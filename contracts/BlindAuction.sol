@@ -32,7 +32,7 @@ contract BlindAuction {
 
     event ProcessReveal(uint deposits);
 
-    event RevealHashes(bytes32 original, bytes32 test);
+    event RevealHashes(bytes32 original, bytes32 test, bytes32 secret);
 
     /// Modifiers are a convenient way to validate inputs to
     /// functions. `onlyBefore` is applied to `bid` below:
@@ -69,8 +69,8 @@ contract BlindAuction {
     {
         require(_blindedBid.length > 0);
         bids[_bidder].push(_blindedBid);
-        deposits[_bidder] += msg.value
-        emit BidCreated(bids[_bidder][bids[_bidder].length-1], deposits[_bidder]);
+        deposits[_bidder] += msg.value;
+        emit BidCreated(bids[_bidder][bids[_bidder].length-1], deposits[_bidder], _bidder);
     }
 
     // Reveal bids to verify bids that were sent by the user,
@@ -81,35 +81,33 @@ contract BlindAuction {
     function reveal(
         uint[] memory _values,
         bool[] memory _fake,
-        bytes32[] memory _secret,
-        bytes32 _hash
+        bytes32[] memory _secret
     )
         public
-        onlyAfter(biddingEnd)
-        onlyBefore(revealEnd)
+        // onlyAfter(biddingEnd)
+        // onlyBefore(revealEnd)
         returns (bool isValid)
     {
-        isValid = true
+        isValid = true;
         uint length = bids[msg.sender].length;
         require(_values.length == length);
         require(_fake.length == length);
         require(_secret.length == length);
         // uint refund;
         for (uint i = 0; i < length; i++) {
-            bytes32 storage bidToCheck = bids[msg.sender][i];
+            bytes32 bidToCheck = bids[msg.sender][i];
             
             (uint value, bool fake, bytes32 secret) =
                     (_values[i], _fake[i], _secret[i]);
             // TODO: FIX hash difference in JS and here
-            emit RevealHashes(bidToCheck.blindedBid, _hash);
-            // if (bidToCheck.blindedBid != keccak256(abi.encodePacked(value, fake, secret))) {
-            if (bidToCheck.blindedBid != _hash) {
+            emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, fake, secret)));
+            if (bidToCheck != keccak256(abi.encodePacked(value, fake, secret))) {
                 // Bid was not actually revealed.
                 // Do not refund deposit.
-                isValid = false
+                isValid = false;
                 continue;
             }
-            if (!fake && bids[msg.sender] >= value) {
+            if (!fake && deposits[msg.sender] >= value) {
                 if (placeBid(msg.sender, value))
                     deposits[msg.sender] -= value;
             }
@@ -119,9 +117,9 @@ contract BlindAuction {
         }
         // return all deposits to user 
         pendingReturns[msg.sender] += deposits[msg.sender];
-        emit ProcessReveal(bids[msg.sender]);
+        emit ProcessReveal(deposits[msg.sender]);
         // _bidder.transfer(refund);
-        return isValid
+        return isValid;
         
     }
 
@@ -150,7 +148,7 @@ contract BlindAuction {
     // refund everyone's deposit using withdraw call 
     function auctionEnd()
         public
-        onlyAfter(revealEnd)
+        // onlyAfter(revealEnd)
         returns (address)
     {
         require(!ended);

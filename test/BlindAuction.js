@@ -47,14 +47,17 @@ require('chai')
           hashBid1 = soliditySha3(
             1,
             false,
-            fromAscii("secret")
+            fromAscii("secret").padEnd(66, 0)
           );
           // remember change secret to bytes
+          // pad secret to be 32bytes cause the solidity contract will convert it to bytes32 to hash
+          // hash would be different if dont pad
           hashBid2 = soliditySha3(
             2,
             false,
-            fromAscii("secret")
+            fromAscii("secret").padEnd(66, 0)
           );
+          console.log(fromAscii("secret").padEnd(66, 0))
           result1 = await blindAuction.bid(hashBid1, bidder1, {from: deployer, value: toWei("1")})
           result2 = await blindAuction.bid(hashBid2, bidder2, {from: deployer, value: toWei("2")})
         })
@@ -70,8 +73,8 @@ require('chai')
         })
 
         it('reveal bid', async () => {
-          const reveal = await blindAuction.reveal([1], [false], [fromAscii("secret")],hashBid1, bidder1)
-          const reveal2 = await blindAuction.reveal([2], [false], [fromAscii("secret")], hashBid2, bidder2)
+          const reveal = await blindAuction.reveal([1], [false], [fromAscii("secret")], {from: bidder1})
+          const reveal2 = await blindAuction.reveal([2], [false], [fromAscii("secret")], {from: bidder2})
           const event = reveal.logs[0].args
           const event2 = reveal2.logs[0].args
           // assert.equal(event.refund, 1, 'Amount refunded correct')
