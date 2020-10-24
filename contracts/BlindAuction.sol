@@ -32,7 +32,7 @@ contract BlindAuction {
 
     event ProcessReveal(uint deposits);
 
-    event RevealHashes(bytes32 original, bytes32 test, bytes32 secret);
+    event RevealHashes(bytes32 original, bytes32 test);
 
     /// Modifiers are a convenient way to validate inputs to
     /// functions. `onlyBefore` is applied to `bid` below:
