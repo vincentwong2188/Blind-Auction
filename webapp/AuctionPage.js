@@ -247,7 +247,6 @@ class AuctionPage extends React.Component {
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('./assets/house.png')} />
 
-
                     <h1 >Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         Welcome to the Auction House, powered by the <b>Ethereum</b> blockchain!

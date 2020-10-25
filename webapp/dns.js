@@ -6,7 +6,7 @@ import Web3 from "web3";
 // importing a compiled contract artifact which contains function signature etc. to interact
 import artifact from "../build/contracts/Bank.json";
 
-const myAddress = ""; // MAY NEED TO FILL UP
+const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO FILL UP
 const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
 
 // run $ truffle migrate --network ropsten --reset
@@ -20,19 +20,27 @@ const web3 = new Web3(
 const contract = new web3.eth.Contract(artifact.abi, DnsContractAddress);
 
 
-export const registerDomain = async (addr) => {
-    // doc here: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-call
-    const newBalance = await contract.methods.balance().call({ from: addr });
-
-    return { address: addr };
-};
-
 export const lookupAddress = async (addr) => {
     // doc here: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-call
-    const result = await contract.methods.lookup_address().call({ from: addr });
+    const result = await contract.methods.getRegisteredURL(addr).call({ from: myAddress });
 
     return { ownerAddress: result };
 };
+
+export const getAddressList = async () => {
+    const result = await contract.methods.getAddresses().call({ from: myAddress });
+    return { addressList: result }
+}
+
+export const getURLCount = async (addr) => {
+    const result = await contract.methods.getURLCount(addr).call({ from: myAddress });
+    return { count: result }
+}
+
+export const getURL = async (addr, idx) => {
+    const result = await contract.methods.getURL(addr, idx).call({ from: myAddress });
+    return { domainName: result }
+}
 
 export const bid = async (amount, domainURL) => {
     // Using MetaMask API to send transaction
@@ -73,5 +81,6 @@ export const bid = async (amount, domainURL) => {
         console.log("Please install MetaMask!");
     }
 };
+
 
 
