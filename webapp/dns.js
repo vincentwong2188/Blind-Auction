@@ -42,6 +42,34 @@ export const getURL = async (addr, idx) => {
     return { domainName: result }
 }
 
+export const sendETH = async (amount, ownerAddress) => {
+    // Using MetaMask API to send transaction
+    //
+    // please read: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-provider-api
+    const provider = await detectEthereumProvider();
+    if (provider) {
+        // From now on, this should always be true:
+        // provider === window.ethereum
+        ethereum.request({
+            method: "eth_sendTransaction",
+            params: [
+                {
+                    from: ethereum.selectedAddress,
+                    to: ownerAddress,
+                    value: web3.utils.toWei(amount, 'ether'),
+                    gas: web3.utils.toHex(46899),
+                    gasPrice: web3.utils.toHex(15000),
+                    data: null,
+                    chainId: 3, // ropsten
+                },
+            ],
+        });
+    } else {
+        window.alert("Please install MetaMask!");
+        // console.log("Please install MetaMask!");
+    }
+}
+
 export const bid = async (amount, domainURL) => {
     // Using MetaMask API to send transaction
     //

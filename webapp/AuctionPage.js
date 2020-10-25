@@ -30,92 +30,7 @@ class AuctionPage extends React.Component {
             domainNameOwner: "",
             bidInput: 0,
 
-            mockItems: [
-                {
-                    domain: "aaa.ntu",
-                    blockchainAddress: "0x1",
-                },
-                {
-                    domain: "bbb.ntu",
-                    blockchainAddress: "0x2",
-                },
-                {
-                    domain: "ccc.ntu",
-                    blockchainAddress: "0x3",
-                },
-                {
-                    domain: "ddd.ntu",
-                    blockchainAddress: "0x4",
-                },
-                {
-                    domain: "eee.ntu",
-                    blockchainAddress: "0x5",
-                },
-                {
-                    domain: "fff.ntu",
-                    blockchainAddress: "0x6",
-                },
-                {
-                    domain: "ggg.ntu",
-                    blockchainAddress: "0x7",
-                },
-                {
-                    domain: "hhh.ntu",
-                    blockchainAddress: "0x8",
-                },
-                {
-                    domain: "iii.ntu",
-                    blockchainAddress: "0x9",
-                },
-                {
-                    domain: "jjj.ntu",
-                    blockchainAddress: "0xA",
-                },
-                {
-                    domain: "kkk.ntu",
-                    blockchainAddress: "0xB",
-                },
-                {
-                    domain: "lll.ntu",
-                    blockchainAddress: "0xC",
-                },
-                {
-                    domain: "mmm.ntu",
-                    blockchainAddress: "0xD",
-                },
-                {
-                    domain: "nnn.ntu",
-                    blockchainAddress: "0xE",
-                },
-                {
-                    domain: "ooo.ntu",
-                    blockchainAddress: "0xF",
-                },
-                {
-                    domain: "ppp.ntu",
-                    blockchainAddress: "0x10",
-                },
-                {
-                    domain: "qqq.ntu",
-                    blockchainAddress: "0x11",
-                },
-                {
-                    domain: "rrr.ntu",
-                    blockchainAddress: "0x12",
-                },
-                {
-                    domain: "sss.ntu",
-                    blockchainAddress: "0x13",
-                },
-                {
-                    domain: "ttt.ntu",
-                    blockchainAddress: "0x14",
-                },
-                {
-                    domain: "uuu.ntu",
-                    blockchainAddress: "0x15",
-                },
-            ]
+
 
         };
 
@@ -211,6 +126,8 @@ class AuctionPage extends React.Component {
         this.setState({
             domainName: queryDomainName
         })
+
+        // Get 
     }
 
     render() {

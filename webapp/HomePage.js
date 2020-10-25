@@ -1,16 +1,11 @@
 import React from "react";
-import {
-    updateDeposit,
-    newDeposit,
-    BankContractAddress,
-    Testnet,
-} from "./bank.js";
 
 import {
     lookupAddress,
     getAddressList,
     getURLCount,
     getURL,
+    sendETH,
     bid,
     DnsContractAddress
 } from "./dns.js"
@@ -22,14 +17,24 @@ class HomePage extends React.Component {
         super(props);
         this.state = {
 
-            address: "0x0",
+            // States for Entering Auction House
             domainName: "",
+
+            // States for Looking Up Owner of Domain
             searchingDomainName: "no",
-            searchedDomainName: "",
+            lookedUpDomainName: "", // Dynamic two way binding domain name search
+            searchedDomainName: "", // Only changes when "search" is pressed
+
+            // States for Looking Up Domains for an Owner
+            address: "0x0", // Dynamic two way binding eth address search
+            searchedAddress: "", // Only changes when "search" is pressed
             domainNameOwner: "",
             domainsOwned: [],
 
-            bidInput: 0,
+            // States for Sending ETH to a Domain
+            domainForETH: "",
+            ethInput: 0,
+            domainNotFound: false,
 
             mockItems: {
                 "0x1": ["scse.ntu"],
@@ -44,55 +49,13 @@ class HomePage extends React.Component {
         };
     }
 
-
-    handlePublicAddress = event => {
-        this.setState({
-            address: event.target.value
-        })
-    }
+    // Handlers for Entering Auction House 
 
     handleDomainName = event => {
         this.setState({
             domainName: event.target.value
         })
     }
-
-    handleOwnerLookup = () => {
-        const address = this.state.address;
-
-        if (!(address in this.state.data)) {
-            return
-        }
-
-        listOfDomains = this.state.data[address]
-
-        this.setState({
-            domainsOwned: result.address,
-        })
-    }
-
-    handleSearchedDomainName = event => {
-        this.setState({
-            searchedDomainName: event.target.value
-        })
-    }
-
-    handleDomainNameLookup = async () => {
-        this.setState({
-            searchingDomainName: "yes",
-        })
-
-        let result = await lookupAddress(this.state.searchedDomainName);
-        this.setState({
-            searchingDomainName: "display",
-            domainNameOwner: result.ownerAddress,
-        })
-
-    }
-
-    handleBidInput = (e) => {
-        this.setState({ bidInput: e.target.value });
-    };
 
     enterAuctionHouse = () => {
 
@@ -108,6 +71,91 @@ class HomePage extends React.Component {
                 search: '?' + queryString
             });
         }
+    }
+
+    // Handlers for Look-up of Owner for Domain
+
+    handleSearchedDomainName = event => {
+        this.setState({
+            lookedUpDomainName: event.target.value
+        })
+    }
+
+    handleDomainNameLookup = async () => {
+        this.setState({
+            searchingDomainName: "yes",
+        })
+
+        this.setState({
+            searchedDomainName: this.state.lookedUpDomainName
+        })
+
+        let result = await lookupAddress(this.state.searchedDomainName);
+        this.setState({
+            searchingDomainName: "display",
+            domainNameOwner: result.ownerAddress,
+        })
+
+    }
+
+    // Handlers for Look-up of Domains of an Owner
+
+    handlePublicAddress = event => {
+        this.setState({
+            address: event.target.value
+        })
+    }
+
+    handleOwnerLookup = () => {
+        const address = this.state.address;
+
+        this.setState({
+            searchedAddress: this.state.address,
+        })
+
+        if (address === "") {
+            this.setState({
+                domainsOwned: [],
+            })
+        }
+        else if (!(address in this.state.data)) {
+            this.setState({
+                domainsOwned: ['Not Found'],
+            })
+        } else {
+            listOfDomains = this.state.data[address]
+
+            this.setState({
+                domainsOwned: listOfDomains,
+            })
+        }
+
+    }
+
+    // Handlers for Sending ETH to a Domain
+
+    handleDomainNameETH = event => {
+        this.setState({
+            domainForETH: event.target.value
+        })
+    }
+
+    handleETHInput = (e) => {
+        this.setState({ ethInput: e.target.value });
+    };
+
+    sendETHtoURL = async () => {
+        // Check if domain has an owner
+        let result = await lookupAddress(this.state.domainForETH);
+
+        if (result.ownerAddress === "0") {
+            window.alert("This domain is not owned by an ETH address!");
+        } else {
+            sendETH(this.state.ethInput, result.ownerAddress);
+        }
+
+        // // For testing purposes only
+        // sendETH(this.state.ethInput, this.state.domainForETH);
     }
 
     componentDidMount() {
@@ -157,7 +205,7 @@ class HomePage extends React.Component {
 
         const cardStyle = {
             fontFamily: "arial",
-            width: "50%",
+            width: "80%",
             margin: "16px auto",
             border: "1px solid #eee",
             boxShadow: "0 2px 3px #ccc",
@@ -166,12 +214,18 @@ class HomePage extends React.Component {
         };
 
         const innerCardStyle = {
+            // fontFamily: "arial",
+            // width: "50%",
+            // // margin: "16px auto",
+            // border: "1px solid #eee",
+            // boxShadow: "0 2px 3px #ccc",
+            // // padding: "5px",
+            // textAlign: "center",
+            flex: 1,
             fontFamily: "arial",
-            width: "50%",
-            // margin: "16px auto",
+
             border: "1px solid #eee",
             boxShadow: "0 2px 3px #ccc",
-            // padding: "5px",
             textAlign: "center",
         }
 
@@ -220,7 +274,7 @@ class HomePage extends React.Component {
 
                 <div style={{
                     fontFamily: "arial",
-                    width: "51.5%",
+                    width: "81%",
                     margin: "auto",
                     display: "flex",
                     flexDirection: "row"
@@ -236,13 +290,13 @@ class HomePage extends React.Component {
                             type="text"
                             placeholder="Please enter a valid domain name"
                             value={this.state.value}
-                            onChange={this.handleDomainName}
+                            onChange={this.handleSearchedDomainName}
                         />{" "}<br></br>
                         <input style={{ margin: "5px" }} type="submit" value="Search!" onClick={this.handleDomainNameLookup} />
                         <p>
                             {/* If currently searching (async call) for owner of domain */}
                             {this.state.searchingDomainName === "yes"
-                                ? "searchingDomainName for owner of domain, please wait..."
+                                ? "Searching for owner of domain, please wait..."
                                 // If page is first loaded, show "Ready!"
                                 : (this.state.searchingDomainName === "no"
                                     ? "Ready!"
@@ -268,11 +322,41 @@ class HomePage extends React.Component {
 
                         <input style={{ margin: "5px" }} type="submit" value="Search!" onClick={this.handleOwnerLookup} />
                         <p>
-                            {this.state.searchingOwner === "yes" ?
-                                "searchingOwner Domain, please wait..."
-                                : this.state.searchingOwner === "no"
-                                    ? "Ready!"
-                                    : this.state.address + "owns the following domains: " + this.state.domainsOwned.join(", ")}
+                            {this.state.domainsOwned.length === 0
+                                ? "Ready!"
+                                : this.state.domainsOwned[0] === 'Not Found'
+                                    ? this.state.searchedAddress + " does not own any domains."
+                                    : this.state.searchedAddress + " owns the following domains: " + this.state.domainsOwned.join(", ")}
+                        </p>
+                    </div>
+
+                    {/* Sending ETH to a Domain URL */}
+                    <div style={innerCardStyle}>
+                        <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/ethereum.png')} />
+                        <h3>Send ETH to a Domain</h3>
+                        <input
+                            style={{ width: "60%", margin: "5px" }}
+                            type="text"
+                            placeholder="Please enter a valid domain"
+                            value={this.state.value}
+                            onChange={this.handleDomainNameETH}
+                        />
+                        <input
+                            style={{ width: "60%", margin: "5px" }}
+                            type="text"
+                            placeholder="Please input the amount to send (in ETH)"
+                            value={this.state.value}
+                            onChange={this.handleETHInput}
+                        />
+                        <br></br>
+
+                        <input style={{ margin: "5px" }} type="submit" value="Send!" onClick={this.sendETHtoURL} />
+                        <p>
+                            {this.state.domainsOwned.length === 0
+                                ? "Ready!"
+                                : this.state.domainsOwned[0] === 'Not Found'
+                                    ? this.state.searchedAddress + " does not own any domains."
+                                    : this.state.searchedAddress + " owns the following domains: " + this.state.domainsOwned.join(", ")}
                         </p>
                     </div>
 
@@ -280,16 +364,6 @@ class HomePage extends React.Component {
 
                 <div style={cardStyle}>
                     <h3>List of Registered Domains</h3>
-
-                    <input
-                        style={{ width: "80%", margin: "5px" }}
-                        type="text"
-                        placeholder="Enter the domain name"
-                        value={this.state.value}
-                        onChange={this.handleDomainName}
-                    />{" "}
-                    <input style={{ margin: "5px" }} type="submit" value="Search!" onClick={this.handleDomainNameLookup} />
-
                     <div style={scroller}>
                         <table style={{
                             borderCollapse: "collapse",
