@@ -82,6 +82,9 @@ contract Dns {
     }
 
     function checkAuctionEnded(string memory url) public view returns (bool) {
+        if (auctions[url].addr == address(0)) {
+            return true;
+        }
         return auctions[url].auction.ended();
     }
 
