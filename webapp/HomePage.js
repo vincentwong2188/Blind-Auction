@@ -10,8 +10,6 @@ import {
     DnsContractAddress
 } from "./dns.js"
 
-
-// example from doc: https://reactjs.org/docs/forms.html#controlled-components
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
@@ -58,19 +56,23 @@ class HomePage extends React.Component {
     }
 
     enterAuctionHouse = () => {
+        // // Error Handling for Domain Names
+        // if (this.state.domainName === "") {
+        //     window.alert("Please input a domain name!");
+        // } else if (!this.state.domainName.includes('.')) {
+        //     window.alert("Please input a valid domain name!");
+        // } else {
+        //     // Routing and Passing of Domain Params into Auction House
+        //     const queryString = "domainName=" + encodeURIComponent(this.state.domainName);
 
-        if (this.state.domainName === "") {
-            window.alert("Please input a domain name!");
-        } else if (!this.state.domainName.includes('.')) {
-            window.alert("Please input a valid domain name!");
-        } else {
-            const queryString = "domainName=" + encodeURIComponent(this.state.domainName);
+        //     this.props.history.push({
+        //         pathname: '/auction',
+        //         search: '?' + queryString
+        //     });
+        // }
 
-            this.props.history.push({
-                pathname: '/auction',
-                search: '?' + queryString
-            });
-        }
+        // Entering "/auction" page
+        this.props.history.push('/auction');
     }
 
     // Handlers for Look-up of Owner for Domain
@@ -242,32 +244,33 @@ class HomePage extends React.Component {
                     <img style={{ width: "100px" }} src={require('./assets/auction.png')} />
 
                     <h1 >DNS Auction House</h1>
-                    <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >Your one-stop registrar service to bid for domain names, using the <b>Ethereum</b> blockchain!</p>
+                    <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
+                        Your one-stop registrar service to bid for domain names, <br />using the <b>Ethereum</b> blockchain!</p>
 
                 </div>
-
+                {/* Routing for Entering the Auction House */}
                 <div style={cardStyle}>
                     <img style={{ height: "50px", width: "50px" }} src={require('./assets/house.png')} />
 
-                    <h2>Enter the Auction House</h2>
+                    <h2>The Auction House</h2>
                     <p style={{ width: "60%", margin: "auto", fontSize: "15px", marginBottom: "20px" }} >
                         Looking to own a new domain name?
                         <br></br>
                         Want to check on the status of an existing auction?
                         <br></br>
                         <br></br>
-                        Enter the Auction House to create or manage your existing auctions.
+                        Click below to create or manage your existing auctions.
                         <br></br>
                     </p>
 
-                    <input
+                    {/* <input
                         style={{ width: "40%", margin: "5px" }}
                         type="text"
                         placeholder="Please enter your desired domain name"
                         value={this.state.value}
                         onChange={this.handleDomainName}
                     />
-                    <br></br>
+                    <br></br> */}
                     <input style={{ margin: "5px" }} type="submit" value="Enter the Auction House" onClick={this.enterAuctionHouse} />
 
                 </div>

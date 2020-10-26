@@ -7,30 +7,29 @@ contract BlindAuction {
     //     uint deposit;
     // }
 
-
     // TODO: ADD IN DEPOSIT MAPPING
     // TODO: API DOC
 
     address payable public beneficiary;
-    uint public biddingEnd;
-    uint public revealEnd;
+    uint256 public biddingEnd;
+    uint256 public revealEnd;
     bool public ended;
 
     // mapping(address => Bid[]) public bids;
     mapping(address => bytes32[]) public bids;
-    mapping(address => uint) deposits;
+    mapping(address => uint256) deposits;
 
     address public highestBidder;
-    uint public highestBid;
+    uint256 public highestBid;
 
     // Allowed withdrawals of previous bids
-    mapping(address => uint) pendingReturns;
+    mapping(address => uint256) pendingReturns;
 
-    event AuctionEnded(address winner, uint highestBid);
+    event AuctionEnded(address winner, uint256 highestBid);
 
-    event BidCreated(bytes32 bidHash, uint deposit, address bidder);
+    event BidCreated(bytes32 bidHash, uint256 deposit, address bidder);
 
-    event ProcessReveal(uint deposits);
+    event ProcessReveal(uint256 deposits);
 
     event RevealHashes(bytes32 original, bytes32 test);
 
@@ -38,14 +37,20 @@ contract BlindAuction {
     /// functions. `onlyBefore` is applied to `bid` below:
     /// The new function body is the modifier's body where
     /// `_` is replaced by the old function body.
-    modifier onlyBefore(uint _time) { require(now < _time); _; }
-    modifier onlyAfter(uint _time) { require(now > _time); _; }
+    modifier onlyBefore(uint256 _time) {
+        require(now < _time);
+        _;
+    }
+    modifier onlyAfter(uint256 _time) {
+        require(now > _time);
+        _;
+    }
 
-    constructor(
-        uint _biddingTime,
-        uint _revealTime
-        // address payable _beneficiary
-    ) payable public {
+    constructor(uint256 _biddingTime, uint256 _revealTime)
+        public
+        payable
+    // address payable _beneficiary
+    {
         beneficiary = msg.sender;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
@@ -60,9 +65,7 @@ contract BlindAuction {
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
-    function bid(
-        bytes32 _blindedBid,
-        address _bidder)
+    function bid(bytes32 _blindedBid, address _bidder)
         public
         payable
         onlyBefore(biddingEnd)
@@ -70,64 +73,77 @@ contract BlindAuction {
         require(_blindedBid.length > 0);
         bids[_bidder].push(_blindedBid);
         deposits[_bidder] += msg.value;
-        emit BidCreated(bids[_bidder][bids[_bidder].length-1], deposits[_bidder], _bidder);
+        emit BidCreated(
+            bids[_bidder][bids[_bidder].length - 1],
+            deposits[_bidder],
+            _bidder
+        );
     }
 
     // Reveal bids to verify bids that were sent by the user,
-    // this will effectively allow the user to test if he has 
+    // this will effectively allow the user to test if he has
     // the highest bid by verifying he actually sent it.
     // Bids has to be sent in order of bidding for reveal
     // TODO: ONLY ALLOW a user to reveal only
     function reveal(
-        uint[] memory _values,
+        uint256[] memory _values,
         bool[] memory _fake,
         bytes32[] memory _secret
     )
         public
-        // onlyAfter(biddingEnd)
-        // onlyBefore(revealEnd)
-        returns (bool isValid)
+        returns (
+            // onlyAfter(biddingEnd)
+            // onlyBefore(revealEnd)
+            bool isValid
+        )
     {
         isValid = true;
-        uint length = bids[msg.sender].length;
+        uint256 length = bids[msg.sender].length;
         require(_values.length == length);
         require(_fake.length == length);
         require(_secret.length == length);
         // uint refund;
-        for (uint i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length; i++) {
             bytes32 bidToCheck = bids[msg.sender][i];
-            
-            (uint value, bool fake, bytes32 secret) =
-                    (_values[i], _fake[i], _secret[i]);
+
+            (uint256 value, bool fake, bytes32 secret) = (
+                _values[i],
+                _fake[i],
+                _secret[i]
+            );
             // TODO: FIX hash difference in JS and here
-            emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, fake, secret)));
-            if (bidToCheck != keccak256(abi.encodePacked(value, fake, secret))) {
+            emit RevealHashes(
+                bidToCheck,
+                keccak256(abi.encodePacked(value, fake, secret))
+            );
+            if (
+                bidToCheck != keccak256(abi.encodePacked(value, fake, secret))
+            ) {
                 // Bid was not actually revealed.
                 // Do not refund deposit.
                 isValid = false;
                 continue;
             }
             if (!fake && deposits[msg.sender] >= value) {
-                if (placeBid(msg.sender, value))
-                    deposits[msg.sender] -= value;
+                if (placeBid(msg.sender, value)) deposits[msg.sender] -= value;
             }
             // Make it impossible for the sender to re-claim
             // the same deposit.
             bids[msg.sender][i] = bytes32(0);
         }
-        // return all deposits to user 
+        // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
         emit ProcessReveal(deposits[msg.sender]);
         // _bidder.transfer(refund);
         return isValid;
-        
     }
 
     // This is an "internal" function which means that it
     // can only be called from the contract itself (or from
     // derived contracts).
-    function placeBid(address bidder, uint value) internal
-            returns (bool success)
+    function placeBid(address bidder, uint256 value)
+        internal
+        returns (bool success)
     {
         if (value <= highestBid) {
             return false;
@@ -141,15 +157,15 @@ contract BlindAuction {
         return true;
     }
 
-
-
     /// End the auction and send the highest bid
     /// to the beneficiary.
-    // refund everyone's deposit using withdraw call 
+    // refund everyone's deposit using withdraw call
     function auctionEnd()
         public
-        // onlyAfter(revealEnd)
-        returns (address)
+        returns (
+            // onlyAfter(revealEnd)
+            address
+        )
     {
         require(!ended);
         emit AuctionEnded(highestBidder, highestBid);
@@ -160,9 +176,13 @@ contract BlindAuction {
 
     /// Withdraw a bid that was overbid.
     // called after auction end
-    function withdraw(
-        // address payable _bidder
-    ) public returns (uint amount) {
+    function withdraw()
+        public
+        returns (
+            // address payable _bidder
+            uint256 amount
+        )
+    {
         require(ended);
         amount = pendingReturns[msg.sender];
         if (amount > 0) {

@@ -127,7 +127,6 @@ class AuctionPage extends React.Component {
             domainName: queryDomainName
         })
 
-        // Get 
     }
 
     render() {
@@ -159,6 +158,7 @@ class AuctionPage extends React.Component {
             overflow: "auto"
         }
 
+
         return (
             <>
                 <div style={cardStyle}>
@@ -167,18 +167,36 @@ class AuctionPage extends React.Component {
                     <h1 >Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         Welcome to the Auction House, powered by the <b>Ethereum</b> blockchain!
+                        {/* <br />
                         <br />
-                        <br />
-                        You have selected the domain <b>{this.state.domainName}</b>
+                        You have selected the domain <b>{this.state.domainName}</b> */}
+                        <br /><br />
+                        <input style={{ margin: "5px" }} type="submit" value="Back to Home Page" onClick={this.handleBack} />
+
                     </p>
 
                 </div>
                 <div style={cardStyle}>
                     <img style={{ height: "50px", width: "50px" }} src={require('./assets/ethereum.png')} />
 
-                    <h3>Bid for A Domain!</h3>
+                    <h3>Enter a Domain</h3>
                     <p style={{ width: "100%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
-                        Bid for your favourite domain names using a <b>"commit-and-reveal"</b> blind auction process.<br></br>
+                        {/* Bid for your favourite domain names using a <b>"commit-and-reveal"</b> blind auction process.<br></br> */}
+                        Enter a domain URL below to find out its status.
+                    </p>
+
+                    <p style={{ width: "100%", margin: "auto", fontSize: "13px", marginBottom: "20px" }} >
+                        {/* Bid for your favourite domain names using a <b>"commit-and-reveal"</b> blind auction process.<br></br> */}
+                        <b>Note: </b>Domain URLs can either be
+                        <div style={{ textAlign: "center" }}>
+                            <ol style={{ display: "inline-block" }}>
+                                <li>Not yet expired - unable to start a new auction for it.</li>
+                                <li>Expired - can start a new auction for it.</li>
+                                <li>Expired but there exists an ongoing auction for it.</li>
+
+                            </ol>
+                        </div>
+
                     </p>
 
 
@@ -189,16 +207,16 @@ class AuctionPage extends React.Component {
                         value={this.state.value}
                         onChange={this.handleDomainName}
                     />
-                    <input
+                    {/* <input
                         style={{ width: "60%", margin: "5px" }}
                         type="text"
                         placeholder="Enter bid amount (in Ether)"
                         value={this.state.value}
                         onChange={this.handleBidInput}
-                    /><br></br>
-                    <input style={{ margin: "5px" }} type="submit" value="Bid Ether" onClick={this.handleBid} />
+                    /> */}
+                    <br></br>
+                    <input style={{ margin: "5px" }} type="submit" value="Check Status" onClick={this.handleBid} />
                     <br />
-                    <input style={{ margin: "5px" }} type="submit" value="Back to Home Page" onClick={this.handleBack} />
 
                 </div>
 
