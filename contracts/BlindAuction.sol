@@ -1,4 +1,5 @@
 pragma solidity >0.4.23 <0.7.0;
+// import "./Dns.sol";
 
 contract BlindAuction {
     // struct Bid {
@@ -7,13 +8,10 @@ contract BlindAuction {
     //     uint deposit;
     // }
 
-
-    // TODO: ADD IN DEPOSIT MAPPING
-    // TODO: API DOC
-
     address payable public beneficiary;
     uint public biddingEnd;
     uint public revealEnd;
+    string public url;
     bool public ended;
 
     // mapping(address => Bid[]) public bids;
@@ -28,11 +26,13 @@ contract BlindAuction {
 
     event AuctionEnded(address winner, uint highestBid);
 
-    event BidCreated(bytes32 bidHash, uint deposit, address bidder);
+    event BidCreated(bytes32 bidHash, uint deposit, address bidder, uint value);
 
     event ProcessReveal(uint deposits);
 
     event RevealHashes(bytes32 original, bytes32 test);
+
+    event WithdrawEther(uint amount, address recipient);
 
     /// Modifiers are a convenient way to validate inputs to
     /// functions. `onlyBefore` is applied to `bid` below:
@@ -44,9 +44,11 @@ contract BlindAuction {
     constructor(
         uint _biddingTime,
         uint _revealTime
-        // address payable _beneficiary
+        // string memory _url
     ) payable public {
+        // beneficiary will always be dns manager contract
         beneficiary = msg.sender;
+        // url = _url;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
     }
@@ -55,8 +57,10 @@ contract BlindAuction {
     /// keccak256(abi.encodePacked(value, fake, secret)).
     /// The sent ether is only refunded if the bid is correctly
     /// revealed in the revealing phase. The bid is valid if the
-    /// ether sent together with the bid is at least "value" and
-    /// "fake" is not true. Setting "fake" to true and sending
+    /// ether sent together in all bids sent by that user
+    /// with the bid is at least "value" of non-fake bids which are when
+    /// "fake" is not true. 
+    /// Setting "fake" to true and sending
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
@@ -70,7 +74,7 @@ contract BlindAuction {
         require(_blindedBid.length > 0);
         bids[_bidder].push(_blindedBid);
         deposits[_bidder] += msg.value;
-        emit BidCreated(bids[_bidder][bids[_bidder].length-1], deposits[_bidder], _bidder);
+        emit BidCreated(bids[_bidder][bids[_bidder].length-1], deposits[_bidder], _bidder, msg.value);
     }
 
     // Reveal bids to verify bids that were sent by the user,
@@ -84,8 +88,8 @@ contract BlindAuction {
         bytes32[] memory _secret
     )
         public
-        // onlyAfter(biddingEnd)
-        // onlyBefore(revealEnd)
+        onlyAfter(biddingEnd)
+        onlyBefore(revealEnd)
         returns (bool isValid)
     {
         isValid = true;
@@ -145,24 +149,27 @@ contract BlindAuction {
 
     /// End the auction and send the highest bid
     /// to the beneficiary.
-    // refund everyone's deposit using withdraw call 
+    /// refund everyone's deposit using withdraw call 
     function auctionEnd()
         public
-        // onlyAfter(revealEnd)
+        onlyAfter(revealEnd)
         returns (address)
     {
         require(!ended);
         emit AuctionEnded(highestBidder, highestBid);
         ended = true;
+        // TODO: CALL beneficiary function plus transfer funds instead of direct call
+        // beneficiary.registerWinner();
         beneficiary.transfer(highestBid);
         return highestBidder;
     }
 
     /// Withdraw a bid that was overbid.
     // called after auction end
-    function withdraw(
-        // address payable _bidder
-    ) public returns (uint amount) {
+    function withdraw() 
+        public
+        returns (uint amount) 
+    {
         require(ended);
         amount = pendingReturns[msg.sender];
         if (amount > 0) {
@@ -174,6 +181,8 @@ contract BlindAuction {
 
             msg.sender.transfer(amount);
         }
+        emit WithdrawEther(amount, msg.sender);
         return amount;
     }
 }
+
