@@ -1,4 +1,5 @@
 pragma solidity >0.4.23 <0.7.0;
+// import "./Dns.sol";
 
 contract BlindAuction {
     // struct Bid {
@@ -7,12 +8,19 @@ contract BlindAuction {
     //     uint deposit;
     // }
 
+<<<<<<< HEAD
     // TODO: ADD IN DEPOSIT MAPPING
     // TODO: API DOC
 
     address payable public beneficiary;
     uint256 public biddingEnd;
     uint256 public revealEnd;
+=======
+    address payable public beneficiary;
+    uint public biddingEnd;
+    uint public revealEnd;
+    string public url;
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
     bool public ended;
 
     // mapping(address => Bid[]) public bids;
@@ -27,16 +35,23 @@ contract BlindAuction {
 
     event AuctionEnded(address winner, uint256 highestBid);
 
+<<<<<<< HEAD
     event BidCreated(bytes32 bidHash, uint256 deposit, address bidder);
+=======
+    event BidCreated(bytes32 bidHash, uint deposit, address bidder, uint value);
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
 
     event ProcessReveal(uint256 deposits);
 
     event RevealHashes(bytes32 original, bytes32 test);
 
+    event WithdrawEther(uint amount, address recipient);
+
     /// Modifiers are a convenient way to validate inputs to
     /// functions. `onlyBefore` is applied to `bid` below:
     /// The new function body is the modifier's body where
     /// `_` is replaced by the old function body.
+<<<<<<< HEAD
     modifier onlyBefore(uint256 _time) {
         require(now < _time);
         _;
@@ -51,7 +66,19 @@ contract BlindAuction {
         payable
     // address payable _beneficiary
     {
+=======
+    modifier onlyBefore(uint _time) { require(now < _time); _; }
+    modifier onlyAfter(uint _time) { require(now > _time); _; }
+
+    constructor(
+        uint _biddingTime,
+        uint _revealTime
+        // string memory _url
+    ) payable public {
+        // beneficiary will always be dns manager contract
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
         beneficiary = msg.sender;
+        // url = _url;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
     }
@@ -60,8 +87,10 @@ contract BlindAuction {
     /// keccak256(abi.encodePacked(value, fake, secret)).
     /// The sent ether is only refunded if the bid is correctly
     /// revealed in the revealing phase. The bid is valid if the
-    /// ether sent together with the bid is at least "value" and
-    /// "fake" is not true. Setting "fake" to true and sending
+    /// ether sent together in all bids sent by that user
+    /// with the bid is at least "value" of non-fake bids which are when
+    /// "fake" is not true. 
+    /// Setting "fake" to true and sending
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
@@ -73,11 +102,15 @@ contract BlindAuction {
         require(_blindedBid.length > 0);
         bids[_bidder].push(_blindedBid);
         deposits[_bidder] += msg.value;
+<<<<<<< HEAD
         emit BidCreated(
             bids[_bidder][bids[_bidder].length - 1],
             deposits[_bidder],
             _bidder
         );
+=======
+        emit BidCreated(bids[_bidder][bids[_bidder].length-1], deposits[_bidder], _bidder, msg.value);
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
     }
 
     // Reveal bids to verify bids that were sent by the user,
@@ -91,11 +124,17 @@ contract BlindAuction {
         bytes32[] memory _secret
     )
         public
+<<<<<<< HEAD
         returns (
             // onlyAfter(biddingEnd)
             // onlyBefore(revealEnd)
             bool isValid
         )
+=======
+        onlyAfter(biddingEnd)
+        onlyBefore(revealEnd)
+        returns (bool isValid)
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
     {
         isValid = true;
         uint256 length = bids[msg.sender].length;
@@ -159,6 +198,7 @@ contract BlindAuction {
 
     /// End the auction and send the highest bid
     /// to the beneficiary.
+<<<<<<< HEAD
     // refund everyone's deposit using withdraw call
     function auctionEnd()
         public
@@ -166,22 +206,37 @@ contract BlindAuction {
             // onlyAfter(revealEnd)
             address
         )
+=======
+    /// refund everyone's deposit using withdraw call 
+    function auctionEnd()
+        public
+        onlyAfter(revealEnd)
+        returns (address)
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
     {
         require(!ended);
         emit AuctionEnded(highestBidder, highestBid);
         ended = true;
+        // TODO: CALL beneficiary function plus transfer funds instead of direct call
+        // beneficiary.registerWinner();
         beneficiary.transfer(highestBid);
         return highestBidder;
     }
 
     /// Withdraw a bid that was overbid.
     // called after auction end
+<<<<<<< HEAD
     function withdraw()
         public
         returns (
             // address payable _bidder
             uint256 amount
         )
+=======
+    function withdraw() 
+        public
+        returns (uint amount) 
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
     {
         require(ended);
         amount = pendingReturns[msg.sender];
@@ -194,6 +249,11 @@ contract BlindAuction {
 
             msg.sender.transfer(amount);
         }
+        emit WithdrawEther(amount, msg.sender);
         return amount;
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0901f20a5f6096ea85f02e02fd14a8b130c20f3a
