@@ -11,7 +11,7 @@ require('chai')
   // accounts are test accounts on local network
   contract('BlindAuction', ([deployer, bidder1, bidder2]) => {
       let blindAuction
-      let deployURL
+      // let deployURL
       before(async () => {
         // deployURL = "dns.ntu"
         blindAuction = await BlindAuction.new(10, 10)
