@@ -15,6 +15,8 @@ contract Dns {
         uint256 _expiry_date
     );
 
+    event AuctionStart(address _auction_addr, string _url);
+
     mapping(address => string[]) private reverse_lookup_table;
     address[] private address_list;
     mapping(address => bool) private address_not_unique;
@@ -57,27 +59,30 @@ contract Dns {
         return (now >= expiry_date[url]);
     }
 
-    function startAuction(string memory url) public returns (address) {
+    function startAuction(string memory url) public {
         if (!checkExpired(url)) {
-            return address(0);
+            return;
         }
 
         if (checkAuctionEnded(url)) {
-            return address(0);
+            return;
         }
 
         AuctionItem memory new_auction;
         // Init new auction here
-        new_auction.auction = createAuction();
+        new_auction.auction = createAuction(url);
         new_auction.addr = address(new_auction.auction);
         new_auction.bidding_end = new_auction.auction.biddingEnd();
         auctions[url] = new_auction;
-
-        return auctions[url].addr;
+        emit AuctionStart(new_auction.addr, url);
     }
 
-    function createAuction() private returns (BlindAuction) {
-        BlindAuction auction = new BlindAuction(bidding_length, reveal_length);
+    function createAuction(string memory url) private returns (BlindAuction) {
+        BlindAuction auction = new BlindAuction(
+            bidding_length,
+            reveal_length,
+            url
+        );
         return auction;
     }
 
@@ -166,5 +171,13 @@ contract Dns {
             internalAddressRegister(url, addr);
             emit Registration(addr, url, expiry_date[url]);
         }
+    }
+
+    function testFuncParam(int256 input_int) public pure returns (int256) {
+        return input_int;
+    }
+
+    function testFunc() public pure returns (string memory) {
+        return ("teststring.ntu");
     }
 }
