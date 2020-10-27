@@ -209,14 +209,14 @@ class HomePage extends React.Component {
         populateMappingData();
 
     }
-    handleTest = () => {
+    handleTest = async () => {
         let result = await testFunc();
         this.setState({
             test: result.name
         })
     }
 
-    handleTestParam = () => {
+    handleTestParam = async () => {
         let result = await testFuncParam(5);
         this.setState({
             testParam: result.value
