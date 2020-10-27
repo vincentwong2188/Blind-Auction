@@ -71,13 +71,8 @@ contract BlindAuction {
     /// revealed in the revealing phase. The bid is valid if the
     /// ether sent together in all bids sent by that user
     /// with the bid is at least "value" of non-fake bids which are when
-<<<<<<< HEAD
-    /// "real" is true. 
+    /// "real" is true.
     /// Setting "real" to false and sending
-=======
-    /// "fake" is not true.
-    /// Setting "fake" to true and sending
->>>>>>> 6c0c35d3971a6d1d19b3c18ab83c1be6c7901ead
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
@@ -103,13 +98,8 @@ contract BlindAuction {
     // Bids has to be sent in order of bidding for reveal
     // TODO: ONLY ALLOW a user to reveal only
     function reveal(
-<<<<<<< HEAD
-        uint[] memory _values,
-        bool[] memory _real,
-=======
         uint256[] memory _values,
-        bool[] memory _fake,
->>>>>>> 6c0c35d3971a6d1d19b3c18ab83c1be6c7901ead
+        bool[] memory _real,
         bytes32[] memory _secret
     )
         public
@@ -125,42 +115,24 @@ contract BlindAuction {
         // uint refund;
         for (uint256 i = 0; i < length; i++) {
             bytes32 bidToCheck = bids[msg.sender][i];
-<<<<<<< HEAD
-            
-            (uint value, bool real, bytes32 secret) =
-                    (_values[i], _real[i], _secret[i]);
-            // TODO: FIX hash difference in JS and here
-            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
-            if (bidToCheck != keccak256(abi.encodePacked(value, real, secret))) {
-=======
 
-            (uint256 value, bool fake, bytes32 secret) = (
+            (uint256 value, bool real, bytes32 secret) = (
                 _values[i],
-                _fake[i],
+                _real[i],
                 _secret[i]
             );
             // TODO: FIX hash difference in JS and here
-            emit RevealHashes(
-                bidToCheck,
-                keccak256(abi.encodePacked(value, fake, secret))
-            );
+            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
             if (
-                bidToCheck != keccak256(abi.encodePacked(value, fake, secret))
+                bidToCheck != keccak256(abi.encodePacked(value, real, secret))
             ) {
->>>>>>> 6c0c35d3971a6d1d19b3c18ab83c1be6c7901ead
                 // Bid was not actually revealed.
                 // Do not refund deposit.
                 isValid = false;
                 continue;
             }
-<<<<<<< HEAD
             if (real && deposits[msg.sender] >= value) {
-                if (placeBid(msg.sender, value))
-                    deposits[msg.sender] -= value;
-=======
-            if (!fake && deposits[msg.sender] >= value) {
                 if (placeBid(msg.sender, value)) deposits[msg.sender] -= value;
->>>>>>> 6c0c35d3971a6d1d19b3c18ab83c1be6c7901ead
             }
             // Make it impossible for the sender to re-claim
             // the same deposit.

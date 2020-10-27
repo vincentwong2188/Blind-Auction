@@ -181,7 +181,7 @@ contract Dns {
         return ("teststring.ntu");
     }
 
-    function testRegisterFunc(string memory url, address addr) {
+    function testRegisterFunc(string memory url, address addr) public {
         if (checkExpired(url)) {
             // Check if calling auction address is valid
             internalAddressRegister(url, addr);
