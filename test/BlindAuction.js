@@ -76,8 +76,13 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       // for reveal bid to ensure it is after bidding time end and before reveal time end
       await blindAuction.moveAheadTime(10)
       // NOTE: all ether values to be converted to Wei 
+<<<<<<< HEAD
       reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], {from: bidder1})
       reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], {from: bidder2})
+=======
+      reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], { from: bidder1 })
+      reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], { from: bidder2 })
+>>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for end auction to ensure it is after reveal time end
       await blindAuction.moveAheadTime(10)
@@ -95,6 +100,16 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       await blindAuction.bid("", bidder1).should.be.rejected;
     
     })
+<<<<<<< HEAD
+=======
+
+    it('reveal bid', async () => {
+      const event_process = reveal.logs[0].args
+      const event2_process = reveal2.logs[0].args
+      assert.equal(event_process.deposits, 0, 'Process Reveal Deposits for bidder1 is correct - Deposits taken as highest bidder at that time')
+      assert.equal(event2_process.deposits, 0, 'Process Reveal Deposits for bidder2 is correct - Deposits taken as highest bidder')
+    })
+>>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
 
     it('reveal bid', async () => {
       const event_process = reveal.logs[0].args
