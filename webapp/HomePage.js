@@ -10,6 +10,7 @@ import {
     DnsContractAddress,
     testFunc,
     testFuncParam,
+    testRegisterFunc,
 } from "./dns.js"
 
 class HomePage extends React.Component {
@@ -18,8 +19,8 @@ class HomePage extends React.Component {
         this.state = {
 
             // TEST state
-            test: "no string output yet",
-            testParam: "no number output yet",
+            testDomainName: " string output yet",
+            testAddress: "",
 
             // States for Entering Auction House
             domainName: "",
@@ -137,7 +138,6 @@ class HomePage extends React.Component {
                 domainsOwned: listOfDomains,
             })
         }
-
     }
 
     // Handlers for Sending ETH to a Domain
@@ -153,18 +153,17 @@ class HomePage extends React.Component {
     };
 
     sendETHtoURL = async () => {
-        // // Check if domain has an owner
-        // let result = await lookupAddress(this.state.domainForETH);
+        // Check if domain has an owner
+        let result = await lookupAddress(this.state.domainForETH);
 
-        // if (result.ownerAddress === "0") {
-        //     window.alert("This domain is not owned by an ETH address!");
-        // } else {
-        //     sendETH(this.state.ethInput, result.ownerAddress);
+        if (result.ownerAddress === "0") {
+            window.alert("This domain is not owned by an ETH address!");
+        } else {
+            sendETH(this.state.ethInput, result.ownerAddress);
+        }
 
-        // }
-
-        // For testing purposes only
-        sendETH(this.state.ethInput, this.state.domainForETH);
+        // // For testing purposes only
+        // sendETH(this.state.ethInput, this.state.domainForETH);
     }
 
     componentDidMount() {
@@ -209,19 +208,28 @@ class HomePage extends React.Component {
         populateMappingData();
 
     }
-    handleTest = async () => {
-        let result = await testFunc();
+
+    // TEST FUNCTION
+
+    handleRegistering = async () => {
+        console.log("before register function");
+        await testRegisterFunc();
+        console.log("after register function");
+    }
+
+    handleTestAddress = event => {
         this.setState({
-            test: result.name
+            testAddress: event.target.value,
         })
     }
 
-    handleTestParam = async () => {
-        let result = await testFuncParam(5);
+    handleTestDomain = event => {
         this.setState({
-            testParam: result.value
+            testDomainName: event.target.value,
         })
     }
+
+    // END
 
     render() {
 
@@ -262,8 +270,23 @@ class HomePage extends React.Component {
             <>
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('./assets/auction.png')} />
-                    <input style={{ margin: "5px" }} type="submit" value="TEST BUTTON" onClick={this.handleTest} /> {this.state.test}
-                    <input style={{ margin: "5px" }} type="submit" value="TEST PARAMS BUTTON" onClick={this.handleTestParam} /> {this.state.testParam}
+                    <input
+                        style={{ width: "60%", margin: "5px" }}
+                        type="text"
+                        placeholder="Please enter a valid Ethereum Public Address"
+                        // value={this.state.value}
+                        onChange={this.handleTestAddress}
+                    />
+
+                    <input
+                        style={{ width: "60%", margin: "5px" }}
+                        type="text"
+                        placeholder="Please enter a valid Domain Name"
+                        // value={this.state.value}
+                        onChange={this.handleTestDomain}
+                    />
+
+                    <input style={{ margin: "5px" }} type="submit" value="Input Values into Contract Backend" onClick={this.handleRegistering} />
 
                     <h1 >DNS Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
