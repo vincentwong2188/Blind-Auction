@@ -183,9 +183,10 @@ contract Dns {
 
     function testRegisterFunc(string memory url, address addr) public {
         if (checkExpired(url)) {
-            // Check if calling auction address is valid
             internalAddressRegister(url, addr);
             emit Registration(addr, url, expiry_date[url]);
+        } else {
+            emit Registration(address(0), "not expired", 0);
         }
     }
 }

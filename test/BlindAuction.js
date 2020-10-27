@@ -70,26 +70,21 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       // Sequential order of contract function calls as function can only be called after each other
       // therefore all to be called in sequence first to ensure they are executed in order
       // if not JS Async may cause some to execute out of order causing error
-      bid1 = await blindAuction.bid(hashBid1, bidder1, {from: bidder1, value: toWei("1")})
-      bid2 = await blindAuction.bid(hashBid2, bidder2, {from: bidder2, value: toWei("2")})
+      bid1 = await blindAuction.bid(hashBid1, bidder1, { from: bidder1, value: toWei("1") })
+      bid2 = await blindAuction.bid(hashBid2, bidder2, { from: bidder2, value: toWei("2") })
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
       await blindAuction.moveAheadTime(10)
       // NOTE: all ether values to be converted to Wei 
-<<<<<<< HEAD
-      reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], {from: bidder1})
-      reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], {from: bidder2})
-=======
       reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], { from: bidder1 })
       reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], { from: bidder2 })
->>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for end auction to ensure it is after reveal time end
       await blindAuction.moveAheadTime(10)
       auctionEnd = await blindAuction.auctionEnd()
       // withdraw only can be executed after auction ends
-      bidder1Withdraw = await blindAuction.withdraw({from: bidder1})
-      bidder2Withdraw = await blindAuction.withdraw({from: bidder2})
+      bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
+      bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
     })
     it('send bid', async () => {
       const event = bid1.logs[0].args
@@ -98,18 +93,8 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       assert.equal(event.bidder, bidder1, 'bidder is correct')
       // FAILURE: bid must have blinded bid content
       await blindAuction.bid("", bidder1).should.be.rejected;
-    
-    })
-<<<<<<< HEAD
-=======
 
-    it('reveal bid', async () => {
-      const event_process = reveal.logs[0].args
-      const event2_process = reveal2.logs[0].args
-      assert.equal(event_process.deposits, 0, 'Process Reveal Deposits for bidder1 is correct - Deposits taken as highest bidder at that time')
-      assert.equal(event2_process.deposits, 0, 'Process Reveal Deposits for bidder2 is correct - Deposits taken as highest bidder')
     })
->>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
 
     it('reveal bid', async () => {
       const event_process = reveal.logs[0].args
