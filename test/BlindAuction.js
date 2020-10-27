@@ -56,7 +56,7 @@ require('chai')
           // https://blog.8bitzen.com/posts/18-03-2019-keccak-abi-encodepacked-with-javascript/
           hashBid1 = soliditySha3(
             toWei("1"), // hash need to change to wei
-            false,
+            true,
             fromAscii("secret").padEnd(66, 0)
           );
           // remember change secret to bytes
@@ -64,7 +64,7 @@ require('chai')
           // hash would be different if dont pad
           hashBid2 = soliditySha3(
             toWei("2"), // hash need to change to Wei
-            false,
+            true,
             fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
           );
           // Sequential order of contract function calls as function can only be called after each other
@@ -76,8 +76,8 @@ require('chai')
           // for reveal bid to ensure it is after bidding time end and before reveal time end
           await blindAuction.moveAheadTime(10)
           // NOTE: all ether values to be converted to Wei 
-          reveal = await blindAuction.reveal([toWei("1")], [false], [fromAscii("secret")], {from: bidder1})
-          reveal2 = await blindAuction.reveal([toWei("2")], [false], [fromAscii("secret")], {from: bidder2})
+          reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], {from: bidder1})
+          reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], {from: bidder2})
           // move time ahead by 10s so that can test onlyAfter & onlyBefore
           // for end auction to ensure it is after reveal time end
           await blindAuction.moveAheadTime(10)
@@ -97,8 +97,8 @@ require('chai')
         })
 
         it('reveal bid', async () => {
-          const event_process = reveal.logs[1].args
-          const event2_process = reveal2.logs[1].args
+          const event_process = reveal.logs[0].args
+          const event2_process = reveal2.logs[0].args
           assert.equal(event_process.deposits, 0, 'Process Reveal Deposits for bidder1 is correct - Deposits taken as highest bidder at that time')
           assert.equal(event2_process.deposits, 0, 'Process Reveal Deposits for bidder2 is correct - Deposits taken as highest bidder')
         })

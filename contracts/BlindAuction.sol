@@ -54,13 +54,13 @@ contract BlindAuction {
     }
 
     /// Place a blinded bid with `_blindedBid` =
-    /// keccak256(abi.encodePacked(value, fake, secret)).
+    /// keccak256(abi.encodePacked(value, real, secret)).
     /// The sent ether is only refunded if the bid is correctly
     /// revealed in the revealing phase. The bid is valid if the
     /// ether sent together in all bids sent by that user
     /// with the bid is at least "value" of non-fake bids which are when
-    /// "fake" is not true. 
-    /// Setting "fake" to true and sending
+    /// "real" is true. 
+    /// Setting "real" to false and sending
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
@@ -84,7 +84,7 @@ contract BlindAuction {
     // TODO: ONLY ALLOW a user to reveal only
     function reveal(
         uint[] memory _values,
-        bool[] memory _fake,
+        bool[] memory _real,
         bytes32[] memory _secret
     )
         public
@@ -95,23 +95,23 @@ contract BlindAuction {
         isValid = true;
         uint length = bids[msg.sender].length;
         require(_values.length == length);
-        require(_fake.length == length);
+        require(_real.length == length);
         require(_secret.length == length);
         // uint refund;
         for (uint i = 0; i < length; i++) {
             bytes32 bidToCheck = bids[msg.sender][i];
             
-            (uint value, bool fake, bytes32 secret) =
-                    (_values[i], _fake[i], _secret[i]);
+            (uint value, bool real, bytes32 secret) =
+                    (_values[i], _real[i], _secret[i]);
             // TODO: FIX hash difference in JS and here
-            emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, fake, secret)));
-            if (bidToCheck != keccak256(abi.encodePacked(value, fake, secret))) {
+            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
+            if (bidToCheck != keccak256(abi.encodePacked(value, real, secret))) {
                 // Bid was not actually revealed.
                 // Do not refund deposit.
                 isValid = false;
                 continue;
             }
-            if (!fake && deposits[msg.sender] >= value) {
+            if (real && deposits[msg.sender] >= value) {
                 if (placeBid(msg.sender, value))
                     deposits[msg.sender] -= value;
             }
@@ -157,10 +157,11 @@ contract BlindAuction {
     {
         require(!ended);
         emit AuctionEnded(highestBidder, highestBid);
-        ended = true;
         // TODO: CALL beneficiary function plus transfer funds instead of direct call
         // beneficiary.registerWinner();
-        beneficiary.transfer(highestBid);
+        // beneficiary.call.value(highestBid).gas(10)(abi.encodeWithSignature("registerAddress(string, address)", url, highestBidder));
+        // beneficiary.transfer(highestBid);
+        ended = true;
         return highestBidder;
     }
 
