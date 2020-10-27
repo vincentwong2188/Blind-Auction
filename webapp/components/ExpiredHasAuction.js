@@ -4,12 +4,15 @@ import {
     startAuction,
 } from "../dns.js"
 
+import {
+    biddingEnd,
+} from "../blindAuction";
+
 class ExpiredHasAuction extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-
             // States for handling status check:
             bidValue: 0,
         };
@@ -31,12 +34,20 @@ class ExpiredHasAuction extends React.Component {
         return (
             <div style={cardStyle}>
                 <img style={{ width: "100px" }} src={require('../assets/checked.png')} />
-
                 <h1 >{this.props.domainName} has an existing ongoing auction!</h1>
                 <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                     Submit a bid below to participate in this auction.
                 </p>
                 <br />
+                ETH Amount:
+                <input
+                    style={{ height: "50px", width: "30%", margin: "5px" }}
+                    type="text"
+                    placeholder="Enter the ETH you want to send"
+                    // value={this.state.bidValue}
+                    onChange={this.props.bidSend}
+                /><br />
+                Hash Values:
                 <input
                     style={{ width: "30%", margin: "5px" }}
                     type="text"
