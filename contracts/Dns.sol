@@ -24,7 +24,7 @@ contract Dns {
     mapping(string => uint256) public expiry_date;
     address public owner;
     mapping(string => AuctionItem) private auctions;
-    uint256 public expiry = 52 weeks;
+    uint256 public expiry = 1 minutes;
     uint256 MAX_UINT;
 
     uint256 public bidding_length = 10 minutes;
@@ -64,7 +64,7 @@ contract Dns {
             revert("URL not yet expired!");
         }
 
-        if (checkAuctionEnded(url)) {
+        if (!checkAuctionEnded(url)) {
             revert("Existing auction not yet ended!");
         }
 
@@ -98,6 +98,10 @@ contract Dns {
         // Check if registration has expired
         if (!checkExpired(url)) {
             // url registration not yet expired
+            return address(0);
+        }
+
+        if (checkAuctionEnded(url)) {
             return address(0);
         }
 
@@ -183,9 +187,10 @@ contract Dns {
 
     function testRegisterFunc(string memory url, address addr) public {
         if (checkExpired(url)) {
-            // Check if calling auction address is valid
             internalAddressRegister(url, addr);
             emit Registration(addr, url, expiry_date[url]);
+        } else {
+            emit Registration(address(0), "not expired", 0);
         }
     }
 }
