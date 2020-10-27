@@ -38,7 +38,8 @@ class AuctionStatus extends React.Component {
             status: "",
 
             // States for storing bidValue, fake/real boolean, and secret:
-            bidInput: 0,
+            bidSend: "",
+            bidInput: "",
             real: false,
             secret: "",
 
@@ -92,6 +93,11 @@ class AuctionStatus extends React.Component {
     }
 
     // Handle Submiting of Bid from ExpiredHasAuction
+    handleBidSend = event => {
+        this.setState({
+            bidSend: event.target.value,
+        })
+    }
 
     handleBid = event => {
         this.setState({
@@ -110,6 +116,7 @@ class AuctionStatus extends React.Component {
     }
 
     handlePlaceBid = async () => {
+        let sendValue = this.state.bidSend;
         let value = this.state.bidInput;
         let real = this.state.real;
         let secret = this.state.secret;
@@ -242,6 +249,8 @@ class AuctionStatus extends React.Component {
                 status = (
                     <ExpiredHasAuction
                         domainName={this.state.domainName}
+                        contractAddress={this.state.contractAddress}
+                        bidSend={event => this.handleBidSend(event)}
                         bidChange={event => this.handleBid(event)}
                         bidReal={event => this.handleReal(event)}
                         bidSecret={event => this.handleSecret(event)}
@@ -258,11 +267,11 @@ class AuctionStatus extends React.Component {
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('./assets/house.png')} />
 
-                    <h1 >The Auction House: {this.state.contractAddress}</h1>
+                    <h1 >The Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         Welcome to the Auction House, powered by the <b>Ethereum</b> blockchain!
                         <br /><br />
-                        You have selected the domain: {this.state.domainName}
+                        You have selected the domain: {this.state.domainName}<br />
                         <br /><br />
                         <input style={{ margin: "5px" }} type="submit" value="Back to Auction House" onClick={this.handleBack} />
                         <br />
@@ -272,15 +281,10 @@ class AuctionStatus extends React.Component {
                     <input style={{ margin: "5px" }} type="submit" value="Not Expired" onClick={this.setNotExpired} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired No Auction" onClick={this.setExpiredNoAuction} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired Has Auction" onClick={this.setExpiredHasAuction} />
+                    <br />Blind Auction Contract Address: {this.state.contractAddress}
 
                 </div>
-
                 {status}
-
-
-
-
-
             </>
         );
     }

@@ -10,7 +10,7 @@ const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO F
 const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
 
 // run $ truffle migrate --network ropsten --reset
-export const DnsContractAddress = "0xc55425e3352A7c4EEc8000C4E1741C515cE7e782"; // FILLED UP!!
+export const DnsContractAddress = "0xF4548F77B73af5e909e230D1A1754Aaf90653aBA"; // FILLED UP!!
 export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
 
 const web3 = new Web3(
