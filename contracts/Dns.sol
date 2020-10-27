@@ -101,7 +101,7 @@ contract Dns {
             return address(0);
         }
 
-        if (checkAuctionEnded()) {
+        if (checkAuctionEnded(url)) {
             return address(0);
         }
 
