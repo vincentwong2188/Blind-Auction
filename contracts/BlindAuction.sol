@@ -1,14 +1,7 @@
 pragma solidity >0.4.23 <0.7.0;
 
-// import "./Dns.sol";
 
 contract BlindAuction {
-    // struct Bid {
-    //     // bytes32 blindedBid;
-    //     bytes32[] blindedBids;
-    //     uint deposit;
-    // }
-
     address payable public beneficiary;
     uint256 public biddingEnd;
     uint256 public revealEnd;
@@ -66,13 +59,17 @@ contract BlindAuction {
     }
 
     /// Place a blinded bid with `_blindedBid` =
-    /// keccak256(abi.encodePacked(value, fake, secret)).
+    /// keccak256(abi.encodePacked(value, real, secret)).
     /// The sent ether is only refunded if the bid is correctly
     /// revealed in the revealing phase. The bid is valid if the
     /// ether sent together in all bids sent by that user
     /// with the bid is at least "value" of non-fake bids which are when
-    /// "fake" is not true.
-    /// Setting "fake" to true and sending
+<<<<<<< HEAD
+    /// "real" is true. 
+=======
+    /// "real" is true.
+>>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
+    /// Setting "real" to false and sending
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
@@ -98,8 +95,12 @@ contract BlindAuction {
     // Bids has to be sent in order of bidding for reveal
     // TODO: ONLY ALLOW a user to reveal only
     function reveal(
+<<<<<<< HEAD
+        uint[] memory _values,
+=======
         uint256[] memory _values,
-        bool[] memory _fake,
+>>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
+        bool[] memory _real,
         bytes32[] memory _secret
     )
         public
@@ -110,32 +111,43 @@ contract BlindAuction {
         isValid = true;
         uint256 length = bids[msg.sender].length;
         require(_values.length == length);
-        require(_fake.length == length);
+        require(_real.length == length);
         require(_secret.length == length);
         // uint refund;
         for (uint256 i = 0; i < length; i++) {
             bytes32 bidToCheck = bids[msg.sender][i];
+<<<<<<< HEAD
+            
+            (uint value, bool real, bytes32 secret) =
+                    (_values[i], _real[i], _secret[i]);
+            // TODO: FIX hash difference in JS and here
+            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
+            if (bidToCheck != keccak256(abi.encodePacked(value, real, secret))) {
+=======
 
-            (uint256 value, bool fake, bytes32 secret) = (
+            (uint256 value, bool real, bytes32 secret) = (
                 _values[i],
-                _fake[i],
+                _real[i],
                 _secret[i]
             );
             // TODO: FIX hash difference in JS and here
-            emit RevealHashes(
-                bidToCheck,
-                keccak256(abi.encodePacked(value, fake, secret))
-            );
+            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
             if (
-                bidToCheck != keccak256(abi.encodePacked(value, fake, secret))
+                bidToCheck != keccak256(abi.encodePacked(value, real, secret))
             ) {
+>>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
                 // Bid was not actually revealed.
                 // Do not refund deposit.
                 isValid = false;
                 continue;
             }
-            if (!fake && deposits[msg.sender] >= value) {
+            if (real && deposits[msg.sender] >= value) {
+<<<<<<< HEAD
+                if (placeBid(msg.sender, value))
+                    deposits[msg.sender] -= value;
+=======
                 if (placeBid(msg.sender, value)) deposits[msg.sender] -= value;
+>>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
             }
             // Make it impossible for the sender to re-claim
             // the same deposit.
@@ -173,10 +185,11 @@ contract BlindAuction {
     function auctionEnd() public onlyAfter(revealEnd) returns (address) {
         require(!ended);
         emit AuctionEnded(highestBidder, highestBid);
-        ended = true;
         // TODO: CALL beneficiary function plus transfer funds instead of direct call
         // beneficiary.registerWinner();
-        beneficiary.transfer(highestBid);
+        // beneficiary.call.value(highestBid).gas(10)(abi.encodeWithSignature("registerAddress(string, address)", url, highestBidder));
+        // beneficiary.transfer(highestBid);
+        ended = true;
         return highestBidder;
     }
 
