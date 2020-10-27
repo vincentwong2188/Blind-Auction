@@ -1,5 +1,3 @@
-// const { assert } = require("console");
-
 const Dns = artifacts.require("Dns");
 
 contract("Dns", async (accounts) => {
@@ -106,6 +104,7 @@ contract("Dns", async (accounts) => {
     // get deposited balance
     // console.log(result)
     // assert.equal(address_list, [accounts[2], accounts[3]]);
-    assert.equal("true", "false");
+    const event = result.logs[0].args
+    assert.equal(event._url, "not expired")
   });
 });
