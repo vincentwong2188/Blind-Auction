@@ -19,9 +19,7 @@ class AuctionPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // queryInput: "",
-            // depositInput: 0,
-            // deposit: 0,
+
             address: "0x0",
             domainName: "",
             registering: false,
@@ -34,85 +32,36 @@ class AuctionPage extends React.Component {
 
         };
 
-        // this.handleQueryChange = this.handleQueryChange.bind(this);
-        // this.handleQuery = this.handleQuery.bind(this);
-        // this.handleDepositChange = this.handleDepositChange.bind(this);
-        // this.handleNewDeposit = this.handleNewDeposit.bind(this);
-
-    }
-    // handleQueryChange = (e) => {
-
-    //   this.setState({ queryInput: e.target.value });
-
-    // };
-    // handleQuery = async () => {
-
-    //   let result = await updateDeposit(this.state.queryInput);
-    //   this.setState({
-    //     address: result.address,
-    //     deposit: result.deposit,
-    //   });
-    // };
-
-    // handleNewDeposit = async () => {
-
-    //   await newDeposit(this.state.depositInput);
-
-    // };
-
-    // MY CODE
-
-    handlePublicAddress = event => {
-        this.setState({
-            address: event.target.value
-        })
     }
 
+    // Handler to Save Domain Name 
     handleDomainName = event => {
         this.setState({
             domainName: event.target.value
         })
     }
 
-    handleDomainNameRegistration = async () => {
+    checkDomainStatus = () => {
 
-        this.setState({
-            registering: true,
-        })
-        let result = await registerDomain(this.state.address);
+        // Error Handling for Domain Names
+        if (this.state.domainName === "") {
+            window.alert("Please input a domain name!");
+        } else if (!this.state.domainName.includes('.')) {
+            window.alert("Please input a valid domain name!");
+        } else {
+            // Routing and Passing of Domain Params into Auction House
+            const queryString = "domainName=" + encodeURIComponent(this.state.domainName);
 
-        this.setState({
-            address: result.address,
-            registering: false,
-        })
-    }
+            this.props.history.push({
+                pathname: '/auction/status',
+                search: '?' + queryString
+            });
+        }
 
-    handleSearchedDomainName = event => {
-        this.setState({
-            searchedDomainName: event.target.value
-        })
-    }
 
-    handleDomainNameLookup = async () => {
-        this.setState({
-            searching: "yes",
-        })
-
-        let result = await lookupAddress(this.state.searchedDomainName);
-        this.setState({
-            searching: "display",
-            domainNameOwner: result.ownerAddress,
-        })
 
     }
 
-    handleBidInput = (e) => {
-        this.setState({ bidInput: e.target.value });
-    };
-
-    handleBid = async () => {
-        await bid(this.state.bidInput, this.state.domainName);
-    }
     handleBack = () => {
         this.props.history.goBack();
     }
@@ -127,14 +76,13 @@ class AuctionPage extends React.Component {
             domainName: queryDomainName
         })
 
-        // Get 
     }
 
     render() {
 
         const cardStyle = {
             fontFamily: "arial",
-            width: "50%",
+            width: "80%",
             margin: "16px auto",
             border: "1px solid #eee",
             boxShadow: "0 2px 3px #ccc",
@@ -159,46 +107,53 @@ class AuctionPage extends React.Component {
             overflow: "auto"
         }
 
+
         return (
             <>
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('./assets/house.png')} />
 
-                    <h1 >Auction House</h1>
+                    <h1 >The Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         Welcome to the Auction House, powered by the <b>Ethereum</b> blockchain!
-                        <br />
-                        <br />
-                        You have selected the domain <b>{this.state.domainName}</b>
+                        <br /><br />
+                        <input style={{ margin: "5px" }} type="submit" value="Back to Home Page" onClick={this.handleBack} />
                     </p>
 
                 </div>
                 <div style={cardStyle}>
                     <img style={{ height: "50px", width: "50px" }} src={require('./assets/ethereum.png')} />
 
-                    <h3>Bid for A Domain!</h3>
+                    <h3>Enter a Domain</h3>
                     <p style={{ width: "100%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
-                        Bid for your favourite domain names using a <b>"commit-and-reveal"</b> blind auction process.<br></br>
+                        {/* Bid for your favourite domain names using a <b>"commit-and-reveal"</b> blind auction process.<br></br> */}
+                        Enter a domain URL below to find out its status.
                     </p>
 
+                    <p style={{ width: "100%", margin: "auto", fontSize: "13px", marginBottom: "20px" }} >
+                        {/* Bid for your favourite domain names using a <b>"commit-and-reveal"</b> blind auction process.<br></br> */}
+                        <b>Note: </b>Domain URLs can either be
+                        <div style={{ textAlign: "center" }}>
+                            <ol style={{ display: "inline-block" }}>
+                                <li>Not yet expired - unable to start a new auction for it.</li>
+                                <li>Expired - can start a new auction for it.</li>
+                                <li>Expired but there exists an ongoing auction for it.</li>
+
+                            </ol>
+                        </div>
+
+                    </p>
 
                     <input
-                        style={{ width: "60%", margin: "5px" }}
+                        style={{ width: "30%", margin: "5px" }}
                         type="text"
                         placeholder="Enter the domain name"
                         value={this.state.value}
                         onChange={this.handleDomainName}
                     />
-                    <input
-                        style={{ width: "60%", margin: "5px" }}
-                        type="text"
-                        placeholder="Enter bid amount (in Ether)"
-                        value={this.state.value}
-                        onChange={this.handleBidInput}
-                    /><br></br>
-                    <input style={{ margin: "5px" }} type="submit" value="Bid Ether" onClick={this.handleBid} />
+                    <br></br>
+                    <input style={{ margin: "5px" }} type="submit" value="Check Status" onClick={this.checkDomainStatus} />
                     <br />
-                    <input style={{ margin: "5px" }} type="submit" value="Back to Home Page" onClick={this.handleBack} />
 
                 </div>
 
