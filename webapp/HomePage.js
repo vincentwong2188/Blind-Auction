@@ -7,13 +7,19 @@ import {
     getURL,
     sendETH,
     bid,
-    DnsContractAddress
+    DnsContractAddress,
+    testFunc,
+    testFuncParam,
 } from "./dns.js"
 
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+
+            // TEST state
+            test: "no string output yet",
+            testParam: "no number output yet",
 
             // States for Entering Auction House
             domainName: "",
@@ -147,17 +153,18 @@ class HomePage extends React.Component {
     };
 
     sendETHtoURL = async () => {
-        // Check if domain has an owner
-        let result = await lookupAddress(this.state.domainForETH);
+        // // Check if domain has an owner
+        // let result = await lookupAddress(this.state.domainForETH);
 
-        if (result.ownerAddress === "0") {
-            window.alert("This domain is not owned by an ETH address!");
-        } else {
-            sendETH(this.state.ethInput, result.ownerAddress);
-        }
+        // if (result.ownerAddress === "0") {
+        //     window.alert("This domain is not owned by an ETH address!");
+        // } else {
+        //     sendETH(this.state.ethInput, result.ownerAddress);
 
-        // // For testing purposes only
-        // sendETH(this.state.ethInput, this.state.domainForETH);
+        // }
+
+        // For testing purposes only
+        sendETH(this.state.ethInput, this.state.domainForETH);
     }
 
     componentDidMount() {
@@ -202,6 +209,19 @@ class HomePage extends React.Component {
         populateMappingData();
 
     }
+    handleTest = () => {
+        let result = await testFunc();
+        this.setState({
+            test: result.name
+        })
+    }
+
+    handleTestParam = () => {
+        let result = await testFuncParam(5);
+        this.setState({
+            testParam: result.value
+        })
+    }
 
     render() {
 
@@ -242,6 +262,8 @@ class HomePage extends React.Component {
             <>
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('./assets/auction.png')} />
+                    <input style={{ margin: "5px" }} type="submit" value="TEST BUTTON" onClick={this.handleTest} /> {this.state.test}
+                    <input style={{ margin: "5px" }} type="submit" value="TEST PARAMS BUTTON" onClick={this.handleTestParam} /> {this.state.testParam}
 
                     <h1 >DNS Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >

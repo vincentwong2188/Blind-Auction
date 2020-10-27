@@ -15,6 +15,9 @@ import {
 } from "./dns.js"
 import HomePage from "./HomePage.js";
 import AuctionPage from "./AuctionPage.js";
+import AuctionStatus from "./AuctionStatus.js";
+
+
 
 
 // example from doc: https://reactjs.org/docs/forms.html#controlled-components
@@ -23,6 +26,8 @@ class App extends React.Component {
     return (
       <div>
         <Switch>
+          <Route path="/auction/status" exact component={AuctionStatus} />
+
           <Route path="/auction" exact component={AuctionPage} />
           <Route path="/" exact component={HomePage} />
         </Switch>
