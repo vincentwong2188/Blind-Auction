@@ -9,12 +9,12 @@ require('chai')
   .should()
 
   // accounts are test accounts on local network
-  contract('BlindAuction', ([deployer, bidder1, bidder2]) => {
+  contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       let blindAuction
-      // let deployURL
+      let deployURL
       before(async () => {
-        // deployURL = "dns.ntu"
-        blindAuction = await BlindAuction.new(10, 10)
+        deployURL = "dns.ntu"
+        blindAuction = await BlindAuction.new(10, 10, deployURL)
       })
       describe('deployment', async () => {
           it('deploys successfully', async () => {
@@ -35,10 +35,10 @@ require('chai')
             assert.notEqual(revealEnd, 0)
           })
 
-          // it('has url', async () => {
-          //   const url = await blindAuction.url()
-          //   assert.equal(url, deployURL)
-          // })
+          it('has url', async () => {
+            const url = await blindAuction.url()
+            assert.equal(url, deployURL)
+          })
       })
 
       describe('bids', async () => {

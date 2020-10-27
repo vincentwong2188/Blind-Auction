@@ -43,12 +43,12 @@ contract BlindAuction {
 
     constructor(
         uint _biddingTime,
-        uint _revealTime
-        // string memory _url
+        uint _revealTime,
+        string memory _url
     ) payable public {
         // beneficiary will always be dns manager contract
         beneficiary = msg.sender;
-        // url = _url;
+        url = _url;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
     }
