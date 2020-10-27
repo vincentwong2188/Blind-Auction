@@ -33,7 +33,7 @@ class HomePage extends React.Component {
             // States for Looking Up Domains for an Owner
             address: "0x0", // Dynamic two way binding eth address search
             searchedAddress: "", // Only changes when "search" is pressed
-            domainNameOwner: "",
+            domainNameOwner: "0x0000000000000000000000000000000000000000",
             domainsOwned: [],
 
             // States for Sending ETH to a Domain
@@ -49,7 +49,7 @@ class HomePage extends React.Component {
                 "0x5": ["adm.ntu", "rep.ntu"],
             },
 
-            data: {}
+            data: { "Loading...": [] }
 
         };
     }
@@ -91,19 +91,22 @@ class HomePage extends React.Component {
     }
 
     handleDomainNameLookup = async () => {
+
         this.setState({
             searchingDomainName: "yes",
+            searchedDomainName: this.state.lookedUpDomainName,
         })
 
-        this.setState({
-            searchedDomainName: this.state.lookedUpDomainName
-        })
+        let result = await lookupAddress(this.state.lookedUpDomainName);
 
-        let result = await lookupAddress(this.state.searchedDomainName);
+
         this.setState({
             searchingDomainName: "display",
             domainNameOwner: result.ownerAddress,
         })
+
+        console.log(this.state.domainNameOwner)
+
 
     }
 
@@ -117,7 +120,6 @@ class HomePage extends React.Component {
 
     handleOwnerLookup = () => {
         const address = this.state.address;
-
         this.setState({
             searchedAddress: this.state.address,
         })
@@ -132,7 +134,7 @@ class HomePage extends React.Component {
                 domainsOwned: ['Not Found'],
             })
         } else {
-            listOfDomains = this.state.data[address]
+            let listOfDomains = this.state.data[address]
 
             this.setState({
                 domainsOwned: listOfDomains,
@@ -166,54 +168,49 @@ class HomePage extends React.Component {
         // sendETH(this.state.ethInput, this.state.domainForETH);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        let addressToCountMap = {}
 
-        const populateMappingData = async () => {
-            // Obtain a list of eth addresses
-            let addressList = await getAddressList();
+        // Obtain a list of eth addresses
+        let result = await getAddressList();
+        // Populate a key value mapping of eth addresses to counts of domains owned
 
-            // Populate a key value mapping of eth addresses to counts of domains owned
-            let addressToCountMap = {}
-            addressList.forEach(async (ethAddress) => {
-                let count = await getURLCount(ethAddress);
-                addressToCountMap[ethAddress] = count;
-            })
+        for (var j = 0; j < result.addressList.length; j++) {
+            let output = await getURLCount(result.addressList[0]);
+            addressToCountMap[result.addressList[0]] = await output.count;
 
-            // Populate a mappings object that contains eth addresses mapped to an array of the domains they own
-            mappings = {}
-
-            // For each ethereum address to count mapping
-            for (const [key, value] of Object.entries(addressToCountMap)) {
-                let domainList = []
-
-                // Based on its count value, we iteratively obtain the domain URL
-                // corresponding its index, for a given ethereum address
-                for (var i = 0; i < value; i++) {
-                    let domainName = await getURL(key, i);
-                    domainList.push(domainName);
-                }
-                // Add the eth address to domain list mapping to the mappings object 
-                mappings[key] = domainList;
-
-            }
-
-            // update the state with the new mappings object
-            this.setState({
-                data: {
-                    ...mappings
-                }
-            })
         }
 
-        populateMappingData();
+        // Populate a mappings object that contains eth addresses mapped to an array of the domains they own
+        let mappings = {}
 
-    }
+        // For each ethereum address to count mapping
+        for (const [key, value] of Object.entries(addressToCountMap)) {
+            console.log("enters here 2")
+            let domainList = []
+
+            // Based on its count value, we iteratively obtain the domain URL
+            // corresponding its index, for a given ethereum address
+            for (var i = 0; i < value; i++) {
+                let output = await getURL(key, i);
+                domainList.push(output.domainName);
+            }
+            // Add the eth address to domain list mapping to the mappings object 
+            mappings[key] = domainList;
+        }
+
+        // Update state with new mapping object
+        this.setState({
+            data: mappings
+        });
+
+    };
 
     // TEST FUNCTION
 
     handleRegistering = async () => {
         console.log("before register function");
-        await testRegisterFunc();
+        await testRegisterFunc(this.state.testDomainName, this.state.testAddress);
         console.log("after register function");
     }
 
@@ -269,14 +266,13 @@ class HomePage extends React.Component {
         return (
             <>
                 <div style={cardStyle}>
-                    <img style={{ width: "100px" }} src={require('./assets/auction.png')} />
                     <input
                         style={{ width: "60%", margin: "5px" }}
                         type="text"
                         placeholder="Please enter a valid Ethereum Public Address"
                         // value={this.state.value}
                         onChange={this.handleTestAddress}
-                    />
+                    /><br />
 
                     <input
                         style={{ width: "60%", margin: "5px" }}
@@ -284,9 +280,12 @@ class HomePage extends React.Component {
                         placeholder="Please enter a valid Domain Name"
                         // value={this.state.value}
                         onChange={this.handleTestDomain}
-                    />
+                    /><br />
 
                     <input style={{ margin: "5px" }} type="submit" value="Input Values into Contract Backend" onClick={this.handleRegistering} />
+                    <br /><br />
+
+                    <img style={{ width: "100px" }} src={require('./assets/auction.png')} />
 
                     <h1 >DNS Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
@@ -349,9 +348,10 @@ class HomePage extends React.Component {
                                 : (this.state.searchingDomainName === "no"
                                     ? "Ready!"
                                     // If domain name lookup returns "0", owner does not exist
-                                    : this.state.domainNameOwner === "0" ? "This domain is currently not owned by anyone."
+                                    : this.state.domainNameOwner === "0x0000000000000000000000000000000000000000"
+                                        ? "This domain is currently not owned by anyone."
                                         // Else, show the owner of the domain URL
-                                        : this.state.searchedDomainName + "belongs to address " + this.state.ownerAddress)}
+                                        : this.state.searchedDomainName + " belongs to address " + this.state.domainNameOwner)}
                         </p>
                     </div>
 
@@ -400,11 +400,7 @@ class HomePage extends React.Component {
 
                         <input style={{ margin: "5px" }} type="submit" value="Send!" onClick={this.sendETHtoURL} />
                         <p>
-                            {this.state.domainsOwned.length === 0
-                                ? "Ready!"
-                                : this.state.domainsOwned[0] === 'Not Found'
-                                    ? this.state.searchedAddress + " does not own any domains."
-                                    : this.state.searchedAddress + " owns the following domains: " + this.state.domainsOwned.join(", ")}
+
                         </p>
                     </div>
 
@@ -430,7 +426,7 @@ class HomePage extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Object.entries(this.state.mockItems).map(([key, value]) => {
+                                {Object.entries(this.state.data).map(([key, value]) => {
                                     return (
                                         <tr>
                                             <th style={{

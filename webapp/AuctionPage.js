@@ -57,9 +57,6 @@ class AuctionPage extends React.Component {
                 search: '?' + queryString
             });
         }
-
-
-
     }
 
     handleBack = () => {

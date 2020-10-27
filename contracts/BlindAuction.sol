@@ -1,6 +1,5 @@
 pragma solidity >0.4.23 <0.7.0;
 
-
 contract BlindAuction {
     address payable public beneficiary;
     uint256 public biddingEnd;
@@ -64,7 +63,11 @@ contract BlindAuction {
     /// revealed in the revealing phase. The bid is valid if the
     /// ether sent together in all bids sent by that user
     /// with the bid is at least "value" of non-fake bids which are when
+<<<<<<< HEAD
+    /// "real" is true.
+=======
     /// "real" is true. 
+>>>>>>> 49c8d0a58b21845d8e2617bd04d9f86adbe52ae8
     /// Setting "real" to false and sending
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
@@ -91,7 +94,11 @@ contract BlindAuction {
     // Bids has to be sent in order of bidding for reveal
     // TODO: ONLY ALLOW a user to reveal only
     function reveal(
+<<<<<<< HEAD
+        uint256[] memory _values,
+=======
         uint[] memory _values,
+>>>>>>> 49c8d0a58b21845d8e2617bd04d9f86adbe52ae8
         bool[] memory _real,
         bytes32[] memory _secret
     )
@@ -108,19 +115,37 @@ contract BlindAuction {
         // uint refund;
         for (uint256 i = 0; i < length; i++) {
             bytes32 bidToCheck = bids[msg.sender][i];
+<<<<<<< HEAD
+
+            (uint256 value, bool real, bytes32 secret) = (
+                _values[i],
+                _real[i],
+                _secret[i]
+            );
+            // TODO: FIX hash difference in JS and here
+            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
+            if (
+                bidToCheck != keccak256(abi.encodePacked(value, real, secret))
+            ) {
+=======
             
             (uint value, bool real, bytes32 secret) =
                     (_values[i], _real[i], _secret[i]);
             // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
             if (bidToCheck != keccak256(abi.encodePacked(value, real, secret))) {
+>>>>>>> 49c8d0a58b21845d8e2617bd04d9f86adbe52ae8
                 // Bid was not actually revealed.
                 // Do not refund deposit.
                 isValid = false;
                 continue;
             }
             if (real && deposits[msg.sender] >= value) {
+<<<<<<< HEAD
+                if (placeBid(msg.sender, value)) deposits[msg.sender] -= value;
+=======
                 if (placeBid(msg.sender, value))
                     deposits[msg.sender] -= value;
+>>>>>>> 49c8d0a58b21845d8e2617bd04d9f86adbe52ae8
             }
             // Make it impossible for the sender to re-claim
             // the same deposit.

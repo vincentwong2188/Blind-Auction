@@ -11,7 +11,8 @@ import {
     lookupAddress,
     DnsContractAddress,
     checkExpired,
-    getAuctionURL
+    getAuctionURL,
+    startAuction,
 } from "./dns.js"
 
 import {
@@ -42,7 +43,7 @@ class AuctionStatus extends React.Component {
             secret: "",
 
             // States for storing contract address:
-            contractAddress: "",
+            contractAddress: "no contract address",
 
             address: "0x0",
             registering: false,
@@ -119,26 +120,31 @@ class AuctionStatus extends React.Component {
 
     // Handles the Starting of Auction from ExpiredNoAuction
     handleStartAuction = async () => {
-
         // Starts a new Auction
-        await startAuction(this.props.domainName);
+        await startAuction(this.state.domainName);
 
         // Get the auction address from the newly started auction
         let output = await getAuctionURL(this.props.domainName);
 
-        this.setState({
-            contractAddress: output.auctionAddress,
-            status: "EXPIRED_HAS_AUCTION"
-
-        })
-
+        if (output.auctionAddress !== "0x0000000000000000000000000000000000000000") {
+            this.setState({
+                contractAddress: output.auctionAddress,
+                status: "EXPIRED_HAS_AUCTION"
+            })
+        }
     }
 
     componentDidMount() {
 
-        const checkStatus = async () => {
+        const checkStatus = async (queryDomainName) => {
+
+            this.setState({
+                domainName: queryDomainName
+            })
+
             // Check if URL has expired
-            let output = await checkExpired(this.state.domainName);
+            let output = await checkExpired(queryDomainName);
+            console.log(output.expired)
             if (!output.expired) {
                 this.setState({
                     status: "NOT_EXPIRED"
@@ -147,8 +153,8 @@ class AuctionStatus extends React.Component {
             }
 
             // Check if auction address exists
-            let result = await getAuctionURL(this.state.domainName);
-            if (result.auctionAddress === "0x0") {
+            let result = await getAuctionURL(queryDomainName);
+            if (result.auctionAddress === "0x0000000000000000000000000000000000000000") {
                 this.setState({
                     status: "EXPIRED_NO_AUCTION"
                 });
@@ -158,7 +164,6 @@ class AuctionStatus extends React.Component {
                     contractAddress: result.auctionAddress,
                 });
             }
-
         }
 
         const query = new URLSearchParams(this.props.location.search);
@@ -166,11 +171,8 @@ class AuctionStatus extends React.Component {
         for (let param of query.entries()) {
             queryDomainName = param[1];
         }
-        this.setState({
-            domainName: queryDomainName
-        })
 
-        checkStatus();
+        checkStatus(queryDomainName);
 
     }
 
@@ -251,13 +253,12 @@ class AuctionStatus extends React.Component {
             // code block
         }
 
-
         return (
             <>
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('./assets/house.png')} />
 
-                    <h1 >The Auction House</h1>
+                    <h1 >The Auction House: {this.state.contractAddress}</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         Welcome to the Auction House, powered by the <b>Ethereum</b> blockchain!
                         <br /><br />

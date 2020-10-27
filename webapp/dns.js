@@ -10,7 +10,7 @@ const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO F
 const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
 
 // run $ truffle migrate --network ropsten --reset
-export const DnsContractAddress = "0x63308b22837D8Af4CD1cF0e44b58DeFFb585a37E"; // FILLED UP!!
+export const DnsContractAddress = "0xc55425e3352A7c4EEc8000C4E1741C515cE7e782"; // FILLED UP!!
 export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
 
 const web3 = new Web3(
@@ -87,7 +87,7 @@ export const testFunc = async () => {
 }
 
 export const testRegisterFunc = async (url, address) => {
-    console.log("Enters testRegisterFunc");
+
     const provider = await detectEthereumProvider();
     if (provider) {
         // From now on, this should always be true:
@@ -98,8 +98,8 @@ export const testRegisterFunc = async (url, address) => {
                 {
                     from: ethereum.selectedAddress,
                     to: DnsContractAddress,
-                    value: web3.utils.toWei(0, 'ether'),
-                    gas: web3.utils.toHex(46899),
+                    value: web3.utils.toWei('0', 'ether'),
+                    gas: web3.utils.toHex(1000000),
                     gasPrice: web3.utils.toHex(15000),
 
                     data: web3.eth.abi.encodeFunctionCall(
@@ -112,7 +112,7 @@ export const testRegisterFunc = async (url, address) => {
                                     name: 'url'
                                 },
                                 {
-                                    type: 'string',
+                                    type: 'address',
                                     name: 'address'
                                 }
                             ],
@@ -126,6 +126,7 @@ export const testRegisterFunc = async (url, address) => {
     } else {
         console.log("Please install MetaMask!");
     }
+
 }
 
 // END
@@ -137,6 +138,8 @@ export const getAuctionURL = async (url) => {
 }
 
 export const startAuction = async (domainURL) => {
+
+    console.log(domainURL)
     const provider = await detectEthereumProvider();
     if (provider) {
         // From now on, this should always be true:
@@ -147,8 +150,8 @@ export const startAuction = async (domainURL) => {
                 {
                     from: ethereum.selectedAddress,
                     to: DnsContractAddress,
-                    value: web3.utils.toWei(amount, 'ether'),
-                    gas: web3.utils.toHex(46899),
+                    value: web3.utils.toWei('0', 'ether'),
+                    gas: web3.utils.toHex(1000000),
                     gasPrice: web3.utils.toHex(15000),
 
                     data: web3.eth.abi.encodeFunctionCall(
