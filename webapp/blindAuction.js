@@ -42,11 +42,12 @@ export const revealEnd = async (contractAddress) => {
 export const bid = async (sendValue, value, real, secret, contractAddress) => {
     // contract = new web3.eth.Contract(artifact.abi, contractAddress);
 
-    hashBid1 = soliditySha3(
+    let hashBid1 = soliditySha3(
         toWei(value), // hash need to change to wei
         real,
         fromAscii(secret).padEnd(66, 0)
     );
+    console.log(hashBid1)
 
     const provider = await detectEthereumProvider();
 
@@ -59,7 +60,7 @@ export const bid = async (sendValue, value, real, secret, contractAddress) => {
                 {
                     from: ethereum.selectedAddress,
                     to: contractAddress,
-                    value: web3.utils.toWei(sendValue, 'ether'),
+                    value: parseInt(web3.utils.toWei(sendValue, 'ether')).toString(16),
                     gas: web3.utils.toHex(46899),
                     gasPrice: web3.utils.toHex(15000),
 
@@ -71,10 +72,14 @@ export const bid = async (sendValue, value, real, secret, contractAddress) => {
                                 {
                                     type: 'string',
                                     name: 'blindedBid'
+                                },
+                                {
+                                    type: 'address',
+                                    name: 'ownerAddress'
                                 }
                             ],
                         },
-                        [hashBid1]
+                        [hashBid1, ethereum.selectedAddress]
                     ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
                     chainId: 3, // ropsten
                 },
@@ -83,7 +88,6 @@ export const bid = async (sendValue, value, real, secret, contractAddress) => {
     } else {
         console.log("Please install MetaMask!");
     }
-
 }
 
 

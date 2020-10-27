@@ -1,17 +1,4 @@
 import React from "react";
-import {
-    updateDeposit,
-    newDeposit,
-    BankContractAddress,
-    Testnet,
-} from "./bank.js";
-
-import {
-    registerDomain,
-    lookupAddress,
-    bid,
-    DnsContractAddress
-} from "./dns.js"
 
 
 // example from doc: https://reactjs.org/docs/forms.html#controlled-components
@@ -19,17 +6,7 @@ class AuctionPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
-            address: "0x0",
             domainName: "",
-            registering: false,
-            searching: "no",
-            searchedDomainName: "",
-            domainNameOwner: "",
-            bidInput: 0,
-
-
-
         };
 
     }
@@ -42,7 +19,6 @@ class AuctionPage extends React.Component {
     }
 
     checkDomainStatus = () => {
-
         // Error Handling for Domain Names
         if (this.state.domainName === "") {
             window.alert("Please input a domain name!");
@@ -153,11 +129,6 @@ class AuctionPage extends React.Component {
                     <br />
 
                 </div>
-
-
-
-
-
             </>
         );
     }

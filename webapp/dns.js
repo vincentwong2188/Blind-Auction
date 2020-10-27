@@ -10,7 +10,7 @@ const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO F
 const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
 
 // run $ truffle migrate --network ropsten --reset
-export const DnsContractAddress = "0xF4548F77B73af5e909e230D1A1754Aaf90653aBA"; // FILLED UP!!
+export const DnsContractAddress = "0xECC27FD00dBCC279b9369856DE42C5E6dc5b69f1"; // FILLED UP!!
 export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
 
 const web3 = new Web3(
@@ -55,7 +55,7 @@ export const sendETH = async (amount, ownerAddress) => {
                 {
                     from: ethereum.selectedAddress,
                     to: ownerAddress,
-                    value: web3.utils.toWei(amount),
+                    value: parseInt(web3.utils.toWei(amount)).toString(16),
                     gas: web3.utils.toHex(46899),
                     gasPrice: web3.utils.toHex(15000),
                     data: null,
@@ -98,7 +98,7 @@ export const testRegisterFunc = async (url, address) => {
                 {
                     from: ethereum.selectedAddress,
                     to: DnsContractAddress,
-                    value: web3.utils.toWei('0', 'ether'),
+                    value: parseInt(web3.utils.toWei('0', 'ether')).toString(16),
                     gas: web3.utils.toHex(1000000),
                     gasPrice: web3.utils.toHex(15000),
 
@@ -150,9 +150,9 @@ export const startAuction = async (domainURL) => {
                 {
                     from: ethereum.selectedAddress,
                     to: DnsContractAddress,
-                    value: web3.utils.toWei('0', 'ether'),
-                    gas: web3.utils.toHex(1000000),
-                    gasPrice: web3.utils.toHex(15000),
+                    value: parseInt(web3.utils.toWei('0', 'ether')).toString(16),
+                    gas: web3.utils.toHex(3000000),
+                    gasPrice: web3.utils.toHex(20000000000),
 
                     data: web3.eth.abi.encodeFunctionCall(
                         {
@@ -170,51 +170,53 @@ export const startAuction = async (domainURL) => {
                     chainId: 3, // ropsten
                 },
             ],
+        }).then(result => {
+            window.alert("A new auction is currently being created. Please refresh the page once the Metamask Transaction is confirmed.");
         });
     } else {
         console.log("Please install MetaMask!");
     }
 }
 
-export const bid = async (amount, domainURL) => {
-    // Using MetaMask API to send transaction
-    //
-    // please read: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-provider-api
-    const provider = await detectEthereumProvider();
-    if (provider) {
-        // From now on, this should always be true:
-        // provider === window.ethereum
-        ethereum.request({
-            method: "eth_sendTransaction",
-            params: [
-                {
-                    from: ethereum.selectedAddress,
-                    to: DnsContractAddress,
-                    value: web3.utils.toWei(amount, 'ether'),
-                    gas: web3.utils.toHex(46899),
-                    gasPrice: web3.utils.toHex(15000),
+// export const bid = async (amount, domainURL) => {
+//     // Using MetaMask API to send transaction
+//     //
+//     // please read: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-provider-api
+//     const provider = await detectEthereumProvider();
+//     if (provider) {
+//         // From now on, this should always be true:
+//         // provider === window.ethereum
+//         ethereum.request({
+//             method: "eth_sendTransaction",
+//             params: [
+//                 {
+//                     from: ethereum.selectedAddress,
+//                     to: DnsContractAddress,
+//                     value: web3.utils.toWei(amount, 'ether'),
+//                     gas: web3.utils.toHex(46899),
+//                     gasPrice: web3.utils.toHex(15000),
 
-                    data: web3.eth.abi.encodeFunctionCall(
-                        {
-                            name: "deposit",
-                            type: "function",
-                            inputs: [
-                                {
-                                    type: 'string',
-                                    name: 'domainURL'
-                                }
-                            ],
-                        },
-                        [domainURL]
-                    ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
-                    chainId: 3, // ropsten
-                },
-            ],
-        });
-    } else {
-        console.log("Please install MetaMask!");
-    }
-};
+//                     data: web3.eth.abi.encodeFunctionCall(
+//                         {
+//                             name: "deposit",
+//                             type: "function",
+//                             inputs: [
+//                                 {
+//                                     type: 'string',
+//                                     name: 'domainURL'
+//                                 }
+//                             ],
+//                         },
+//                         [domainURL]
+//                     ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
+//                     chainId: 3, // ropsten
+//                 },
+//             ],
+//         });
+//     } else {
+//         console.log("Please install MetaMask!");
+//     }
+// };
 
 
 

@@ -6,10 +6,6 @@ import {
     getURLCount,
     getURL,
     sendETH,
-    bid,
-    DnsContractAddress,
-    testFunc,
-    testFuncParam,
     testRegisterFunc,
 } from "./dns.js"
 
@@ -158,7 +154,7 @@ class HomePage extends React.Component {
         // Check if domain has an owner
         let result = await lookupAddress(this.state.domainForETH);
 
-        if (result.ownerAddress === "0") {
+        if (result.ownerAddress === "0x0000000000000000000000000000000000000000") {
             window.alert("This domain is not owned by an ETH address!");
         } else {
             sendETH(this.state.ethInput, result.ownerAddress);
@@ -374,7 +370,7 @@ class HomePage extends React.Component {
                                 ? "Ready!"
                                 : this.state.domainsOwned[0] === 'Not Found'
                                     ? this.state.searchedAddress + " does not own any domains."
-                                    : this.state.searchedAddress + " owns the following domains: " + this.state.domainsOwned.join(", ")}
+                                    : "Domains Owned: " + this.state.domainsOwned.join(", ")}
                         </p>
                     </div>
 

@@ -6,17 +6,48 @@ import {
 
 import {
     biddingEnd,
+    revealEnd,
 } from "../blindAuction";
+
+import BiddingStage from './auctionStages/BiddingStage';
+import RevealStage from './auctionStages/RevealStage';
+import EndStage from './auctionStages/EndStage';
 
 class ExpiredHasAuction extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            // States for handling status check:
-            bidValue: 0,
+            // States for handling stage check:
+            stage: 0,
         };
+    }
 
+    componentDidMount() {
+        const stageCheck = async () => {
+            let bidEndTime = await biddingEnd(this.props.contractAddress);
+            console.log(bidEndTime)
+            let revealEndTime = await revealEnd(this.props.contractAddress);
+            console.log(revealEndTime)
+
+            let timeNow = Math.floor(Date.now() / 1000);
+            console.log(timeNow)
+
+            if (timeNow <= bidEndTime) {
+                this.setState({
+                    stage: 1 // 1 
+                })
+            } else if (timeNow > bidEndTime && timeNow <= revealEndTime) {
+                this.setState({
+                    stage: 2 // 2
+                })
+            } else {
+                this.setState({
+                    stage: 3 // 3
+                })
+            }
+        }
+        stageCheck();
     }
 
     render() {
@@ -31,47 +62,26 @@ class ExpiredHasAuction extends React.Component {
             textAlign: "center",
         };
 
+
+        let stage = null;
+        switch (this.state.stage) {
+            case 1:
+                stage = <BiddingStage contractAddress={this.props.contractAddress} />;
+                break;
+            case 2:
+                stage = <RevealStage contractAddress={this.props.contractAddress} />;
+                break;
+            case 3:
+                stage = <EndStage contractAddress={this.props.contractAddress} />;
+                break;
+
+        }
+
         return (
             <div style={cardStyle}>
                 <img style={{ width: "100px" }} src={require('../assets/checked.png')} />
-                <h1 >{this.props.domainName} has an existing ongoing auction!</h1>
-                <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
-                    Submit a bid below to participate in this auction.
-                </p>
-                <br />
-                ETH Amount:
-                <input
-                    style={{ height: "50px", width: "30%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter the ETH you want to send"
-                    // value={this.state.bidValue}
-                    onChange={this.props.bidSend}
-                /><br />
-                Hash Values:
-                <input
-                    style={{ width: "30%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter your bid (in ETH)"
-                    // value={this.state.bidValue}
-                    onChange={this.props.bidChange}
-                /><br />
-                <input
-                    style={{ width: "30%", margin: "5px" }}
-                    type="text"
-                    placeholder="Is this bid real? Write 'True' if real, and 'False' if fake. "
-                    // value={this.state.bidValue}
-                    onChange={this.props.bidReal}
-                /><br />
-                <input
-                    style={{ width: "30%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter a secret password"
-                    // value={this.state.bidValue}
-                    onChange={this.props.bidSecret}
-                /><br />
-                <input style={{ margin: "5px" }} type="submit" value="Place Bid" onClick={this.props.placeBid} />
-
-
+                <h1 >{this.props.domainName} has an existing ongoing auction at stage {this.state.stage}!</h1>
+                {stage}
             </div>
         );
     }

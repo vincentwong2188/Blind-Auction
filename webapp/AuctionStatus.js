@@ -1,24 +1,10 @@
 import React from "react";
-import {
-    updateDeposit,
-    newDeposit,
-    BankContractAddress,
-    Testnet,
-} from "./bank.js";
 
 import {
-    registerDomain,
-    lookupAddress,
-    DnsContractAddress,
     checkExpired,
     getAuctionURL,
     startAuction,
 } from "./dns.js"
-
-import {
-    bid,
-} from "./blindAuction.js"
-
 
 import NotExpired from './components/NotExpired';
 import ExpiredNoAuction from "./components/ExpiredNoAuction.js";
@@ -37,20 +23,11 @@ class AuctionStatus extends React.Component {
             // States for handling status check:
             status: "",
 
-            // States for storing bidValue, fake/real boolean, and secret:
-            bidSend: "",
-            bidInput: "",
-            real: false,
-            secret: "",
-
             // States for storing contract address:
             contractAddress: "no contract address",
 
-            address: "0x0",
-            registering: false,
-            searching: "no",
-            searchedDomainName: "",
-            domainNameOwner: "",
+            // State for showing loading
+            startedAuction: false,
 
         };
 
@@ -92,54 +69,7 @@ class AuctionStatus extends React.Component {
 
     }
 
-    // Handle Submiting of Bid from ExpiredHasAuction
-    handleBidSend = event => {
-        this.setState({
-            bidSend: event.target.value,
-        })
-    }
 
-    handleBid = event => {
-        this.setState({
-            bidInput: event.target.value,
-        })
-    }
-    handleReal = event => {
-        this.setState({
-            real: event.target.value,
-        })
-    }
-    handleSecret = event => {
-        this.setState({
-            secret: event.target.value,
-        })
-    }
-
-    handlePlaceBid = async () => {
-        let sendValue = this.state.bidSend;
-        let value = this.state.bidInput;
-        let real = this.state.real;
-        let secret = this.state.secret;
-        let contractAddress = this.state.contractAddress;
-        await bid(value, real, secret, contractAddress);
-
-    }
-
-    // Handles the Starting of Auction from ExpiredNoAuction
-    handleStartAuction = async () => {
-        // Starts a new Auction
-        await startAuction(this.state.domainName);
-
-        // Get the auction address from the newly started auction
-        let output = await getAuctionURL(this.props.domainName);
-
-        if (output.auctionAddress !== "0x0000000000000000000000000000000000000000") {
-            this.setState({
-                contractAddress: output.auctionAddress,
-                status: "EXPIRED_HAS_AUCTION"
-            })
-        }
-    }
 
     componentDidMount() {
 
@@ -183,24 +113,24 @@ class AuctionStatus extends React.Component {
 
     }
 
-    // ONLY FOR TESTING
+    // // ONLY FOR TESTING
 
-    setNotExpired = () => {
-        this.setState({
-            status: "NOT_EXPIRED"
-        });
-    }
-    setExpiredNoAuction = () => {
-        this.setState({
-            status: "EXPIRED_NO_AUCTION"
-        });
-    }
-    setExpiredHasAuction = () => {
-        this.setState({
-            status: "EXPIRED_HAS_AUCTION"
-        });
-    }
-    // END - ONLY FOR TESTING
+    // setNotExpired = () => {
+    //     this.setState({
+    //         status: "NOT_EXPIRED"
+    //     });
+    // }
+    // setExpiredNoAuction = () => {
+    //     this.setState({
+    //         status: "EXPIRED_NO_AUCTION"
+    //     });
+    // }
+    // setExpiredHasAuction = () => {
+    //     this.setState({
+    //         status: "EXPIRED_HAS_AUCTION"
+    //     });
+    // }
+    // // END - ONLY FOR TESTING
 
     render() {
 
@@ -241,7 +171,6 @@ class AuctionStatus extends React.Component {
                 status = (
                     <ExpiredNoAuction
                         domainName={this.state.domainName}
-                        startAuction={() => this.handleStartAuction()}
                     />
                 );
                 break;
@@ -250,16 +179,9 @@ class AuctionStatus extends React.Component {
                     <ExpiredHasAuction
                         domainName={this.state.domainName}
                         contractAddress={this.state.contractAddress}
-                        bidSend={event => this.handleBidSend(event)}
-                        bidChange={event => this.handleBid(event)}
-                        bidReal={event => this.handleReal(event)}
-                        bidSecret={event => this.handleSecret(event)}
-                        placeBid={() => this.handlePlaceBid()}
                     />
                 );
                 break;
-            default:
-            // code block
         }
 
         return (
@@ -278,9 +200,9 @@ class AuctionStatus extends React.Component {
                         <input style={{ margin: "5px" }} type="submit" value="Back to Home Page" onClick={this.handleDoubleBack} />
                     </p>
                     Only for Testing:<br />
-                    <input style={{ margin: "5px" }} type="submit" value="Not Expired" onClick={this.setNotExpired} />
+                    {/* <input style={{ margin: "5px" }} type="submit" value="Not Expired" onClick={this.setNotExpired} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired No Auction" onClick={this.setExpiredNoAuction} />
-                    <input style={{ margin: "5px" }} type="submit" value="Expired Has Auction" onClick={this.setExpiredHasAuction} />
+                    <input style={{ margin: "5px" }} type="submit" value="Expired Has Auction" onClick={this.setExpiredHasAuction} /> */}
                     <br />Blind Auction Contract Address: {this.state.contractAddress}
 
                 </div>
