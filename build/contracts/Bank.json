@@ -93,15 +93,15 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"accountAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LogDepositMade\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"balance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"deposit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"withdrawAmount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingBal\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/zhiqisim/development/Blockchain/Blind-Auction/contracts/Bank.sol\":\"Bank\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/zhiqisim/development/Blockchain/Blind-Auction/contracts/Bank.sol\":{\"keccak256\":\"0xbe24cea5c6dccb1ab33c51f7e454e4d0c483555ea26c938d3cd253d666e2537c\",\"urls\":[\"bzz-raw://fed61b284ed2619cc5e3322f23a02026532131561599b26ea6f242bf904b9025\",\"dweb:/ipfs/QmS3Eg8YaJYWJocv5AD1NWgrtdiSECCC1rq2fFv23qNFGF\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610482806100616000396000f3fe60806040526004361061003f5760003560e01c80632e1a7d4d146100445780638da5cb5b14610093578063b69ef8a8146100ea578063d0e30db014610115575b600080fd5b34801561005057600080fd5b5061007d6004803603602081101561006757600080fd5b8101908080359060200190929190505050610133565b6040518082815260200191505060405180910390f35b34801561009f57600080fd5b506100a8610259565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100f657600080fd5b506100ff61027f565b6040518082815260200191505060405180910390f35b61011d6102c5565b6040518082815260200191505060405180910390f35b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205482111561018057600080fd5b816000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055503373ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f19350505050158015610212573d6000803e3d6000fd5b506000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905090565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205401101561035257600080fd5b346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055507fa8126f7572bb1fdeae5b5aa9ec126438b91f658a07873f009d041ae690f3a1933334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490509056fea265627a7a72315820ca3e72a6063a5898a3e769b521024dba7c6a377c2e251646651857152c22d8be64736f6c63430005100032",
-  "deployedBytecode": "0x60806040526004361061003f5760003560e01c80632e1a7d4d146100445780638da5cb5b14610093578063b69ef8a8146100ea578063d0e30db014610115575b600080fd5b34801561005057600080fd5b5061007d6004803603602081101561006757600080fd5b8101908080359060200190929190505050610133565b6040518082815260200191505060405180910390f35b34801561009f57600080fd5b506100a8610259565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100f657600080fd5b506100ff61027f565b6040518082815260200191505060405180910390f35b61011d6102c5565b6040518082815260200191505060405180910390f35b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205482111561018057600080fd5b816000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055503373ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f19350505050158015610212573d6000803e3d6000fd5b506000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905090565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205401101561035257600080fd5b346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055507fa8126f7572bb1fdeae5b5aa9ec126438b91f658a07873f009d041ae690f3a1933334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490509056fea265627a7a72315820ca3e72a6063a5898a3e769b521024dba7c6a377c2e251646651857152c22d8be64736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"accountAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LogDepositMade\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"balance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"deposit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"withdrawAmount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingBal\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/vincent/Documents/Mirror/NTU Related Documents/REP Course Items/Year 4/CZ4153 Blockchain Technology/Truffle Project/contracts/Bank.sol\":\"Bank\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/vincent/Documents/Mirror/NTU Related Documents/REP Course Items/Year 4/CZ4153 Blockchain Technology/Truffle Project/contracts/Bank.sol\":{\"keccak256\":\"0xbe24cea5c6dccb1ab33c51f7e454e4d0c483555ea26c938d3cd253d666e2537c\",\"urls\":[\"bzz-raw://fed61b284ed2619cc5e3322f23a02026532131561599b26ea6f242bf904b9025\",\"dweb:/ipfs/QmS3Eg8YaJYWJocv5AD1NWgrtdiSECCC1rq2fFv23qNFGF\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610482806100616000396000f3fe60806040526004361061003f5760003560e01c80632e1a7d4d146100445780638da5cb5b14610093578063b69ef8a8146100ea578063d0e30db014610115575b600080fd5b34801561005057600080fd5b5061007d6004803603602081101561006757600080fd5b8101908080359060200190929190505050610133565b6040518082815260200191505060405180910390f35b34801561009f57600080fd5b506100a8610259565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100f657600080fd5b506100ff61027f565b6040518082815260200191505060405180910390f35b61011d6102c5565b6040518082815260200191505060405180910390f35b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205482111561018057600080fd5b816000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055503373ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f19350505050158015610212573d6000803e3d6000fd5b506000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905090565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205401101561035257600080fd5b346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055507fa8126f7572bb1fdeae5b5aa9ec126438b91f658a07873f009d041ae690f3a1933334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490509056fea265627a7a723158208c266da4b8919f6468b2c462432592f381a0f09848985221abc92900bc57025564736f6c63430005100032",
+  "deployedBytecode": "0x60806040526004361061003f5760003560e01c80632e1a7d4d146100445780638da5cb5b14610093578063b69ef8a8146100ea578063d0e30db014610115575b600080fd5b34801561005057600080fd5b5061007d6004803603602081101561006757600080fd5b8101908080359060200190929190505050610133565b6040518082815260200191505060405180910390f35b34801561009f57600080fd5b506100a8610259565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100f657600080fd5b506100ff61027f565b6040518082815260200191505060405180910390f35b61011d6102c5565b6040518082815260200191505060405180910390f35b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205482111561018057600080fd5b816000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055503373ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f19350505050158015610212573d6000803e3d6000fd5b506000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905090565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205401101561035257600080fd5b346000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055507fa8126f7572bb1fdeae5b5aa9ec126438b91f658a07873f009d041ae690f3a1933334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a16000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490509056fea265627a7a723158208c266da4b8919f6468b2c462432592f381a0f09848985221abc92900bc57025564736f6c63430005100032",
   "sourceMap": "26:1038:0:-;;;245:57;8:9:-1;5:2;;;30:1;27;20:12;5:2;245:57:0;285:10;277:5;;:18;;;;;;;;;;;;;;;;;;26:1038;;;;;;",
   "deployedSourceMap": "26:1038:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;599:271;;8:9:-1;5:2;;;30:1;27;20:12;5:2;599:271:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;599:271:0;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;94:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;94:20:0;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;876:186;;8:9:-1;5:2;;;30:1;27;20:12;5:2;876:186:0;;;:::i;:::-;;;;;;;;;;;;;;;;;;;308:285;;;:::i;:::-;;;;;;;;;;;;;;;;;;;599:271;654:17;709:8;:20;718:10;709:20;;;;;;;;;;;;;;;;691:14;:38;;683:47;;;;;;765:14;741:8;:20;750:10;741:20;;;;;;;;;;;;;;;;:38;;;;;;;;;;;790:10;:19;;:35;810:14;790:35;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;790:35:0;843:8;:20;852:10;843:20;;;;;;;;;;;;;;;;836:27;;599:271;;;:::o;94:20::-;;;;;;;;;;;;;:::o;876:186::-;916:4;1009:8;:20;1018:10;1009:20;;;;;;;;;;;;;;;;1002:27;;876:186;:::o;308:285::-;351:4;413:8;:20;422:10;413:20;;;;;;;;;;;;;;;;399:9;376:8;:20;385:10;376:20;;;;;;;;;;;;;;;;:32;375:58;;367:67;;;;;;469:9;445:8;:20;454:10;445:20;;;;;;;;;;;;;;;;:33;;;;;;;;;;;494:37;509:10;521:9;494:37;;;;;;;;;;;;;;;;;;;;;;;;;;;;566:8;:20;575:10;566:20;;;;;;;;;;;;;;;;559:27;;308:285;:::o",
   "source": "pragma solidity ^0.5.16;\n\ncontract Bank {\n    mapping (address => uint) private balances;\n    address public owner;\n    event LogDepositMade(address accountAddress, uint amount);\n    // event BalanceFunctionEntered(address accountAddress);\n\n    constructor () public {\n        owner = msg.sender;\n    }\n\n    function deposit() public payable returns (uint) {\n        require((balances[msg.sender] + msg.value) >= balances[msg.sender]);\n\n        balances[msg.sender] += msg.value;\n\n        emit LogDepositMade(msg.sender, msg.value); // emit an event\n\n        return balances[msg.sender];\n    }\n\n    function withdraw(uint withdrawAmount) public returns (uint remainingBal) {\n        require(withdrawAmount <= balances[msg.sender]);\n\n        balances[msg.sender] -= withdrawAmount;\n\n        msg.sender.transfer(withdrawAmount);\n\n        return balances[msg.sender];\n    }\n\n    function balance() view public returns (uint) {\n        // emit BalanceFunctionEntered(msg.sender); // emit an event\n\n        return balances[msg.sender];\n        // return 50000;\n\n    }\n}",
-  "sourcePath": "/Users/zhiqisim/development/Blockchain/Blind-Auction/contracts/Bank.sol",
+  "sourcePath": "/Users/vincent/Documents/Mirror/NTU Related Documents/REP Course Items/Year 4/CZ4153 Blockchain Technology/Truffle Project/contracts/Bank.sol",
   "ast": {
-    "absolutePath": "/Users/zhiqisim/development/Blockchain/Blind-Auction/contracts/Bank.sol",
+    "absolutePath": "/Users/vincent/Documents/Mirror/NTU Related Documents/REP Course Items/Year 4/CZ4153 Blockchain Technology/Truffle Project/contracts/Bank.sol",
     "exportedSymbols": {
       "Bank": [
         113
@@ -313,7 +313,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "285:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -430,7 +430,7 @@
                                     "name": "msg",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1143,
+                                    "referencedDeclaration": 1174,
                                     "src": "385:3:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_message",
@@ -472,7 +472,7 @@
                                   "name": "msg",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1143,
+                                  "referencedDeclaration": 1174,
                                   "src": "399:3:0",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_message",
@@ -539,7 +539,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1143,
+                              "referencedDeclaration": 1174,
                               "src": "422:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -589,10 +589,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1146,
-                        1147
+                        1177,
+                        1178
                       ],
-                      "referencedDeclaration": 1146,
+                      "referencedDeclaration": 1177,
                       "src": "367:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -649,7 +649,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "454:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -691,7 +691,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "469:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -734,7 +734,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "509:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -763,7 +763,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "521:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -850,7 +850,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "575:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1001,7 +1001,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1143,
+                              "referencedDeclaration": 1174,
                               "src": "718:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -1051,10 +1051,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1146,
-                        1147
+                        1177,
+                        1178
                       ],
-                      "referencedDeclaration": 1146,
+                      "referencedDeclaration": 1177,
                       "src": "683:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1111,7 +1111,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "750:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1201,7 +1201,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "790:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1279,7 +1279,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "852:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1428,7 +1428,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "1018:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1527,7 +1527,7 @@
     "src": "0:1064:0"
   },
   "legacyAST": {
-    "absolutePath": "/Users/zhiqisim/development/Blockchain/Blind-Auction/contracts/Bank.sol",
+    "absolutePath": "/Users/vincent/Documents/Mirror/NTU Related Documents/REP Course Items/Year 4/CZ4153 Blockchain Technology/Truffle Project/contracts/Bank.sol",
     "exportedSymbols": {
       "Bank": [
         113
@@ -1739,7 +1739,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "285:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1856,7 +1856,7 @@
                                     "name": "msg",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1143,
+                                    "referencedDeclaration": 1174,
                                     "src": "385:3:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_message",
@@ -1898,7 +1898,7 @@
                                   "name": "msg",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1143,
+                                  "referencedDeclaration": 1174,
                                   "src": "399:3:0",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_message",
@@ -1965,7 +1965,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1143,
+                              "referencedDeclaration": 1174,
                               "src": "422:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2015,10 +2015,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1146,
-                        1147
+                        1177,
+                        1178
                       ],
-                      "referencedDeclaration": 1146,
+                      "referencedDeclaration": 1177,
                       "src": "367:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2075,7 +2075,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "454:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2117,7 +2117,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "469:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -2160,7 +2160,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "509:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2189,7 +2189,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "521:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2276,7 +2276,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "575:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -2427,7 +2427,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1143,
+                              "referencedDeclaration": 1174,
                               "src": "718:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2477,10 +2477,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1146,
-                        1147
+                        1177,
+                        1178
                       ],
-                      "referencedDeclaration": 1146,
+                      "referencedDeclaration": 1177,
                       "src": "683:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2537,7 +2537,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "750:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2627,7 +2627,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1143,
+                          "referencedDeclaration": 1174,
                           "src": "790:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2705,7 +2705,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "852:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -2854,7 +2854,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1143,
+                        "referencedDeclaration": 1174,
                         "src": "1018:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -3023,8 +3023,8 @@
       "transactionHash": "0xf31ba14d3d6c5693dc022da66a9302cef96a38397e0e076babca6bdfe23eb8a8"
     }
   },
-  "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-26T15:19:31.498Z",
+  "schemaVersion": "3.2.5",
+  "updatedAt": "2020-10-27T12:17:05.685Z",
   "devdoc": {
     "methods": {}
   },

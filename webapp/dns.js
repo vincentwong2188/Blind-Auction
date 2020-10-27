@@ -4,13 +4,13 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
 // importing a compiled contract artifact which contains function signature etc. to interact
-import artifact from "../build/contracts/Bank.json"; // REMEMBER TO CHANGE THIS!!!
+import artifact from "../build/contracts/Dns.json"; // REMEMBER TO CHANGE THIS!!!
 
 const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO FILL UP
 const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
 
 // run $ truffle migrate --network ropsten --reset
-export const DnsContractAddress = ""; // TO FILL UP!!
+export const DnsContractAddress = "0x63308b22837D8Af4CD1cF0e44b58DeFFb585a37E"; // FILLED UP!!
 export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
 
 const web3 = new Web3(
@@ -82,11 +82,54 @@ export const testFuncParam = async (number) => {
 }
 
 export const testFunc = async () => {
-    const result = await contract.methods.testFuncParam().call({ from: myAddress });
+    const result = await contract.methods.testFunc().call({ from: myAddress });
     return { name: result }
 }
 
+export const testRegisterFunc = async (url, address) => {
+    console.log("Enters testRegisterFunc");
+    const provider = await detectEthereumProvider();
+    if (provider) {
+        // From now on, this should always be true:
+        // provider === window.ethereum
+        ethereum.request({
+            method: "eth_sendTransaction",
+            params: [
+                {
+                    from: ethereum.selectedAddress,
+                    to: DnsContractAddress,
+                    value: web3.utils.toWei(0, 'ether'),
+                    gas: web3.utils.toHex(46899),
+                    gasPrice: web3.utils.toHex(15000),
+
+                    data: web3.eth.abi.encodeFunctionCall(
+                        {
+                            name: "testRegisterFunc",
+                            type: "function",
+                            inputs: [
+                                {
+                                    type: 'string',
+                                    name: 'url'
+                                },
+                                {
+                                    type: 'string',
+                                    name: 'address'
+                                }
+                            ],
+                        },
+                        [url, address]
+                    ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
+                    chainId: 3, // ropsten
+                },
+            ],
+        });
+    } else {
+        console.log("Please install MetaMask!");
+    }
+}
+
 // END
+
 
 export const getAuctionURL = async (url) => {
     const result = await contract.methods.getAuctionURL(url).call({ from: myAddress });
