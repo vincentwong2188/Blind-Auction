@@ -96,8 +96,8 @@ contract BlindAuction {
         bytes32[] memory _secret
     )
         public
-        // onlyAfter(biddingEnd)
-        // onlyBefore(revealEnd)
+        onlyAfter(biddingEnd)
+        onlyBefore(revealEnd)
         returns (bool isValid)
     {
         isValid = true;
@@ -111,7 +111,6 @@ contract BlindAuction {
             
             (uint value, bool real, bytes32 secret) =
                     (_values[i], _real[i], _secret[i]);
-            // TODO: FIX hash difference in JS and here
             // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
             if (bidToCheck != keccak256(abi.encodePacked(value, real, secret))) {
                 // Bid was not actually revealed.
@@ -162,7 +161,7 @@ contract BlindAuction {
         // TODO: CALL beneficiary function plus transfer funds instead of direct call
         // beneficiary.registerWinner();
         // beneficiary.call.value(highestBid).gas(10)(abi.encodeWithSignature("registerAddress(string, address)", url, highestBidder));
-        // beneficiary.transfer(highestBid);
+        beneficiary.transfer(highestBid);
         ended = true;
         return highestBidder;
     }

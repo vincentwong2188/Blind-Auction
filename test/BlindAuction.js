@@ -4,19 +4,31 @@ const { soliditySha3, toWei, fromAscii } = require("web3-utils");
 
 const BigNumber = require('bignumber.js');
 
+const Dns = artifacts.require("Dns");
+
+
 const BlindAuction = artifacts.require('./mocks/MockBlindAuction.sol')
 
 require('chai')
   .use(require('chai-as-promised'))
   .should()
 
+
+
 // accounts are test accounts on local network
 contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
   let blindAuction
+  let dns
   let deployURL
   before(async () => {
+    dns = await Dns.deployed(); // get the deployed Dns contract
     deployURL = "dns.ntu"
+    console.log(dns)
+    const deployBlindAuction = await dns.startAuction(deployURL)
+    const deployEvent = deployBlindAuction.logs[0].args
+    console.log(deployEvent._auction_addr)
     blindAuction = await BlindAuction.new(10, 10, deployURL)
+    console.log(blindAuction.address)
   })
   describe('deployment', async () => {
     it('deploys successfully', async () => {
@@ -29,14 +41,16 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
 
     it('has bidding time', async () => {
       const biddingEnd = BigNumber(await blindAuction.biddingEnd())
-      console.log(biddingEnd.c[0])
-      assert.notEqual(biddingEnd, 0)
+      const endTime = biddingEnd.c[0]
+      // check that bidding end is below current time + 10s
+      assert.isAtMost(endTime, Math.floor(Date.now() / 1000)+10)
     })
 
     it('has reveal time', async () => {
       const revealEnd = BigNumber(await blindAuction.revealEnd())
-      console.log(revealEnd.c[0])
-      assert.notEqual(revealEnd, 0)
+      const endTime = revealEnd.c[0]
+      // check that reveal time is below current time + 20s
+      assert.isAtMost(endTime, Math.floor(Date.now() / 1000)+20)
     })
 
     it('has url', async () => {
@@ -76,13 +90,13 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       // if not JS Async may cause some to execute out of order causing error
       bid1 = await blindAuction.bid(hashBid1, bidder1, {from: bidder1, value: toWei("1")})
       bid2 = await blindAuction.bid(hashBid2, bidder2, {from: bidder2, value: toWei("2")})
-      // move time ahead by 10s so that can test onlyAfter & onlyBefore
+      // move time ahead by 20s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
       await blindAuction.moveAheadBiddingTime(20)
       // NOTE: all ether values to be converted to Wei 
       reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], {from: bidder1})
       reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], {from: bidder2})
-      // move time ahead by 10s so that can test onlyAfter & onlyBefore
+      // move time ahead by 30s so that can test onlyAfter & onlyBefore
       // for end auction to ensure it is after reveal time end
       await blindAuction.moveAheadRevealTime(30)
       auctionEnd = await blindAuction.auctionEnd()
