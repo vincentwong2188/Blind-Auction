@@ -7,6 +7,7 @@ contract("Dns", async (accounts) => {
   // by default, the first account will deploy the contract
   it("should make deployer the owner", async () => {
     let dns = await Dns.deployed(); // get the deployed Dns contract
+    console.log(dns.address);
     let owner = await dns.owner(); // call the getter on public state variable, https://solidity.readthedocs.io/en/v0.7.1/contracts.html#getter-functions
     assert.equal(owner, accounts[0]); // compare the expected owner with the actual owner
   });
