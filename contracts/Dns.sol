@@ -61,11 +61,11 @@ contract Dns {
 
     function startAuction(string memory url) public {
         if (!checkExpired(url)) {
-            return;
+            revert("URL not yet expired!");
         }
 
         if (checkAuctionEnded(url)) {
-            return;
+            revert("Existing auction not yet ended!");
         }
 
         AuctionItem memory new_auction;
@@ -179,5 +179,13 @@ contract Dns {
 
     function testFunc() public pure returns (string memory) {
         return ("teststring.ntu");
+    }
+
+    function testRegisterFunc(string memory url, address addr) {
+        if (checkExpired(url)) {
+            // Check if calling auction address is valid
+            internalAddressRegister(url, addr);
+            emit Registration(addr, url, expiry_date[url]);
+        }
     }
 }
