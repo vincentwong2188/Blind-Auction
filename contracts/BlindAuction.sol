@@ -69,12 +69,13 @@ contract BlindAuction {
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
-    function bid(bytes32 _blindedBid, address _bidder)
+    function bid(bytes32 _blindedBid)
         public
         payable
         onlyBefore(biddingEnd)
     {
         require(_blindedBid.length > 0);
+        address _bidder = msg.sender;
         bids[_bidder].push(_blindedBid);
         deposits[_bidder] += msg.value;
         emit BidCreated(
