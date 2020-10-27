@@ -2,6 +2,8 @@ const { assert } = require('chai')
 
 const { soliditySha3, toWei, fromAscii } = require("web3-utils");
 
+const BigNumber = require('bignumber.js');
+
 const BlindAuction = artifacts.require('./mocks/MockBlindAuction.sol')
 
 require('chai')
@@ -26,12 +28,14 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
     })
 
     it('has bidding time', async () => {
-      const biddingEnd = await blindAuction.biddingEnd()
+      const biddingEnd = BigNumber(await blindAuction.biddingEnd())
+      console.log(biddingEnd.c[0])
       assert.notEqual(biddingEnd, 0)
     })
 
     it('has reveal time', async () => {
-      const revealEnd = await blindAuction.revealEnd()
+      const revealEnd = BigNumber(await blindAuction.revealEnd())
+      console.log(revealEnd.c[0])
       assert.notEqual(revealEnd, 0)
     })
 
@@ -74,18 +78,13 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       bid2 = await blindAuction.bid(hashBid2, bidder2, {from: bidder2, value: toWei("2")})
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
-      await blindAuction.moveAheadTime(10)
+      await blindAuction.moveAheadBiddingTime(20)
       // NOTE: all ether values to be converted to Wei 
-<<<<<<< HEAD
       reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], {from: bidder1})
       reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], {from: bidder2})
-=======
-      reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], { from: bidder1 })
-      reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], { from: bidder2 })
->>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for end auction to ensure it is after reveal time end
-      await blindAuction.moveAheadTime(10)
+      await blindAuction.moveAheadRevealTime(30)
       auctionEnd = await blindAuction.auctionEnd()
       // withdraw only can be executed after auction ends
       bidder1Withdraw = await blindAuction.withdraw({from: bidder1})
@@ -100,8 +99,6 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       await blindAuction.bid("", bidder1).should.be.rejected;
     
     })
-<<<<<<< HEAD
-=======
 
     it('reveal bid', async () => {
       const event_process = reveal.logs[0].args
@@ -109,7 +106,6 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       assert.equal(event_process.deposits, 0, 'Process Reveal Deposits for bidder1 is correct - Deposits taken as highest bidder at that time')
       assert.equal(event2_process.deposits, 0, 'Process Reveal Deposits for bidder2 is correct - Deposits taken as highest bidder')
     })
->>>>>>> f2f0a50af1f1f5c91472534910a4216af53261bb
 
     it('reveal bid', async () => {
       const event_process = reveal.logs[0].args

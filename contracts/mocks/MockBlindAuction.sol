@@ -9,8 +9,11 @@ contract MockBlindAuction is BlindAuction {
     ) public BlindAuction(_biddingTime, _revealTime, _url) {}
 
 
-    function moveAheadTime(uint secs) external {
+    function moveAheadBiddingTime(uint secs) external {
         biddingEnd -= secs;
+    }
+
+    function moveAheadRevealTime(uint secs) external {
         revealEnd -= secs;
     }
 }
