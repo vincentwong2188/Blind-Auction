@@ -82,7 +82,8 @@ contract Dns {
             bidding_length,
             reveal_length,
             url,
-            address(uint160(address(this)))
+            address(uint160(address(this))),
+            msg.sender
         );
         return auction;
     }
