@@ -1,5 +1,7 @@
 pragma solidity >0.4.23 <0.7.0;
 
+import "./Dns.sol";
+
 contract BlindAuction {
     address payable public beneficiary;
     uint256 public biddingEnd;
@@ -133,7 +135,7 @@ contract BlindAuction {
         }
         // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
-        emit ProcessReveal(deposits[msg.sender]);
+        emit ProcessReveal(pendingReturns[msg.sender]);
         return isValid;
     }
 
@@ -161,12 +163,11 @@ contract BlindAuction {
     /// refund everyone's deposit using withdraw call
     function auctionEnd() public onlyAfter(revealEnd) returns (address) {
         require(!ended);
-        emit AuctionEnded(highestBidder, highestBid);
         // TODO: CALL beneficiary function plus transfer funds instead of direct call
-        // beneficiary.registerWinner();
-        // beneficiary.call.value(highestBid).gas(10)(abi.encodeWithSignature("registerAddress(string, address)", url, highestBidder));
-        beneficiary.transfer(highestBid);
+        Dns dns = Dns(beneficiary);
+        dns.registerAddress(url, highestBidder);
         ended = true;
+        emit AuctionEnded(highestBidder, highestBid);
         return highestBidder;
     }
 

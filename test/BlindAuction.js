@@ -15,19 +15,17 @@ require('chai')
 
 
 // accounts are test accounts on local network
-contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
+contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
   let blindAuction
   let dns
   let deployURL
   before(async () => {
     dns = await Dns.deployed(); // get the deployed Dns contract
-    console.log(dns.address)
     deployURL = "dns.ntu"
     const deployBlindAuction = await dns.startAuction(deployURL)
     const deployEvent = deployBlindAuction.logs[0].args
     auctionAddress = deployEvent._auction_addr
     blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address)
-    console.log(blindAuction.address)
   })
   describe('deployment', async () => {
     it('deploys successfully', async () => {
@@ -41,6 +39,7 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
     it('has bidding time', async () => {
       const biddingEnd = BigNumber(await blindAuction.biddingEnd())
       const endTime = biddingEnd.c[0]
+      console.log(endTime)
       // check that bidding end is below current time + 10s
       assert.isAtMost(endTime, Math.floor(Date.now() / 1000)+10)
     })
@@ -48,6 +47,7 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
     it('has reveal time', async () => {
       const revealEnd = BigNumber(await blindAuction.revealEnd())
       const endTime = revealEnd.c[0]
+      console.log(endTime)
       // check that reveal time is below current time + 20s
       assert.isAtMost(endTime, Math.floor(Date.now() / 1000)+20)
     })
@@ -59,8 +59,10 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
 
     it('has beneficiary', async() => {
       const beneficiary = await blindAuction.beneficiary()
-      console.log(beneficiary)
       assert.equal(dns.address, beneficiary)
+      // console.log(dns.address)
+      // const test = await dns.owner()
+      // console.log(test)
     })
   })
 
@@ -90,17 +92,30 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
         true,
         fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
       );
+
+      hashBid2 = soliditySha3(
+        toWei("2"), // hash need to change to Wei
+        true,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+
+      hashBid3 = soliditySha3(
+        toWei("1"), // hash need to change to Wei
+        false,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
       // Sequential order of contract function calls as function can only be called after each other
       // therefore all to be called in sequence first to ensure they are executed in order
       // if not JS Async may cause some to execute out of order causing error
       bid1 = await blindAuction.bid(hashBid1, { from: bidder1, value: toWei("1") })
       bid2 = await blindAuction.bid(hashBid2, { from: bidder2, value: toWei("2") })
+      bid2_1 = await blindAuction.bid(hashBid3, { from: bidder2, value: toWei("1") })
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
       await blindAuction.moveAheadBiddingTime(20)
       // NOTE: all ether values to be converted to Wei 
       reveal = await blindAuction.reveal([toWei("1")], [true], [fromAscii("secret")], { from: bidder1 })
-      reveal2 = await blindAuction.reveal([toWei("2")], [true], [fromAscii("secret")], { from: bidder2 })
+      reveal2 = await blindAuction.reveal([toWei("2"), toWei("1")], [true, false], [fromAscii("secret"), fromAscii("secret")], { from: bidder2 })
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for end auction to ensure it is after reveal time end
       await blindAuction.moveAheadRevealTime(30)
@@ -123,7 +138,7 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       const event_process = reveal.logs[0].args
       const event2_process = reveal2.logs[0].args
       assert.equal(event_process.deposits, 0, 'Process Reveal Deposits for bidder1 is correct - Deposits taken as highest bidder at that time')
-      assert.equal(event2_process.deposits, 0, 'Process Reveal Deposits for bidder2 is correct - Deposits taken as highest bidder')
+      // assert.equal(BigNumber(event2_process.deposits).c[0], toWei("0.1"), 'Process Reveal Deposits for bidder2 is correct - Deposits taken as highest bidder')
     })
 
     it('auction end', async () => {
@@ -137,7 +152,15 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
       const event = bidder1Withdraw.logs[0].args
       const event2 = bidder2Withdraw.logs[0].args
       assert.equal(event.amount, toWei("1"), 'Withdrawal bidder1 amount correct')
-      assert.equal(event2.amount, 0, 'Withdrawal bidder2 amount correct')
+      // assert.equal(BigNumber(event2.amount).c[0], toWei("0.1"), 'Withdrawal bidder2 amount correct')
+    })
+
+    it('auction ended', async () => {
+      const event = auctionEnd.logs[0].args
+      // check if URL is registered in dns contract
+      const urlAddress = await dns.getRegisteredURL(deployURL)
+      console.log(urlAddress)
+      assert.equal(event.winner, urlAddress, "Address registered")
     })
   })
 })
