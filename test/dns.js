@@ -18,6 +18,7 @@ contract("Dns", async (accounts) => {
     assert.equal(owner, accounts[0]); // compare the expected owner with the actual owner
   });
 
+  // Check that unregistered url is considered expired
   it("unregistered address should be expired", async () => {
     let dns = await Dns.deployed();
     let result = await dns.checkExpired("test.ntu", {
@@ -26,6 +27,7 @@ contract("Dns", async (accounts) => {
     assert.equal(result, true);
   });
 
+  // Check that 
   it("check auction ended on unregistered url", async () => {
     let dns = await Dns.deployed();
     // sending 3 Ether to deposit() function from accounts[4],

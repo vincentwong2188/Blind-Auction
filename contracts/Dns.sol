@@ -81,7 +81,8 @@ contract Dns {
         BlindAuction auction = new BlindAuction(
             bidding_length,
             reveal_length,
-            url
+            url,
+            address(this)
         );
         return auction;
     }
