@@ -1,5 +1,7 @@
 pragma solidity >0.4.23 <0.7.0;
 
+import "./Dns.sol";
+
 contract BlindAuction {
     address payable public beneficiary;
     uint256 public biddingEnd;
@@ -48,10 +50,11 @@ contract BlindAuction {
     constructor(
         uint256 _biddingTime,
         uint256 _revealTime,
-        string memory _url
+        string memory _url,
+        address payable _beneficiary
     ) public payable {
         // beneficiary will always be dns manager contract
-        beneficiary = msg.sender;
+        beneficiary = _beneficiary;
         url = _url;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
@@ -110,8 +113,10 @@ contract BlindAuction {
                 _real[i],
                 _secret[i]
             );
-            // TODO: FIX hash difference in JS and here
-
+            emit RevealHashes(
+                bidToCheck,
+                keccak256(abi.encodePacked(value, real, secret))
+            );
             if (
                 bidToCheck != keccak256(abi.encodePacked(value, real, secret))
             ) {
@@ -129,8 +134,7 @@ contract BlindAuction {
         }
         // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
-        emit ProcessReveal(deposits[msg.sender]);
-        // _bidder.transfer(refund);
+        emit ProcessReveal(pendingReturns[msg.sender]);
         return isValid;
     }
 
@@ -158,12 +162,11 @@ contract BlindAuction {
     /// refund everyone's deposit using withdraw call
     function auctionEnd() public onlyAfter(revealEnd) returns (address) {
         require(!ended);
-        emit AuctionEnded(highestBidder, highestBid);
         // TODO: CALL beneficiary function plus transfer funds instead of direct call
-        // beneficiary.registerWinner();
-        // beneficiary.call.value(highestBid).gas(10)(abi.encodeWithSignature("registerAddress(string, address)", url, highestBidder));
-        beneficiary.transfer(highestBid);
+        Dns dns = Dns(beneficiary);
+        dns.registerAddress(url, highestBidder);
         ended = true;
+        emit AuctionEnded(highestBidder, highestBid);
         return highestBidder;
     }
 
@@ -178,7 +181,6 @@ contract BlindAuction {
             // before `transfer` returns (see the remark above about
             // conditions -> effects -> interaction).
             pendingReturns[msg.sender] = 0;
-
             msg.sender.transfer(amount);
         }
         emit WithdrawEther(amount, msg.sender);
