@@ -24,15 +24,15 @@ contract Dns {
     mapping(string => uint256) public expiry_date;
     address public owner;
     mapping(string => AuctionItem) private auctions;
-    uint256 public expiry = 1 minutes;
-    uint256 MAX_UINT;
+    uint256 public expiry = 15 minutes;
+    uint256 MAX_UINT = 16666666666666666666666666666666666666666666666666666666666666665;
 
     uint256 public bidding_length = 10 minutes;
     uint256 public reveal_length = 5 minutes;
 
     constructor() public {
         owner = msg.sender;
-        MAX_UINT = 2**256 - 1;
+        // MAX_UINT = 2**256 - 1;
     }
 
     function getAddresses() public view returns (address[] memory) {
@@ -110,7 +110,7 @@ contract Dns {
     }
 
     function internalAddressRegister(string memory url, address new_owner)
-        private
+        internal
     {
         // If previously registered
         if (dns_lookup_table[url] != address(0)) {
