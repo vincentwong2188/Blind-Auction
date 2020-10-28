@@ -1,5 +1,13 @@
 const Dns = artifacts.require("Dns");
 
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
 contract("Dns", async (accounts) => {
   // accounts are the list of account created by the Truffle (i.e. 10 key pair)
   // by default, the first account will deploy the contract
@@ -85,8 +93,9 @@ contract("Dns", async (accounts) => {
     let address_list = await dns.getAddresses({ from: accounts[2] })
 
     // get deposited balance
-    console.log(address_list);
-    // assert.equal(address_list, [accounts[2], accounts[3]]);
+    // console.log(address_list);
+    // console.log([accounts[2], accounts[3]]);
+    assert.equal(JSON.stringify(address_list), JSON.stringify([accounts[2], accounts[3]]));
   });
 
   it("check cannot register same address (not expired)", async () => {
@@ -107,4 +116,29 @@ contract("Dns", async (accounts) => {
     const event = result.logs[0].args
     assert.equal(event._url, "not expired")
   });
+
+  it("check old address deleted after no urls assigned to it", async () => {
+    let dns = await Dns.deployed();
+    sleep(60000);
+    // sending 3 Ether to deposit() function from accounts[4],
+    // Note that deposit() function in the contract doesn't have any input parameter,
+    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
+    // contract while we are making this function call.
+    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
+    let result = await dns.testRegisterFunc("test3.ntu", accounts[4], {
+      from: accounts[2]
+      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
+    });
+
+    // get deposited balance
+    // console.log(result)
+    // assert.equal(address_list, [accounts[2], accounts[3]]);
+    let address_list = await dns.getAddresses({ from: accounts[2] })
+    console.log(address_list)
+    assert.equal(JSON.stringify(address_list), JSON.stringify([accounts[2], accounts[4]]));
+    // const event = result.logs[0].args
+    // assert.equal(event._url, "not expired")
+  });
+
+
 });
