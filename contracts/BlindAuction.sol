@@ -48,10 +48,11 @@ contract BlindAuction {
     constructor(
         uint256 _biddingTime,
         uint256 _revealTime,
-        string memory _url
+        string memory _url,
+        address payable _beneficiary
     ) public payable {
         // beneficiary will always be dns manager contract
-        beneficiary = msg.sender;
+        beneficiary = _beneficiary;
         url = _url;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
@@ -114,7 +115,6 @@ contract BlindAuction {
                 _real[i],
                 _secret[i]
             );
-            // TODO: FIX hash difference in JS and here
             // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
             if (
                 bidToCheck != keccak256(abi.encodePacked(value, real, secret))
@@ -134,7 +134,6 @@ contract BlindAuction {
         // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
         emit ProcessReveal(deposits[msg.sender]);
-        // _bidder.transfer(refund);
         return isValid;
     }
 
@@ -182,7 +181,6 @@ contract BlindAuction {
             // before `transfer` returns (see the remark above about
             // conditions -> effects -> interaction).
             pendingReturns[msg.sender] = 0;
-
             msg.sender.transfer(amount);
         }
         emit WithdrawEther(amount, msg.sender);

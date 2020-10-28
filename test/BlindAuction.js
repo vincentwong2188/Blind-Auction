@@ -6,7 +6,6 @@ const BigNumber = require('bignumber.js');
 
 const Dns = artifacts.require("Dns");
 
-
 const BlindAuction = artifacts.require('./mocks/MockBlindAuction.sol')
 
 require('chai')
@@ -22,12 +21,12 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
   let deployURL
   before(async () => {
     dns = await Dns.deployed(); // get the deployed Dns contract
+    console.log(dns.address)
     deployURL = "dns.ntu"
-    console.log(dns)
     const deployBlindAuction = await dns.startAuction(deployURL)
     const deployEvent = deployBlindAuction.logs[0].args
-    console.log(deployEvent._auction_addr)
-    blindAuction = await BlindAuction.new(10, 10, deployURL)
+    auctionAddress = deployEvent._auction_addr
+    blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address)
     console.log(blindAuction.address)
   })
   describe('deployment', async () => {
@@ -56,6 +55,12 @@ contract('BlindAuction', ([deployer, bidder1, test, bidder2]) => {
     it('has url', async () => {
       const url = await blindAuction.url()
       assert.equal(url, deployURL)
+    })
+
+    it('has beneficiary', async() => {
+      const beneficiary = await blindAuction.beneficiary()
+      console.log(beneficiary)
+      assert.equal(dns.address, beneficiary)
     })
   })
 
