@@ -27,33 +27,20 @@ contract("Dns", async (accounts) => {
     assert.equal(result, true);
   });
 
-  // Check that 
-  it("check auction ended on unregistered url", async () => {
+  // Check that auction has ended on unregisterd url (since no auction has existed)
+  it("unregistered url should have ended auction attached", async () => {
     let dns = await Dns.deployed();
-    // sending 3 Ether to deposit() function from accounts[4],
-    // Note that deposit() function in the contract doesn't have any input parameter,
-    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
-    // contract while we are making this function call.
-    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
     let result = await dns.checkAuctionEnded("test.ntu", {
       from: accounts[1]
-      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
     });
-
-    // get deposited balance
     assert.equal(result, true);
   });
 
-  it("check can register url", async () => {
+  // Checks that the URL can be registered and recalled
+  it("can register and resolve url", async () => {
     let dns = await Dns.deployed();
-    // sending 3 Ether to deposit() function from accounts[4],
-    // Note that deposit() function in the contract doesn't have any input parameter,
-    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
-    // contract while we are making this function call.
-    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
     let result = await dns.testRegisterFunc("test.ntu", accounts[2], {
       from: accounts[2]
-      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
     });
 
     let address = await dns.getRegisteredURL("test.ntu");
