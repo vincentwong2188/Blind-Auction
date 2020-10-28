@@ -25,7 +25,11 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     const deployBlindAuction = await dns.startAuction(deployURL)
     const deployEvent = deployBlindAuction.logs[0].args
     auctionAddress = deployEvent._auction_addr
-    blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address)
+    console.log(auctionAddress)
+    // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address)
+    blindAuction = await BlindAuction(auctionAddress)
+    console.log(dns.address)
+    console.log(blindAuction.address)
   })
   describe('deployment', async () => {
     it('deploys successfully', async () => {
@@ -157,6 +161,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
 
     it('auction ended', async () => {
       const event = auctionEnd.logs[0].args
+      console.log(event)
       // check if URL is registered in dns contract
       const urlAddress = await dns.getRegisteredURL(deployURL)
       console.log(urlAddress)

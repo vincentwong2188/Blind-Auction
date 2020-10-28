@@ -19,7 +19,7 @@ contract BlindAuction {
     // Allowed withdrawals of previous bids
     mapping(address => uint256) pendingReturns;
 
-    event AuctionEnded(address winner, uint256 highestBid);
+    event AuctionEnded(address winner, uint256 highestBid, address add1, address add2);
 
     event BidCreated(
         bytes32 bidHash,
@@ -51,10 +51,13 @@ contract BlindAuction {
         uint256 _biddingTime,
         uint256 _revealTime,
         string memory _url,
-        address payable _beneficiary
+        address payable _beneficiary,
+        address _auctionStarter
     ) public payable {
         // beneficiary will always be dns manager contract
         beneficiary = _beneficiary;
+        highestBidder = _auctionStarter;
+        highestBid = 0;
         url = _url;
         biddingEnd = now + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
@@ -113,10 +116,10 @@ contract BlindAuction {
                 _real[i],
                 _secret[i]
             );
-            emit RevealHashes(
-                bidToCheck,
-                keccak256(abi.encodePacked(value, real, secret))
-            );
+            // emit RevealHashes(
+            //     bidToCheck,
+            //     keccak256(abi.encodePacked(value, real, secret))
+            // );
             if (
                 bidToCheck != keccak256(abi.encodePacked(value, real, secret))
             ) {
@@ -166,7 +169,7 @@ contract BlindAuction {
         Dns dns = Dns(beneficiary);
         dns.registerAddress(url, highestBidder);
         ended = true;
-        emit AuctionEnded(highestBidder, highestBid);
+        emit AuctionEnded(highestBidder, highestBid, add1, add2);
         return highestBidder;
     }
 
