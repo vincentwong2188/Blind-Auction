@@ -259,6 +259,13 @@ class HomePage extends React.Component {
             overflow: "auto"
         }
 
+        let loader = <img style={{ width: "50px" }} src={require('./assets/loading.gif')} />
+
+        if (!("Loading..." in this.state.data)) {
+            loader = <img style={{ width: "50px" }} src={require('./assets/clipboard.png')} />;
+        }
+
+
         return (
             <>
                 <div style={cardStyle}>
@@ -325,7 +332,7 @@ class HomePage extends React.Component {
                     {/* DNS Look up from URL String -> ETH Address of Owner */}
 
                     <div style={innerCardStyle}>
-                        <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/ethereum.png')} />
+                        <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/teamwork.png')} />
                         <h3>Look-up the Owner of a Domain</h3>
 
                         <input
@@ -339,7 +346,10 @@ class HomePage extends React.Component {
                         <p>
                             {/* If currently searching (async call) for owner of domain */}
                             {this.state.searchingDomainName === "yes"
-                                ? "Searching for owner of domain, please wait..."
+                                ? <div>
+                                    <img style={{ width: "50px" }} src={require('./assets/loading.gif')} />
+                                    <br />Searching for owner of domain, please wait...
+                                </div>
                                 // If page is first loaded, show "Ready!"
                                 : (this.state.searchingDomainName === "no"
                                     ? "Ready!"
@@ -354,7 +364,7 @@ class HomePage extends React.Component {
                     {/* DNS Look up from URL String -> ETH Address of Owner */}
 
                     <div style={innerCardStyle}>
-                        <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/ethereum.png')} />
+                        <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/www.png')} />
                         <h3> Look-up the Domain(s) of an Owner</h3>
                         <input
                             style={{ width: "60%", margin: "5px" }}
@@ -403,6 +413,7 @@ class HomePage extends React.Component {
                 </div>
 
                 <div style={cardStyle}>
+                    {loader}
                     <h3>List of Registered Domains</h3>
                     <div style={scroller}>
                         <table style={{

@@ -95,7 +95,7 @@ class AuctionPage extends React.Component {
 
                 </div>
                 <div style={cardStyle}>
-                    <img style={{ height: "50px", width: "50px" }} src={require('./assets/ethereum.png')} />
+                    <img style={{ height: "50px", width: "50px" }} src={require('./assets/www.png')} />
 
                     <h3>Enter a Domain</h3>
                     <p style={{ width: "100%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >

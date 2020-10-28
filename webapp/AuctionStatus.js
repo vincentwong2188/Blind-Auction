@@ -161,7 +161,10 @@ class AuctionStatus extends React.Component {
             overflow: "auto"
         }
 
-        let status = null;
+        let status = (<div style={cardStyle}>
+            <img style={{ width: "50px" }} src={require('./assets/loading.gif')} />
+            <h2 >Loading Auction Information...</h2>
+        </div>);
 
         switch (this.state.status) {
             case "NOT_EXPIRED":

@@ -43,8 +43,22 @@ class BiddingStage extends React.Component {
     handlePlaceBid = async () => {
         let sendValue = this.state.bidSend;
         let value = this.state.bidInput;
-        let real = this.state.real;
+        let real = null;
+        if (this.state.real.toUpperCase() === 'TRUE') {
+            real = true;
+        } else if (this.state.real.toUpperCase() === 'FALSE') {
+            real = false;
+        } else {
+            window.alert('Please either write "true" or "false" as your real input.')
+            return;
+        }
+
         let secret = this.state.secret;
+
+        console.log("value: " + value);
+        console.log("real: " + real);
+        console.log("secret: " + secret);
+
         let contractAddress = this.props.contractAddress;
         await bid(sendValue, value, real, secret, contractAddress);
 
@@ -86,7 +100,7 @@ class BiddingStage extends React.Component {
                     type="text"
                     placeholder="Enter a secret password"
                     // value={this.state.bidValue}
-                    onChange={this.handleReal}
+                    onChange={this.handleSecret}
                 /><br />
                 <input style={{ margin: "5px" }} type="submit" value="Place Bid" onClick={this.handlePlaceBid} />
 

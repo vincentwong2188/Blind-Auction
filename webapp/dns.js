@@ -7,15 +7,27 @@ import Web3 from "web3";
 import artifact from "../build/contracts/Dns.json"; // REMEMBER TO CHANGE THIS!!!
 
 const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO FILL UP
-const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
+// const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
+// const infuraWSS = `wss://rinkeby.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
+const infuraWSS = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
+
+const CHAIN_ID = 5;
 
 // run $ truffle migrate --network ropsten --reset
-export const DnsContractAddress = "0xECC27FD00dBCC279b9369856DE42C5E6dc5b69f1"; // FILLED UP!!
-export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
+// export const DnsContractAddress = "0x9C0ddaeAe254F751b91B00dFdD11C924C48aDBbb"; // ROPSTEN
+export const DnsContractAddress = "0x7b1fBeE3DB2D5C2b22a0e3c29BebCB10D0EB9183"; // GOERLI
+
+// export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
+// export const Testnet = "rinkeby"; // PLEASE CHANGE IT TO YOURS (changed)
+export const Testnet = "goerli"; // PLEASE CHANGE IT TO YOURS (changed)
+
 
 const web3 = new Web3(
     Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSS)
 );
+
+
+
 // doc here: https://web3js.readthedocs.io/en/v1.2.11/web3.html#providers
 const contract = new web3.eth.Contract(artifact.abi, DnsContractAddress); // MUST CHANGE ARTIFACT
 
@@ -59,7 +71,7 @@ export const sendETH = async (amount, ownerAddress) => {
                     gas: web3.utils.toHex(46899),
                     gasPrice: web3.utils.toHex(15000),
                     data: null,
-                    chainId: 3, // ropsten
+                    chainId: CHAIN_ID, // ropsten
                 },
             ],
         });
@@ -87,6 +99,8 @@ export const testFunc = async () => {
 }
 
 export const testRegisterFunc = async (url, address) => {
+    console.log(url)
+    console.log(address)
 
     const provider = await detectEthereumProvider();
     if (provider) {
@@ -119,7 +133,7 @@ export const testRegisterFunc = async (url, address) => {
                         },
                         [url, address]
                     ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
-                    chainId: 3, // ropsten
+                    chainId: CHAIN_ID, // ropsten
                 },
             ],
         });
@@ -167,7 +181,7 @@ export const startAuction = async (domainURL) => {
                         },
                         [domainURL]
                     ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
-                    chainId: 3, // ropsten
+                    chainId: CHAIN_ID, // ropsten
                 },
             ],
         }).then(result => {

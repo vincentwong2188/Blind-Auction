@@ -68,11 +68,7 @@ contract BlindAuction {
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
-    function bid(bytes32 _blindedBid)
-        public
-        payable
-        onlyBefore(biddingEnd)
-    {
+    function bid(bytes32 _blindedBid) public payable onlyBefore(biddingEnd) {
         require(_blindedBid.length > 0);
         address _bidder = msg.sender;
         bids[_bidder].push(_blindedBid);
@@ -115,7 +111,7 @@ contract BlindAuction {
                 _secret[i]
             );
             // TODO: FIX hash difference in JS and here
-            // emit RevealHashes(bidToCheck, keccak256(abi.encodePacked(value, real, secret)));
+
             if (
                 bidToCheck != keccak256(abi.encodePacked(value, real, secret))
             ) {
