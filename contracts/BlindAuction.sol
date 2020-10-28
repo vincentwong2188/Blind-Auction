@@ -19,7 +19,7 @@ contract BlindAuction {
     // Allowed withdrawals of previous bids
     mapping(address => uint256) pendingReturns;
 
-    event AuctionEnded(address winner, uint256 highestBid, address add1, address add2);
+    event AuctionEnded(address winner, uint256 highestBid);
 
     event BidCreated(
         bytes32 bidHash,
@@ -169,7 +169,7 @@ contract BlindAuction {
         Dns dns = Dns(beneficiary);
         dns.registerAddress(url, highestBidder);
         ended = true;
-        emit AuctionEnded(highestBidder, highestBid, add1, add2);
+        emit AuctionEnded(highestBidder, highestBid);
         return highestBidder;
     }
 

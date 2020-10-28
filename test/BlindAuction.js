@@ -25,11 +25,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     const deployBlindAuction = await dns.startAuction(deployURL)
     const deployEvent = deployBlindAuction.logs[0].args
     auctionAddress = deployEvent._auction_addr
-    console.log(auctionAddress)
-    // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address)
-    blindAuction = await BlindAuction(auctionAddress)
-    console.log(dns.address)
-    console.log(blindAuction.address)
+    // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
+    blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
   })
   describe('deployment', async () => {
     it('deploys successfully', async () => {
@@ -64,10 +61,24 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     it('has beneficiary', async() => {
       const beneficiary = await blindAuction.beneficiary()
       assert.equal(dns.address, beneficiary)
+    })
+
+    it('has default winner', async() => {
+      const highestBidder = await blindAuction.highestBidder()
+      assert.equal(deployer, highestBidder, "Default Highest bidder is auction starter")
       // console.log(dns.address)
       // const test = await dns.owner()
       // console.log(test)
     })
+
+    it('has default highest bid', async() => {
+      const highestBid = await blindAuction.highestBid()
+      assert.equal(0, highestBid, "Default Highest bid is 0")
+      // console.log(dns.address)
+      // const test = await dns.owner()
+      // console.log(test)
+    })
+
   })
 
   describe('bids', async () => {
