@@ -91,7 +91,6 @@ contract BlindAuction {
     // this will effectively allow the user to test if he has
     // the highest bid by verifying he actually sent it.
     // Bids has to be sent in order of bidding for reveal
-    // TODO: ONLY ALLOW a user to reveal only
     function reveal(
         uint256[] memory _values,
         bool[] memory _real,
@@ -104,10 +103,10 @@ contract BlindAuction {
     {
         isValid = true;
         uint256 length = bids[msg.sender].length;
+        // require the number of values passed in to be equal to total number of bids for user
         require(_values.length == length);
         require(_real.length == length);
         require(_secret.length == length);
-        // uint refund;
         for (uint256 i = 0; i < length; i++) {
             bytes32 bidToCheck = bids[msg.sender][i];
 
@@ -124,11 +123,17 @@ contract BlindAuction {
                 bidToCheck != keccak256(abi.encodePacked(value, real, secret))
             ) {
                 // Bid was not actually revealed.
-                // Do not refund deposit.
+                // skip as the bid is invalid
+                // NOTE: user can try to re-reveal this by passing in the same number of values
+                // in the event user made a mistake
+                // Although successful reveal will have been made empty, 
+                // but unsuccessful bids can always be retried
                 isValid = false;
                 continue;
             }
             if (real && deposits[msg.sender] >= value) {
+                // if place bid function successful means bid is current highest bid
+                // minus value off deposits as the value will be kept for current highest bid
                 if (placeBid(msg.sender, value)) deposits[msg.sender] -= value;
             }
             // Make it impossible for the sender to re-claim
@@ -148,11 +153,12 @@ contract BlindAuction {
         internal
         returns (bool success)
     {
+        // if value not higher just return false
         if (value <= highestBid) {
             return false;
         }
         if (highestBidder != address(0)) {
-            // Refund the previously highest bidder to deposits.
+            // Refund the previously highest bidder to pending return for withdrawal.
             pendingReturns[highestBidder] += highestBid;
         }
         highestBid = value;
@@ -165,7 +171,7 @@ contract BlindAuction {
     /// refund everyone's deposit using withdraw call
     function auctionEnd() public onlyAfter(revealEnd) returns (address) {
         require(!ended);
-        // CALL beneficiary function plus transfer funds instead of direct call
+        // Call DNS contract to transfer the funds back and register the winner of auction
         Dns dns = Dns(beneficiary);
         dns.registerAddress.value(highestBid)(url, highestBidder);
         ended = true;

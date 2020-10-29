@@ -74,17 +74,22 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
   })
 
   describe('2 Bidders Success Case', async () => {
-    let bid1
-    let bid2
-    let bid3
-    let reveal
-    let reveal2
-    let auctionEnd
-    let bidder1Withdraw
-    let bidder2Withdraw
     let hashBid1
     let hashBid2
     let hashBid3
+    
+    let bid1
+    let bid2
+    let bid3
+
+    let revealBidder1
+    let revealBidder2 
+
+    let auctionEnd
+    
+    let bidder1Withdraw
+    let bidder2Withdraw
+    
     before(async () => {
       // use URL below for keccak256 hash in JS
       // https://blog.8bitzen.com/posts/18-03-2019-keccak-abi-encodepacked-with-javascript/
