@@ -19,7 +19,7 @@ contract BlindAuction {
     // Allowed withdrawals of previous bids
     mapping(address => uint256) pendingReturns;
 
-    event AuctionEnded(address winner, uint256 highestBid);
+    event AuctionEnded(address winner, uint256 highestBid, uint256 currentValue);
 
     event BidCreated(
         bytes32 bidHash,
@@ -28,7 +28,7 @@ contract BlindAuction {
         uint256 value
     );
 
-    event ProcessReveal(uint256 deposits);
+    event ProcessReveal(uint256 deposits, bool isValid);
 
     event RevealHashes(bytes32 original, bytes32 test);
 
@@ -137,7 +137,7 @@ contract BlindAuction {
         }
         // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
-        emit ProcessReveal(pendingReturns[msg.sender]);
+        emit ProcessReveal(pendingReturns[msg.sender], isValid);
         return isValid;
     }
 
@@ -165,11 +165,11 @@ contract BlindAuction {
     /// refund everyone's deposit using withdraw call
     function auctionEnd() public onlyAfter(revealEnd) returns (address) {
         require(!ended);
-        // TODO: CALL beneficiary function plus transfer funds instead of direct call
+        // CALL beneficiary function plus transfer funds instead of direct call
         Dns dns = Dns(beneficiary);
-        dns.registerAddress(url, highestBidder);
+        dns.registerAddress.value(highestBid)(url, highestBidder);
         ended = true;
-        emit AuctionEnded(highestBidder, highestBid);
+        emit AuctionEnded(highestBidder, highestBid, address(this).balance);
         return highestBidder;
     }
 
