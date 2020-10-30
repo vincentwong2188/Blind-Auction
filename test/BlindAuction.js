@@ -16,15 +16,6 @@ require('chai')
 
 // accounts are test accounts on local network
 contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
-  // before(async () => {
-  //   dns = await Dns.deployed(); // get the deployed Dns contract
-  //   deployURL = "dns.ntu"
-  //   const deployBlindAuction = await dns.startAuction(deployURL)
-  //   const deployEvent = deployBlindAuction.logs[0].args
-  //   auctionAddress = deployEvent._auction_addr
-  //   // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-  //   blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
-  // })
   describe('deployment', async () => {
     let blindAuction
     let dns
@@ -37,6 +28,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       auctionAddress = deployEvent._auction_addr
       // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
       blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
     })
     it('deploys successfully', async () => {
       const address = await blindAuction.address
@@ -69,16 +61,16 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const beneficiary = await blindAuction.beneficiary()
       assert.equal(dns.address, beneficiary)
     })
+    
+    it('has default winner', async() => {
+      const highestBidder = await blindAuction.getHighestBidder()
+      assert.equal(deployer, highestBidder, "Default Highest bidder should be auction starter")
+    })
 
-    // it('has default winner', async() => {
-    //   const highestBidder = await blindAuction.highestBidder()
-    //   assert.equal(deployer, highestBidder, "Default Highest bidder should be auction starter")
-    // })
-
-    // it('has default highest bid', async() => {
-    //   const highestBid = await blindAuction.highestBid()
-    //   assert.equal(0, highestBid, "Default Highest bid should be 0")
-    // })
+    it('has default highest bid', async() => {
+      const highestBid = await blindAuction.getHighestBid()
+      assert.equal(0, highestBid, "Default Highest bid should be 0")
+    })
 
   })
 
