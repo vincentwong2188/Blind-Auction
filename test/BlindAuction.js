@@ -61,15 +61,15 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.equal(dns.address, beneficiary)
     })
 
-    it('has default winner', async() => {
-      const highestBidder = await blindAuction.highestBidder()
-      assert.equal(deployer, highestBidder, "Default Highest bidder should be auction starter")
-    })
+    // it('has default winner', async() => {
+    //   const highestBidder = await blindAuction.highestBidder()
+    //   assert.equal(deployer, highestBidder, "Default Highest bidder should be auction starter")
+    // })
 
-    it('has default highest bid', async() => {
-      const highestBid = await blindAuction.highestBid()
-      assert.equal(0, highestBid, "Default Highest bid should be 0")
-    })
+    // it('has default highest bid', async() => {
+    //   const highestBid = await blindAuction.highestBid()
+    //   assert.equal(0, highestBid, "Default Highest bid should be 0")
+    // })
 
   })
 
@@ -86,7 +86,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     let revealBidder2 
 
     let auctionEnd
-    
+
     let bidder1Withdraw
     let bidder2Withdraw
     
@@ -162,13 +162,20 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
 
     it('auction end', async () => {
       const event = auctionEnd.logs[0].args
+      const highestBidder = await blindAuction.getHighestBidder()
+      const highestBid = await blindAuction.getHighestBid()
+      console.log(highestBid)
+      console.log(highestBidder)
       assert.equal(event.winner, bidder2, 'Winner of auction should be bidder2')
+      assert.equal(highestBidder, bidder2, 'getHighestBidder function should return bidder2')
       // NOTE: all ether values to be converted to Wei 
       assert.equal(event.highestBid, toWei("0.2"), 'Highest bid of auction should be 0.2')
+      assert.equal(highestBid, toWei("0.2"), 'getHighestBid should return 0.2')
       assert.equal(event.currentValue, toWei('0.15'), 'Current value of contract should be 0.15 (0.1 from bidder1 + 0.05 from fake bid bidder 2)')
       // check if URL is registered in dns contract
       const urlAddress = await dns.getRegisteredURL(deployURL)
       assert.equal(event.winner, urlAddress, "Address of winner should be registered as owner in DNS manager")
+      
     })
 
     it('withdraw', async () => {
