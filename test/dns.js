@@ -8,6 +8,27 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
+function increaseTime(addSeconds) {
+  const id = Date.now();
+
+  return new Promise((resolve, reject) => {
+    web3.currentProvider.send({
+      jsonrpc: '2.0',
+      method: 'evm_increaseTime',
+      params: [addSeconds],
+      id,
+    }, (err1) => {
+      if (err1) return reject(err1);
+
+      web3.currentProvider.send({
+        jsonrpc: '2.0',
+        method: 'evm_mine',
+        id: id + 1,
+      }, (err2, res) => (err2 ? reject(err2) : resolve(res)));
+    });
+  });
+}
+
 contract("Dns", async (accounts) => {
   // accounts are the list of account created by the Truffle (i.e. 10 key pair)
   // by default, the first account will deploy the contract
@@ -40,48 +61,32 @@ contract("Dns", async (accounts) => {
   it("can register and resolve url", async () => {
     let dns = await Dns.deployed();
     let result = await dns.testRegisterFunc("test.ntu", accounts[2], {
-      from: accounts[2]
+      from: accounts[0]
     });
 
     let address = await dns.getRegisteredURL("test.ntu");
 
-    // get deposited balance
     assert.equal(address, accounts[2]);
   });
 
   it("check can register another url", async () => {
     let dns = await Dns.deployed();
-    // sending 3 Ether to deposit() function from accounts[4],
-    // Note that deposit() function in the contract doesn't have any input parameter,
-    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
-    // contract while we are making this function call.
-    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
     let result = await dns.testRegisterFunc("test2.ntu", accounts[2], {
-      from: accounts[2]
-      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
+      from: accounts[0]
     });
 
     let address = await dns.getRegisteredURL("test2.ntu");
-
-    // get deposited balance
     assert.equal(address, accounts[2]);
   });
 
   it("check address list correct", async () => {
     let dns = await Dns.deployed();
-    // sending 3 Ether to deposit() function from accounts[4],
-    // Note that deposit() function in the contract doesn't have any input parameter,
-    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
-    // contract while we are making this function call.
-    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
     let result = await dns.testRegisterFunc("test3.ntu", accounts[3], {
-      from: accounts[2]
-      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
+      from: accounts[0]
     });
 
     let address_list = await dns.getAddresses({ from: accounts[2] })
 
-    // get deposited balance
     // console.log(address_list);
     // console.log([accounts[2], accounts[3]]);
     assert.equal(JSON.stringify(address_list), JSON.stringify([accounts[2], accounts[3]]));
@@ -89,17 +94,10 @@ contract("Dns", async (accounts) => {
 
   it("check cannot register same address (not expired)", async () => {
     let dns = await Dns.deployed();
-    // sending 3 Ether to deposit() function from accounts[4],
-    // Note that deposit() function in the contract doesn't have any input parameter,
-    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
-    // contract while we are making this function call.
-    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
     let result = await dns.testRegisterFunc("test3.ntu", accounts[4], {
-      from: accounts[2]
-      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
+      from: accounts[0]
     });
 
-    // get deposited balance
     // console.log(result)
     // assert.equal(address_list, [accounts[2], accounts[3]]);
     const event = result.logs[0].args
@@ -109,17 +107,11 @@ contract("Dns", async (accounts) => {
   it("check old address deleted after no urls assigned to it", async () => {
     let dns = await Dns.deployed();
     // sleep(60000);
-    // sending 3 Ether to deposit() function from accounts[4],
-    // Note that deposit() function in the contract doesn't have any input parameter,
-    // but in test, we are allowed to pass one optional special object specifying ethers to send to this
-    // contract while we are making this function call.
-    // Another similar example here: https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#making-a-transaction
+    await increaseTime(2 * 60 * 60);
     let result = await dns.testRegisterFunc("test3.ntu", accounts[4], {
-      from: accounts[2]
-      // value: web3.utils.toWei("3"), // all amount are expressed in wei, this is 3 Ether in wei
+      from: accounts[0]
     });
 
-    // get deposited balance
     // console.log(result)
     // assert.equal(address_list, [accounts[2], accounts[3]]);
     let address_list = await dns.getAddresses({ from: accounts[2] })

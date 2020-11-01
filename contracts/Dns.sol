@@ -1,4 +1,4 @@
-pragma solidity >0.4.23 <0.7.0;
+pragma solidity >0.4.23 <0.6.0;
 
 import "./BlindAuction.sol";
 
@@ -192,15 +192,8 @@ contract Dns {
         }
     }
 
-    function testFuncParam(int256 input_int) public pure returns (int256) {
-        return input_int;
-    }
-
-    function testFunc() public pure returns (string memory) {
-        return ("teststring.ntu");
-    }
-
     function testRegisterFunc(string memory url, address addr) public {
+        require(msg.sender == owner);
         if (checkExpired(url)) {
             internalAddressRegister(url, addr);
             emit Registration(addr, url, expiry_date[url]);
