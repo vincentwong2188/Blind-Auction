@@ -173,18 +173,11 @@ contract Dns {
         // Check if url is expired
         if (checkExpired(url)) {
             // Check if calling auction address is valid
-<<<<<<< HEAD
-            // require(auctions[url].addr == auc_addr);
-            require(address(auctions[url].addr) == address(auc_addr));
-            internalAddressRegister(url, addr);
-            emit Registration(addr, url, expiry_date[url]);
-=======
             require(auctions[url].addr == auc_addr);
             if (addr != address(0)) {
                 internalAddressRegister(url, addr);
                 emit Registration(addr, url, expiry_date[url]);
             }
->>>>>>> 61217fad227f177da1c091f6c191fc4341f78fee
         }
     }
 
