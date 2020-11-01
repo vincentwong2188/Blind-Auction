@@ -140,12 +140,12 @@ class BiddingStage extends React.Component {
                             1. Input in a <b>deposit</b> amount of your choice. Note that your desired bid amount does not need to correspond with your deposit amount. However, each individual bid value must be at least equal or greater than the sum of all your deposits.
                             <br /><br />2. Input your desired <b>bid</b>.
                             <br /><br />3. Indicate whether this bid is real or not by writing <b>'true'</b> or <b>'false'</b>. This way, you may input fake bids to mask your actual bid.
-                            <br /><br />4. Input a <b>secret password</b> value. The purpose of this secret is to authenticate that you are the one who made the bid. You must remember this secret, as iot will be used in the reveal stage later to prove your identity for your bids.
+                            <br /><br />4. Input a <b>secret password</b> value. The purpose of this secret is to authenticate that you are the one who made the bid. You must remember this secret, as it will be used in the reveal stage later to prove your identity for your bids.
                             <br /><br />
                             And you're done! All the above values will be hashed, and this hash will be sent to the Blind Auction Ethereum Smart Contract as inputs into the auction.
 
                             <br /><br />
-                            <b>Important:</b> Please remember all your (bid, real, secret) inputs, as you will need these values in the reveal stage later. Failure to properly safekeep these values will result in you losing your bid.
+                            <b>Important:</b> Please remember all your (bid, real, secret) inputs in chronological order, as you will need these values in the reveal stage later. Failure to properly safekeep these values will result in you losing your bid.
 
                             {/* - Tell user that they can place multiple bids
                             - eth of bid does not need to correpond with bid hash amount
