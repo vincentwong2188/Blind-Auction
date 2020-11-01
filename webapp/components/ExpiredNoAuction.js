@@ -61,17 +61,8 @@ class ExpiredNoAuction extends React.Component {
                     Click below to start an auction for this domain name.
                 </p>
                 <br />
-                {/* <input
-                    style={{ width: "30%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter your bid (in ETH)"
-                    // value={this.state.bidValue}
-                    onChange={this.props.bidChange}
-                /> */}
                 <br />
                 {button}
-                {/* <input style={{ margin: "5px" }} type="submit" value="Start Auction" onClick={this.props.startAuction} /> */}
-
 
             </div>
         );

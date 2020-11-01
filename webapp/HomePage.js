@@ -170,13 +170,13 @@ class HomePage extends React.Component {
         // Obtain a list of eth addresses
         let result = await getAddressList();
         // Populate a key value mapping of eth addresses to counts of domains owned
+        console.log(result.addressList)
 
         for (var j = 0; j < result.addressList.length; j++) {
-            let output = await getURLCount(result.addressList[0]);
-            addressToCountMap[result.addressList[0]] = await output.count;
+            let output = await getURLCount(result.addressList[j]);
+            addressToCountMap[result.addressList[j]] = await output.count;
 
         }
-
         // Populate a mappings object that contains eth addresses mapped to an array of the domains they own
         let mappings = {}
 
@@ -194,7 +194,6 @@ class HomePage extends React.Component {
             // Add the eth address to domain list mapping to the mappings object 
             mappings[key] = domainList;
         }
-
         // Update state with new mapping object
         this.setState({
             data: mappings

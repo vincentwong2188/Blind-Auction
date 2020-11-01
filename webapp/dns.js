@@ -2,30 +2,34 @@ import { useState, useRef, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 // NOTE: be aware of this: https://flaviocopes.com/parcel-regeneratorruntime-not-defined/
 import Web3 from "web3";
-
 // importing a compiled contract artifact which contains function signature etc. to interact
 import artifact from "../build/contracts/Dns.json"; // REMEMBER TO CHANGE THIS!!!
 
 const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO FILL UP
-// const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
-// const infuraWSS = `wss://rinkeby.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
-const infuraWSS = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
-
-const CHAIN_ID = 5;
 
 // run $ truffle migrate --network ropsten --reset
-// export const DnsContractAddress = "0x9C0ddaeAe254F751b91B00dFdD11C924C48aDBbb"; // ROPSTEN
-export const DnsContractAddress = "0x7b1fBeE3DB2D5C2b22a0e3c29BebCB10D0EB9183"; // GOERLI
 
+// for GANACHE
+const web3 = new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
+export const DnsContractAddress = "0x72143F74687ecA4E3b44FAa4aF0b79268b972d64"; // GANACHE
+
+// FOR ROPSTEN
+// const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
+// const CHAIN_ID = 3;
+// const web3 = new Web3(
+//     Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSS)
+// );
 // export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
-// export const Testnet = "rinkeby"; // PLEASE CHANGE IT TO YOURS (changed)
-export const Testnet = "goerli"; // PLEASE CHANGE IT TO YOURS (changed)
+// export const DnsContractAddress = "0x9C0ddaeAe254F751b91B00dFdD11C924C48aDBbb"; // ROPSTEN
 
-
-const web3 = new Web3(
-    Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSS)
-);
-
+// FOR GOERLI
+// const infuraWSS = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
+// const CHAIN_ID = 5;
+// const web3 = new Web3(
+//     Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSS)
+// );
+// export const Testnet = "goerli"; // PLEASE CHANGE IT TO YOURS (changed)
+// export const DnsContractAddress = "0x1674e1cC98D8E9d8e31f411f3A81400880dCaDfB"; // GOERLI
 
 
 // doc here: https://web3js.readthedocs.io/en/v1.2.11/web3.html#providers
@@ -55,7 +59,10 @@ export const getURL = async (addr, idx) => {
 
 export const sendETH = async (amount, ownerAddress) => {
     // Using MetaMask API to send transaction
-    //
+
+    // For ganache:
+    const CHAIN_ID = await web3.eth.getChainId();
+
     // please read: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-provider-api
     const provider = await detectEthereumProvider();
     if (provider) {
@@ -101,6 +108,9 @@ export const testFunc = async () => {
 export const testRegisterFunc = async (url, address) => {
     console.log(url)
     console.log(address)
+
+    // // For ganache:
+    const CHAIN_ID = await web3.eth.getChainId();
 
     const provider = await detectEthereumProvider();
     if (provider) {
@@ -153,6 +163,9 @@ export const getAuctionURL = async (url) => {
 
 export const startAuction = async (domainURL) => {
 
+    // // For ganache:
+    const CHAIN_ID = await web3.eth.getChainId();
+
     console.log(domainURL)
     const provider = await detectEthereumProvider();
     if (provider) {
@@ -185,52 +198,13 @@ export const startAuction = async (domainURL) => {
                 },
             ],
         }).then(result => {
-            window.alert("A new auction is currently being created. Please refresh the page once the Metamask Transaction is confirmed.");
+            window.alert("A new auction is now being created. Please refresh the page once the Metamask Transaction is confirmed.");
         });
     } else {
         console.log("Please install MetaMask!");
     }
 }
 
-// export const bid = async (amount, domainURL) => {
-//     // Using MetaMask API to send transaction
-//     //
-//     // please read: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-provider-api
-//     const provider = await detectEthereumProvider();
-//     if (provider) {
-//         // From now on, this should always be true:
-//         // provider === window.ethereum
-//         ethereum.request({
-//             method: "eth_sendTransaction",
-//             params: [
-//                 {
-//                     from: ethereum.selectedAddress,
-//                     to: DnsContractAddress,
-//                     value: web3.utils.toWei(amount, 'ether'),
-//                     gas: web3.utils.toHex(46899),
-//                     gasPrice: web3.utils.toHex(15000),
-
-//                     data: web3.eth.abi.encodeFunctionCall(
-//                         {
-//                             name: "deposit",
-//                             type: "function",
-//                             inputs: [
-//                                 {
-//                                     type: 'string',
-//                                     name: 'domainURL'
-//                                 }
-//                             ],
-//                         },
-//                         [domainURL]
-//                     ), // https://web3js.readthedocs.io/en/v1.2.11/web3-eth-abi.html#encodefunctioncall
-//                     chainId: 3, // ropsten
-//                 },
-//             ],
-//         });
-//     } else {
-//         console.log("Please install MetaMask!");
-//     }
-// };
 
 
 

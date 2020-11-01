@@ -19,7 +19,8 @@ class ExpiredHasAuction extends React.Component {
         super(props);
         this.state = {
             // States for handling stage check:
-            stage: 0,
+            stage: "Loading Auction Stage...",
+            curTime: '',
         };
     }
 
@@ -36,11 +37,11 @@ class ExpiredHasAuction extends React.Component {
 
             if (timeNow <= bidEndTime) {
                 this.setState({
-                    stage: 1 // 1 
+                    stage: 3 // 1 
                 })
             } else if (timeNow > bidEndTime && timeNow <= revealEndTime) {
                 this.setState({
-                    stage: 2 // 2
+                    stage: 3 // 2
                 })
             } else {
                 this.setState({
@@ -48,6 +49,7 @@ class ExpiredHasAuction extends React.Component {
                 })
             }
         }
+
         stageCheck();
     }
 
@@ -79,11 +81,19 @@ class ExpiredHasAuction extends React.Component {
         }
 
         return (
-            <div style={cardStyle}>
-                <img style={{ width: "100px" }} src={require('../assets/checked.png')} />
-                <h1 >{this.props.domainName} has an existing ongoing auction at stage {this.state.stage}!</h1>
-                {stage}
+            <div >
+                <div style={cardStyle}>
+                    <img style={{ width: "100px" }} src={require('../assets/checked.png')} />
+                    <h1 >{this.props.domainName} has an existing ongoing auction!<br /> </h1>
+                    <h2>{this.state.stage === 0 ? "" : this.state.stage === 1 ? "Bidding Stage" : this.state.stage === 2 ? "Reveal Stage" : "End Stage"
+                    }</h2>
+                </div>
+                <div>
+                    {stage}
+                </div>
+
             </div>
+
         );
     }
 }

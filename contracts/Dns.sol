@@ -24,11 +24,11 @@ contract Dns {
     mapping(string => uint256) public expiry_date;
     address public owner;
     mapping(string => AuctionItem) private auctions;
-    uint256 public expiry = 15 minutes;
+    uint256 public expiry = 15 minutes; // 15
     uint256 MAX_UINT = 16666666666666666666666666666666666666666666666666666666666666665;
 
-    uint256 public bidding_length = 10 minutes;
-    uint256 public reveal_length = 5 minutes;
+    uint256 public bidding_length = 10 minutes; // 10
+    uint256 public reveal_length = 5 minutes; // 5
 
     constructor() public {
         owner = msg.sender;
