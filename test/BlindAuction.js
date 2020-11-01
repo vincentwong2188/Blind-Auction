@@ -57,7 +57,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     })
 
     it('has beneficiary', async() => {
-      const beneficiary = await blindAuction.beneficiary()
+      const beneficiary = await blindAuction.dnsManagerAddress()
       assert.equal(dns.address, beneficiary)
     })
     
