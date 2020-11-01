@@ -1,6 +1,6 @@
 const { assert } = require('chai')
 
-const { soliditySha3, toWei, fromAscii } = require("web3-utils");
+const { soliditySha3, toWei, fromAscii, eth } = require("web3-utils");
 
 const BigNumber = require('bignumber.js');
 
@@ -28,7 +28,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       auctionAddress = deployEvent._auction_addr
       // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
       blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
-      await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
     })
     it('deploys successfully', async () => {
       const address = await blindAuction.address
@@ -63,12 +62,12 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     })
     
     it('has default winner', async() => {
-      const highestBidder = await blindAuction.getHighestBidder()
+      const highestBidder = await blindAuction.highestBidder()
       assert.equal(deployer, highestBidder, "Default Highest bidder should be auction starter")
     })
 
     it('has default highest bid', async() => {
-      const highestBid = await blindAuction.getHighestBid()
+      const highestBid = await blindAuction.highestBid()
       assert.equal(0, highestBid, "Default Highest bid should be 0")
     })
 
@@ -95,10 +94,10 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     let revealBidder1
     let revealBidder2 
 
-    let auctionEnd
+    let bidder1Balance
+    let bidder2Balance
 
-    let bidder1Withdraw
-    let bidder2Withdraw
+    let auctionEnd
     
     before(async () => {
       // deploy DNS contract and auction contract
@@ -138,8 +137,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       bid3 = await blindAuction.bid(hashBid3, { from: bidder2, value: toWei("0.05") })
       // should not be able call auction end before bidding ended
       await blindAuction.auctionEnd().should.be.rejected
-      // should not be able withdraw before bidding ended
-      // await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
       await blindAuction.moveAheadBiddingTime(11) // mock moving ahead by 11s (10s is time to bidding end)
@@ -147,15 +144,10 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       // reveal for both users with their respective correct bids
       // should not be able call auction end before reveal ended
       await blindAuction.auctionEnd().should.be.rejected
-      // should not be able withdraw before reveal ended
-      // await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
       revealBidder1 = await blindAuction.reveal([toWei("0.1")], [true], [fromAscii("secret")], { from: bidder1 })
       revealBidder2 = await blindAuction.reveal([toWei("0.2"), toWei("0.05")], [true, false], [fromAscii("secret"), fromAscii("secret")], { from: bidder2 })
-      // test if contract will revert in the event getHighestBid / getHighestBidder is called
-      // during the reveal phase - this is to prevent others from checking current winner status
-      // while still at reveal phase
-      await blindAuction.getHighestBid().should.be.rejected
-      await blindAuction.getHighestBidder().should.be.rejected
+      // should reject reveal second time from same user
+      await blindAuction.reveal([toWei("0.2"), toWei("0.05")], [true, false], [fromAscii("secret"), fromAscii("secret")], { from: bidder2 }).should.be.rejected
       // bidding should be rejected as well as pass bidding time
       await blindAuction.bid(hashBid3, { from: bidder3, value: toWei("0.05") }).should.be.rejected
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
@@ -165,12 +157,10 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       await blindAuction.bid(hashBid3, { from: bidder3, value: toWei("0.05") }).should.be.rejected
       // reveal should be rejected as pass reveal time
       await blindAuction.reveal([toWei("0.2"), toWei("0.05")], [true, false], [fromAscii("secret"), fromAscii("secret")], { from: bidder2 }).should.be.rejected
-      // should not be able withdraw before auction ended
-      // await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
+      
+      bidder1Balance = await web3.eth.getBalance(bidder1)
+      bidder2Balance = await web3.eth.getBalance(bidder2)
       auctionEnd = await blindAuction.auctionEnd()
-      // withdraw only can be executed after auction ends
-      // bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
-      // bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
     })
     it('send bid', async () => {
       const eventBid1 = bid1.logs[0].args
@@ -194,15 +184,17 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const eventBidder1 = revealBidder1.logs[0].args
       const eventBidder2 = revealBidder2.logs[0].args
       assert.equal(eventBidder1.deposits, 0, 'Bidder 1 Deposits should be 0 as bid is highest at point of time')
-      assert.equal(eventBidder1.isValid, true, "Reveal of bidder1 should be valid")
+      assert.equal(eventBidder1.balances, 0, "bidder1 balance should be 0 as only can reveal once")
+      assert.equal(eventBidder1.bidder, bidder1, "bidder1 should be present in bidder list that has revealed already")
       assert.equal(eventBidder2.deposits, toWei("0.05"), 'Bidder 2 Deposits should be 0.05 as bid3 deposit should be returned')
-      assert.equal(eventBidder2.isValid, true, "Reveal of bidder2 should be valid")
+      assert.equal(eventBidder2.balances, 0, "bidder2 balance should be 0 as only can reveal once")
+      assert.equal(eventBidder2.bidder, bidder2, "bidder2 should be present in bidder list that has revealed already")
     })
 
     it('auction end', async () => {
       const event = auctionEnd.logs[0].args
-      const highestBidder = await blindAuction.getHighestBidder()
-      const highestBid = await blindAuction.getHighestBid()
+      const highestBidder = await blindAuction.highestBidder()
+      const highestBid = await blindAuction.highestBid()
       assert.equal(event.winner, bidder2, 'Winner of auction should be bidder2')
       assert.equal(highestBidder, bidder2, 'getHighestBidder function should return bidder2')
       // NOTE: all ether values to be converted to Wei 
@@ -218,6 +210,11 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const urlAddress = await dns.getRegisteredURL(deployURL)
       assert.equal(event.winner, urlAddress, "Address of winner should be registered as owner in DNS manager")
       
+      // ensure refund is actually given to users by checking their accounts
+      const bidder1BalanceNow = await web3.eth.getBalance(bidder1) - toWei("0.1")
+      const bidder2BalanceNow = await web3.eth.getBalance(bidder2) - toWei("0.05")
+      assert.equal(bidder1Balance, bidder1BalanceNow, "Bidder1 should have balance increase by 0.1 ether")
+      assert.equal(bidder2Balance, bidder2BalanceNow, "Bidder2 should have balance increase by 0.05 ether")
     })
 
   })
@@ -234,12 +231,13 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     let bid2
 
     let revealBidder1
-    let revealBidder2 
+    let revealBidder2
+
+    let bidder1Balance
+    let bidder2Balance
 
     let auctionEnd
 
-    let bidder1Withdraw
-    let bidder2Withdraw
     before(async () => {
       // deploy DNS contract and auction contract
       dns = await Dns.deployed(); // get the deployed Dns contract
@@ -265,9 +263,9 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       revealBidder1 = await blindAuction.reveal([toWei("0.1")], [true], [fromAscii("secret")], { from: bidder1 })
       revealBidder2 = await blindAuction.reveal([toWei("0.2")], [true], [fromAscii("secret")], { from: bidder2 })
       await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
+      bidder1Balance = await web3.eth.getBalance(bidder1)
+      bidder2Balance = await web3.eth.getBalance(bidder2)
       auctionEnd = await blindAuction.auctionEnd()
-      // bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
-      // bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
     })
     it('send bid', async () => {
       const eventBid1 = bid1.logs[0].args
@@ -284,15 +282,17 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const eventBidder1 = revealBidder1.logs[0].args
       const eventBidder2 = revealBidder2.logs[0].args
       assert.equal(eventBidder1.deposits, 0, 'Bidder 1 Deposits should be 0 as bid is highest at point of time')
-      assert.equal(eventBidder1.isValid, true, "Reveal of bidder1 should be valid")
+      assert.equal(eventBidder1.balances, 0, "bidder1 balance should be 0 as only can reveal once")
+      assert.equal(eventBidder1.bidder, bidder1, "bidder1 should be present in bidder list that has revealed already")
       assert.equal(eventBidder2.deposits, toWei("0.01"), 'Bidder 2 Deposits should be 0.01 as bid was rejected due to not enough value')
-      assert.equal(eventBidder2.isValid, true, "Reveal of bidder2 should be valid")
+      assert.equal(eventBidder2.balances, 0, "bidder2 balance should be 0 as only can reveal once")
+      assert.equal(eventBidder2.bidder, bidder2, "bidder2 should be present in bidder list that has revealed already")
     })
 
     it('auction end', async () => {
       const event = auctionEnd.logs[0].args
-      const highestBidder = await blindAuction.getHighestBidder()
-      const highestBid = await blindAuction.getHighestBid()
+      const highestBidder = await blindAuction.highestBidder()
+      const highestBid = await blindAuction.highestBid()
       assert.equal(event.winner, bidder1, 'Winner of auction should be bidder1')
       assert.equal(highestBidder, bidder1, 'getHighestBidder function should return bidder1')
       // NOTE: all ether values to be converted to Wei 
@@ -307,7 +307,12 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       // check if URL is registered in dns contract
       const urlAddress = await dns.getRegisteredURL(deployURL)
       assert.equal(event.winner, urlAddress, "Address of winner should be registered as owner in DNS manager")
-      
+      // ensure refund is actually given to users by checking their accounts
+      const bidder1BalanceNow = await web3.eth.getBalance(bidder1)
+      const bidder2BalanceNow = await web3.eth.getBalance(bidder2) - toWei("0.01")
+      assert.equal(bidder1Balance, bidder1BalanceNow, "Bidder1 should have balance increase by 0 ether")
+      assert.equal(bidder2Balance, bidder2BalanceNow, "Bidder2 should have balance increase by 0.01 ether")
+
     })
 
   })
