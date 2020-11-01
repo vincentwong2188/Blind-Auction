@@ -26,7 +26,10 @@ class ExpiredHasAuction extends React.Component {
 
     componentDidMount() {
         const stageCheck = async () => {
+            console.log('before bidEndTime')
             let bidEndTime = await biddingEnd(this.props.contractAddress);
+            console.log('after bidEndTime')
+
             console.log("bidEndTime: " + bidEndTime)
             let revealEndTime = await revealEnd(this.props.contractAddress);
             console.log("revealEndTime: " + revealEndTime)
@@ -37,11 +40,11 @@ class ExpiredHasAuction extends React.Component {
 
             if (timeNow <= bidEndTime) {
                 this.setState({
-                    stage: 3 // 1 
+                    stage: 1 // 1 
                 })
             } else if (timeNow > bidEndTime && timeNow <= revealEndTime) {
                 this.setState({
-                    stage: 3 // 2
+                    stage: 2 // 2
                 })
             } else {
                 this.setState({
@@ -66,7 +69,7 @@ class ExpiredHasAuction extends React.Component {
         };
 
 
-        let stage = "Loading Auction Stage...";
+        let stage = "";
         switch (this.state.stage) {
             case 1:
                 stage = <BiddingStage contractAddress={this.props.contractAddress} />;

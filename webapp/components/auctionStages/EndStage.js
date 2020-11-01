@@ -11,7 +11,7 @@ class EndStage extends React.Component {
         super(props);
         this.state = {
             // States for inputs into reveal() function of BlindAuction contract
-            highestBidderAddress: '(loading...)',
+            highestBidderAddress: '',
             highestBidValue: '',
             clicked: false,
 
@@ -28,18 +28,19 @@ class EndStage extends React.Component {
 
     componentDidMount() {
         const getHighestBidder = async () => {
+            console.log('Entered component')
             let highestBidderAddress = await highestBidder(this.props.contractAddress);
-            let highestBidValue = await highestBid(this.props.contractAddress);
             console.log('highestBidderAddress ' + highestBidderAddress)
+            let highestBidValue = await highestBid(this.props.contractAddress);
             console.log('highestBidValue ' + highestBidValue)
-
             this.setState({
                 highestBidderAddress: highestBidderAddress,
                 highestBidValue: highestBidValue,
             })
-
         }
         getHighestBidder();
+
+
     }
 
     render() {
@@ -59,7 +60,7 @@ class EndStage extends React.Component {
 
         }
 
-        let winningText = "Loading winner information..."
+        let winningText = "Waiting for new Ethereum blocks to be appended... please refresh the page."
         if (this.state.highestBidderAddress === "0x0000000000000000000000000000000000000000") {
             winningText = `This auction had no bidders, and thus, no one won the auction.`
         }

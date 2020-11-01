@@ -137,7 +137,7 @@ class RevealStage extends React.Component {
                     onChange={this.handleSecrets}
                 /><br />
                 <input style={{ margin: "5px" }} type="submit" value="Reveal" onClick={this.revealBids} />
-                <br /><br /><b>Remaining Time Left for Bidding Stage:</b><br />
+                <br /><br /><b>Remaining Time Left for Reveal Stage:</b><br />
                 {this.state.remainingTime === ''
                     ? 'Loading time left...'
                     : this.state.remainingTime < 0

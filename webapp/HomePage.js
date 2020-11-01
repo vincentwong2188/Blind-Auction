@@ -268,7 +268,7 @@ class HomePage extends React.Component {
         return (
             <>
                 <div style={cardStyle}>
-                    <input
+                    {/* <input
                         style={{ width: "60%", margin: "5px" }}
                         type="text"
                         placeholder="Please enter a valid Ethereum Public Address"
@@ -285,7 +285,7 @@ class HomePage extends React.Component {
                     /><br />
 
                     <input style={{ margin: "5px" }} type="submit" value="Input Values into Contract Backend" onClick={this.handleRegistering} />
-                    <br /><br />
+                    <br /><br /> */}
 
                     <img style={{ width: "100px" }} src={require('./assets/auction.png')} />
 

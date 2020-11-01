@@ -195,14 +195,14 @@ class AuctionStatus extends React.Component {
                     <h1 >The Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         Welcome to the Auction House, powered by the <b>Ethereum</b> blockchain!
-                        <br /><br />
-                        You have selected the domain: {this.state.domainName}<br />
+                        {/* <br /><br /> */}
+                        {/* You have selected the domain: {this.state.domainName}<br /> */}
                         <br /><br />
                         <input style={{ margin: "5px" }} type="submit" value="Back to Auction House" onClick={this.handleBack} />
                         <br />
                         <input style={{ margin: "5px" }} type="submit" value="Back to Home Page" onClick={this.handleDoubleBack} />
                     </p>
-                    Only for Testing:<br />
+                    {/* Only for Testing:<br />
                     {/* <input style={{ margin: "5px" }} type="submit" value="Not Expired" onClick={this.setNotExpired} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired No Auction" onClick={this.setExpiredNoAuction} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired Has Auction" onClick={this.setExpiredHasAuction} /> */}

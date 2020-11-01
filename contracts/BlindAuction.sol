@@ -20,7 +20,11 @@ contract BlindAuction {
     // Allowed withdrawals of previous bids
     mapping(address => uint256) pendingReturns;
 
-    event AuctionEnded(address winner, uint256 highestBid, uint256 currentValue);
+    event AuctionEnded(
+        address winner,
+        uint256 highestBid,
+        uint256 currentValue
+    );
 
     event BidCreated(
         bytes32 bidHash,
@@ -75,13 +79,7 @@ contract BlindAuction {
     /// not the exact amount are ways to hide the real bid but
     /// still make the required deposit. The same address can
     /// place multiple bids.
-    function bid(
-        bytes32 _blindedBid
-    ) 
-        public 
-        payable 
-        onlyBefore(biddingEnd) 
-    {
+    function bid(bytes32 _blindedBid) public payable onlyBefore(biddingEnd) {
         require(_blindedBid.length > 0);
         address _bidder = msg.sender;
         bids[_bidder].push(_blindedBid);
@@ -133,7 +131,7 @@ contract BlindAuction {
                 // skip as the bid is invalid
                 // NOTE: user can try to re-reveal this by passing in the same number of values
                 // in the event user made a mistake
-                // Although successful reveal will have been made empty, 
+                // Although successful reveal will have been made empty,
                 // but unsuccessful bids can always be retried
                 isValid = false;
                 continue;
@@ -203,19 +201,21 @@ contract BlindAuction {
         return amount;
     }
 
-    function getHighestBidder() 
-        public 
+    function getHighestBidder()
+        public
         view
         onlyAfter(revealEnd)
-        returns (address) {
+        returns (address)
+    {
         return highestBidder;
     }
 
-    function getHighestBid() 
-        public 
+    function getHighestBid()
+        public
         view
         onlyAfter(revealEnd)
-        returns (uint256) {
+        returns (uint256)
+    {
         return highestBid;
     }
 }

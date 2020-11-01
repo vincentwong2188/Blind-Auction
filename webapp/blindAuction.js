@@ -7,7 +7,7 @@ const { soliditySha3, toWei, fromAscii, fromWei } = require("web3-utils");
 
 // importing a compiled contract artifact which contains function signature etc. to interact
 import artifact from "../build/contracts/BlindAuction.json"; // REMEMBER TO CHANGE THIS!!!
-const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO FILL UP
+const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // MAY NEED TO FILL UP
 
 // run $ truffle migrate --network ropsten --reset
 
@@ -33,6 +33,7 @@ const web3 = new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("h
 // Start of Functions
 
 export const biddingEnd = async (contractAddress) => {
+
     const contract = new web3.eth.Contract(artifact.abi, contractAddress); // Need to put this into each function
     let result = BigNumber(await contract.methods.biddingEnd().call({ from: myAddress }));
     let output = result.c[0];
@@ -49,7 +50,7 @@ export const revealEnd = async (contractAddress) => {
 }
 
 export const bid = async (sendValue, value, real, secret, contractAddress) => {
-
+    console.log('enters bid function')
     // For ganache:
     const CHAIN_ID = await web3.eth.getChainId();
 
@@ -186,6 +187,8 @@ export const auctionEnd = async (contractAddress) => {
 };
 
 export const highestBidder = async (contractAddress) => {
+
+    console.log('enter async highestBidder')
     const contract = new web3.eth.Contract(artifact.abi, contractAddress); // Need to put this into each function
     let highestBidderAddreses = await contract.methods.getHighestBidder().call({ from: myAddress });
 
