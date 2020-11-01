@@ -64,8 +64,9 @@ class BiddingStage extends React.Component {
         console.log("secret: " + secret);
 
         let contractAddress = this.props.contractAddress;
+        console.log('before bid function')
         await bid(sendValue, value, real, secret, contractAddress);
-
+        console.log('exits bid function')
     }
 
     async componentDidMount() {
