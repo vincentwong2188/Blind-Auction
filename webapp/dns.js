@@ -11,7 +11,7 @@ const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO F
 
 // for GANACHE
 const web3 = new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
-export const DnsContractAddress = "0xb595dB9a46ca3d2AfBf259ca6D3F34E3eCc678A0"; // GANACHE
+export const DnsContractAddress = "0x7928fd6AB386fec763d2aEfFB03E18e1c1eDB76F"; // GANACHE
 
 // FOR ROPSTEN
 // const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
@@ -75,8 +75,8 @@ export const sendETH = async (amount, ownerAddress) => {
                     from: ethereum.selectedAddress,
                     to: ownerAddress,
                     value: parseInt(web3.utils.toWei(amount)).toString(16),
-                    gas: web3.utils.toHex(46899),
-                    gasPrice: web3.utils.toHex(15000),
+                    gas: web3.utils.toHex(3000000),
+                    gasPrice: web3.utils.toHex(20000000000),
                     data: null,
                     chainId: CHAIN_ID, // ropsten
                 },
@@ -91,6 +91,11 @@ export const sendETH = async (amount, ownerAddress) => {
 export const checkExpired = async (url) => {
     const result = await contract.methods.checkExpired(url).call({ from: myAddress });
     return { expired: result }
+}
+
+export const getExpired = async (url) => {
+    const result = await contract.methods.getExpired(url).call({ from: myAddress });
+    return result;
 }
 
 // TEST FUNCTIONS

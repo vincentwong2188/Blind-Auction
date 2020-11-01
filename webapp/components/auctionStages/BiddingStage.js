@@ -114,7 +114,7 @@ class BiddingStage extends React.Component {
                         // value={this.state.bidValue}
                         onChange={this.handleBidSend}
                     /><br /><br />
-                    <b></b><br />
+                    <b>Hash Values:</b><br />
                     <input
                         style={{ width: "20%", margin: "5px" }}
                         type="text"

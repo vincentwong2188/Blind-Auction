@@ -114,7 +114,7 @@ class RevealStage extends React.Component {
                 </p>
                 <br />
 
-                Hash Values:<br />
+                <b>Hash Values:</b><br />
                 <input
                     style={{ width: "40%", margin: "5px" }}
                     type="text"
