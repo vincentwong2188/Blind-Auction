@@ -74,6 +74,11 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
 
   })
 
+  // Test when 2 bidders bid their own bids and all have valid bids
+  // Bidder2 will emerge as the winner due to the highest bid of 0.2
+  // Test rejecting calls to various function due to the time check 
+  // function calls that are called before the time bounds will be checked
+  // if they are rejected
   describe('2 Bidders Success Case', async () => {
     let blindAuction
     let dns
