@@ -144,17 +144,33 @@ class RevealStage extends React.Component {
 
                             The Reveal Phase allows a bidder to reveal all their bids for a particular domain name, and prove that they were the ones who made those bids during the Bidding Phase.
                             <br /><br />
-
-                        - put what you bid in order
-                        - can only reveal ONCE! so please check before revealing and paying gas
-                        --- will get error if we reveal more than once
-                        - give example of how to added Reveals
-                        --- if you have (0.1, true, secret1), (0.2, false, secret2)
-                        ----- input 0.1, 0.2
-                        ----- input true, false
-                        ----- input secret1, secret 2
-
-                    </p>
+                            Unlike the Bidding Phase, the Reveal Phase only takes place once per bidder, and is executing for <b>ALL</b> bids made by a single bidder.
+                            <br /><br />
+                            The Reveal Phase takes in 3 inputs: <br /><br />A list of <b>bids</b>, a list of <b>'true/false'</b> real booleans, and a list of <b>secrets</b>.
+                            <br /><br />
+                            Here are the steps to reveal all your bids.
+                            <br /><br />
+                            1. Input in all your <b>bids</b> in <b>chronological order</b>, separating them each with a <b>comma ',' </b> .
+                            <br /><br />2. Input in all your <b>'true/false'</b> real booleans in <b>chronological order</b>, separating them each with a <b>comma ',' </b> .
+                            <br /><br />3. Input in all your <b>secrets</b> in <b>chronological order</b>, separating them each with a <b>comma ',' </b> .
+                            <br /><br />
+                            And you're <b>done</b>!
+                            <br /><br />
+                            <hr />
+                            <br /><br />
+                            <b>Important:</b>
+                            <br /><br />
+                            Each bidder can only reveal once! If a bidder attempts to reveal all their bids a second time, the contract call will not go through, and Metamask will return an contract revert error.
+                            <br /><br />
+                            Please input all your values in chronological order, separated by commas. This is to ensure that the contract will correctly read and verify your bids.
+                            <br /><br />
+                            <b>Example of Inputs:</b>
+                            <br /><br />
+                            If you made two bids (0.1, true, secret1), and (0.2, false, secret2), your inputs would be:<br /><br />
+                            <b>List of Bids:</b> 0.1, 0.2<br />
+                            <b>List of Real Booleans:</b> true, false<br />
+                            <b>List of Secrets:</b> secret1, secret 2<br />
+                        </p>
                     </div>
 
                     <div style={{ ...innerCardStyle, flex: 2, paddingTop: "80px" }}>
@@ -167,21 +183,21 @@ class RevealStage extends React.Component {
 
                         <b>Hash Values:</b><br />
                         <input
-                            style={{ width: "40%", margin: "5px" }}
+                            style={{ width: "70%", margin: "5px" }}
                             type="text"
                             placeholder="Enter all your bids in order, separated with a comma ','"
                             // value={this.state.bidValue}
                             onChange={this.handleBids}
                         /><br />
                         <input
-                            style={{ width: "40%", margin: "5px" }}
+                            style={{ width: "70%", margin: "5px" }}
                             type="text"
                             placeholder="Enter all your True/False values, separated with a comma ','"
                             // value={this.state.bidValue}
                             onChange={this.handleReals}
                         /><br />
                         <input
-                            style={{ width: "40%", margin: "5px" }}
+                            style={{ width: "70%", margin: "5px" }}
                             type="text"
                             placeholder="Enter all your secret passwords in order, separated with a comma ','"
                             // value={this.state.bidValue}

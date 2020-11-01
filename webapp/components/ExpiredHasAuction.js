@@ -40,15 +40,15 @@ class ExpiredHasAuction extends React.Component {
 
             if (timeNow <= bidEndTime) {
                 this.setState({
-                    stage: 1 // 1 
+                    stage: 2 // 1 
                 })
             } else if (timeNow > bidEndTime && timeNow <= revealEndTime) {
                 this.setState({
-                    stage: 1 // 2
+                    stage: 2 // 2
                 })
             } else {
                 this.setState({
-                    stage: 1 // 3
+                    stage: 2 // 3
                 })
             }
         }
