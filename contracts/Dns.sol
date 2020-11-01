@@ -59,6 +59,10 @@ contract Dns {
         return (now >= expiry_date[url]);
     }
 
+    function getExpired(string memory url) public view returns (uint256) {
+        return expiry_date[url];
+    }
+
     function startAuction(string memory url) public {
         if (!checkExpired(url)) {
             revert("URL not yet expired!");
