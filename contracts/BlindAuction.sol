@@ -19,6 +19,7 @@ contract BlindAuction {
 
     // Allowed withdrawals of previous bids
     mapping(address => uint256) pendingReturns;
+    address[] private bidder_list;
 
     event AuctionEnded(
         address winner,
@@ -147,6 +148,7 @@ contract BlindAuction {
         }
         // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
+        bidder_list.push(msg.sender);
         emit ProcessReveal(pendingReturns[msg.sender], isValid);
         return isValid;
     }
@@ -181,23 +183,32 @@ contract BlindAuction {
         dns.registerAddress.value(highestBid)(url, highestBidder);
         ended = true;
         emit AuctionEnded(highestBidder, highestBid, address(this).balance);
+        // refund all excess Ether that the loser deposited
+        for (uint256 i = 0; i < bidder_list.length; i++) {
+            withdraw(address(uint160(address(bidder_list[i]))));
+        }
         return highestBidder;
     }
 
     /// Withdraw a bid that was overbid.
     // called after auction end
-    function withdraw() public returns (uint256 amount) {
+    function withdraw
+    (
+        address payable _bidder
+    )   internal
+        returns (uint256 amount) 
+    {
         require(ended);
-        amount = pendingReturns[msg.sender];
+        amount = pendingReturns[_bidder];
         if (amount > 0) {
             // It is important to set this to zero because the recipient
             // can call this function again as part of the receiving call
             // before `transfer` returns (see the remark above about
             // conditions -> effects -> interaction).
-            pendingReturns[msg.sender] = 0;
-            msg.sender.transfer(amount);
+            pendingReturns[_bidder] = 0;
+            _bidder.transfer(amount);
         }
-        emit WithdrawEther(amount, msg.sender);
+        emit WithdrawEther(amount, _bidder);
         return amount;
     }
 
