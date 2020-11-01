@@ -60,7 +60,7 @@ class EndStage extends React.Component {
 
         }
 
-        let winningText = "Waiting for new Ethereum blocks to be appended... please refresh the page."
+        let winningText = "Waiting for new Ethereum blocks to be appended before showing winner information... please refresh the page and try again."
         if (this.state.highestBidderAddress === "0x0000000000000000000000000000000000000000") {
             winningText = `This auction had no bidders, and thus, no one won the auction.`
         }
