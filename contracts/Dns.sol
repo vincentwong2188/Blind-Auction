@@ -82,7 +82,8 @@ contract Dns {
             bidding_length,
             reveal_length,
             url,
-            address(uint160(address(this)))
+            address(uint160(address(this))),
+            msg.sender
         );
         return auction;
     }
@@ -172,9 +173,11 @@ contract Dns {
         // Check if url is expired
         if (checkExpired(url)) {
             // Check if calling auction address is valid
-            // require(auctions[url].addr == auc_addr);
-            internalAddressRegister(url, addr);
-            emit Registration(addr, url, expiry_date[url]);
+            require(auctions[url].addr == auc_addr);
+            if (addr != address(0)) {
+                internalAddressRegister(url, addr);
+                emit Registration(addr, url, expiry_date[url]);
+            }
         }
     }
 

@@ -108,7 +108,7 @@ contract("Dns", async (accounts) => {
 
   it("check old address deleted after no urls assigned to it", async () => {
     let dns = await Dns.deployed();
-    sleep(60000);
+    // sleep(60000);
     // sending 3 Ether to deposit() function from accounts[4],
     // Note that deposit() function in the contract doesn't have any input parameter,
     // but in test, we are allowed to pass one optional special object specifying ethers to send to this

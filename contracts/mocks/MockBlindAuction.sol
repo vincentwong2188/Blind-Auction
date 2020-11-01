@@ -6,8 +6,9 @@ contract MockBlindAuction is BlindAuction {
         uint _biddingTime,
         uint _revealTime,
         string memory _url,
-        address payable _beneficiary
-    ) public BlindAuction(_biddingTime, _revealTime, _url, _beneficiary) {}
+        address payable _beneficiary,
+        address _auctionStarter
+    ) public BlindAuction(_biddingTime, _revealTime, _url, _beneficiary, _auctionStarter) {}
 
 
     function moveAheadBiddingTime(uint secs) external {
