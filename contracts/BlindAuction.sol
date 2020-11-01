@@ -14,8 +14,8 @@ contract BlindAuction {
     mapping(address => uint256) deposits;
 
     // TODO: MAKE PRIVATE AND HAVE GETTING VIEW FUNC that only allow viewing after reveal phase ends
-    address private highestBidder;
-    uint256 private highestBid;
+    address public highestBidder;
+    uint256 public highestBid;
 
     // Allowed withdrawals of previous bids
     mapping(address => uint256) pendingReturns;
@@ -150,6 +150,7 @@ contract BlindAuction {
         }
         // return all deposits to user
         pendingReturns[msg.sender] += deposits[msg.sender];
+        deposits[msg.sender] = 0;
         bidder_list.push(msg.sender);
         emit ProcessReveal(pendingReturns[msg.sender], isValid);
         return isValid;
@@ -214,19 +215,19 @@ contract BlindAuction {
         return amount;
     }
 
-    function getHighestBidder() 
-        public 
-        view
-        onlyAfter(revealEnd)
-        returns (address) {
-        return highestBidder;
-    }
+    // function getHighestBidder() 
+    //     public 
+    //     view
+    //     onlyAfter(revealEnd)
+    //     returns (address) {
+    //     return highestBidder;
+    // }
 
-    function getHighestBid() 
-        public 
-        view
-        onlyAfter(revealEnd)
-        returns (uint256) {
-        return highestBid;
-    }
+    // function getHighestBid() 
+    //     public 
+    //     view
+    //     onlyAfter(revealEnd)
+    //     returns (uint256) {
+    //     return highestBid;
+    // }
 }
