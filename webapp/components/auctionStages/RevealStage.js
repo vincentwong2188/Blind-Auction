@@ -99,66 +99,112 @@ class RevealStage extends React.Component {
             textAlign: "center",
         }
 
-        return (<div style={{
+        const cardStyle = {
             fontFamily: "arial",
-            width: "82%",
-            margin: "auto",
-            display: "flex",
-            flexDirection: "row"
-        }}>
-            <div style={{ ...innerCardStyle, flex: 2, marginRight: "16px" }}>
-                <p style={{ width: "60%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
-                    This auction is currently in the <b>Reveal Stage</b>, as its Bidding Stage has already concluded.
-                    <br /><br />Only participants that have bidded before will be allowed to participate to reveal their bids.
-                    <br /><br />Reveal your bid below to be eligible to either win the auction or have your bids refunded due to a loss.
-                </p>
-                <br />
+            width: "80%",
+            margin: "16px auto",
+            border: "1px solid #eee",
+            boxShadow: "0 2px 3px #ccc",
+            padding: "15px",
+            textAlign: "center",
+        };
 
-                <b>Hash Values:</b><br />
-                <input
-                    style={{ width: "40%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter all your bids in order, separated with a comma ','"
-                    // value={this.state.bidValue}
-                    onChange={this.handleBids}
-                /><br />
-                <input
-                    style={{ width: "40%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter all your True/False values, separated with a comma ','"
-                    // value={this.state.bidValue}
-                    onChange={this.handleReals}
-                /><br />
-                <input
-                    style={{ width: "40%", margin: "5px" }}
-                    type="text"
-                    placeholder="Enter all your secret passwords in order, separated with a comma ','"
-                    // value={this.state.bidValue}
-                    onChange={this.handleSecrets}
-                /><br />
-                <input style={{ margin: "5px" }} type="submit" value="Reveal" onClick={this.revealBids} />
-                <br /><br /><b>Remaining Time Left for Reveal Stage:</b><br />
-                {this.state.remainingTime === ''
-                    ? 'Loading time left...'
-                    : this.state.remainingTime < 0
-                        ? `Reveal Stage has concluded! Please refresh the page.`
-                        : this.state.remainingTime > 60
-                            ? `${Math.floor(this.state.remainingTime / 60)} min ${this.state.remainingTime - (Math.floor(this.state.remainingTime / 60)) * 60} sec`
-                            : `${this.state.remainingTime} sec`}
-            </div>
+        return (
+            <div>
 
-            <div style={{ ...innerCardStyle, flex: 1 }}>
-                <img style={{ width: "50px" }} src={require('../../assets/question.png')} />
+                <div style={cardStyle}>
+                    {/* <b>Remaining Time Left:</b><br /> */}
+                    <h2>
+                        {
+                            this.state.remainingTime === ''
+                                ? 'Loading time left...'
+                                : this.state.remainingTime < 0
+                                    ? `Reveal Stage has concluded! Please refresh the page.`
+                                    : this.state.remainingTime > 60
+                                        ? `${Math.floor(this.state.remainingTime / 60)} min ${this.state.remainingTime - (Math.floor(this.state.remainingTime / 60)) * 60} sec`
+                                        : `${this.state.remainingTime} sec`
+                        }
+                    </h2>
 
-                <h3>How do I participate in the <br />Reveal Phase?</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        <br /><br />Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div>
+
+                <div style={{
+                    fontFamily: "arial",
+                    width: "82%",
+                    margin: "auto",
+                    display: "flex",
+                    flexDirection: "row"
+                }}>
+
+                    <div style={{ ...innerCardStyle, flex: 1, marginRight: "16px" }}>
+                        <img style={{ width: "50px" }} src={require('../../assets/question.png')} />
+
+                        <h3>How do I participate in the <br />Reveal Phase?</h3>
+                        <p>
+
+                            The Reveal Phase allows a bidder to reveal all their bids for a particular domain name, and prove that they were the ones who made those bids during the Bidding Phase.
+                            <br /><br />
+
+                        - put what you bid in order
+                        - can only reveal ONCE! so please check before revealing and paying gas
+                        --- will get error if we reveal more than once
+                        - give example of how to added Reveals
+                        --- if you have (0.1, true, secret1), (0.2, false, secret2)
+                        ----- input 0.1, 0.2
+                        ----- input true, false
+                        ----- input secret1, secret 2
+
                     </p>
+                    </div>
+
+                    <div style={{ ...innerCardStyle, flex: 2, paddingTop: "80px" }}>
+                        <p style={{ width: "60%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
+                            This auction is currently in the <b>Reveal Stage</b>, as its Bidding Stage has already concluded.
+                        <br /><br />Only participants that have bidded before will be allowed to participate to reveal their bids.
+                        <br /><br />Reveal your bid below to be eligible to either win the auction or have your bids refunded due to a loss.
+                    </p>
+                        <br />
+
+                        <b>Hash Values:</b><br />
+                        <input
+                            style={{ width: "40%", margin: "5px" }}
+                            type="text"
+                            placeholder="Enter all your bids in order, separated with a comma ','"
+                            // value={this.state.bidValue}
+                            onChange={this.handleBids}
+                        /><br />
+                        <input
+                            style={{ width: "40%", margin: "5px" }}
+                            type="text"
+                            placeholder="Enter all your True/False values, separated with a comma ','"
+                            // value={this.state.bidValue}
+                            onChange={this.handleReals}
+                        /><br />
+                        <input
+                            style={{ width: "40%", margin: "5px" }}
+                            type="text"
+                            placeholder="Enter all your secret passwords in order, separated with a comma ','"
+                            // value={this.state.bidValue}
+                            onChange={this.handleSecrets}
+                        /><br />
+                        <input style={{ margin: "5px" }} type="submit" value="Reveal" onClick={this.revealBids} />
+                        {/* <br /><br /><b>Remaining Time Left for Reveal Stage:</b><br />
+                    {this.state.remainingTime === ''
+                        ? 'Loading time left...'
+                        : this.state.remainingTime < 0
+                            ? `Reveal Stage has concluded! Please refresh the page.`
+                            : this.state.remainingTime > 60
+                                ? `${Math.floor(this.state.remainingTime / 60)} min ${this.state.remainingTime - (Math.floor(this.state.remainingTime / 60)) * 60} sec`
+                                : `${this.state.remainingTime} sec`} */}
+                    </div>
+
+
+
+                </div >
+
             </div>
 
-
-        </div >);
+        );
     }
 }
 export default RevealStage;

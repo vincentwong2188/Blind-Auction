@@ -11,7 +11,7 @@ const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // MAY NEED TO F
 
 // for GANACHE
 const web3 = new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
-export const DnsContractAddress = "0x7928fd6AB386fec763d2aEfFB03E18e1c1eDB76F"; // GANACHE
+export const DnsContractAddress = "0x4fB6b03261aB30C9329f098f84D038BA0D791009"; // GANACHE
 
 // FOR ROPSTEN
 // const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)

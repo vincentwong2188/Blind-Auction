@@ -101,8 +101,11 @@ class EndStage extends React.Component {
 
                     <h3>How does the End Phase work?</h3>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        <br /><br />Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        - The end phase is where we can officially end an ongoing auction.
+                        - Auctions must end before winners can claim ownership to their desired domains
+                        - Auctions must end before refunds will be made to users that did not win the auction.
+                        - If an auction has no bidders, the user that started the auction will automatically be the winner the auction.
+
                     </p>
                 </div>
 
