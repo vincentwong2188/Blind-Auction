@@ -91,79 +91,118 @@ class BiddingStage extends React.Component {
             textAlign: "center",
         }
 
+        const cardStyle = {
+            fontFamily: "arial",
+            width: "80%",
+            margin: "16px auto",
+            border: "1px solid #eee",
+            boxShadow: "0 2px 3px #ccc",
+            padding: "15px",
+            textAlign: "center",
+        };
 
         return (
-            <div style={{
-                fontFamily: "arial",
-                width: "82%",
-                margin: "auto",
-                display: "flex",
-                flexDirection: "row"
-            }}>
-                <div style={{ ...innerCardStyle, flex: 2, marginRight: "16px" }} >
-                    <p style={{ width: "100%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
-                        This auction is currently in the <b>Bidding Stage</b> and is still accepting bids!<br /><br />
-                    Submit a bid below to participate in this auction.
-                    </p>
-                    <br />
-                    <b>ETH Amount:</b>
-                    <input
-                        style={{ height: "50px", width: "80px", margin: "5px", fontSize: "30px" }}
-                        type="text"
-                        placeholder=""
-                        // value={this.state.bidValue}
-                        onChange={this.handleBidSend}
-                    /><br /><br />
-                    <b></b><br />
-                    <input
-                        style={{ width: "20%", margin: "5px" }}
-                        type="text"
-                        placeholder="Enter the bid"
-                        // value={this.state.bidValue}
-                        onChange={this.handleBid}
-                    /><br />
-                    <input
-                        style={{ width: "20%", margin: "5px" }}
-                        type="text"
-                        placeholder="Is this bid real? Write 'True' if real, and 'False' if fake. "
-                        // value={this.state.bidValue}
-                        onChange={this.handleReal}
-                    /><br />
-                    <input
-                        style={{ width: "20%", margin: "5px" }}
-                        type="text"
-                        placeholder="Enter a secret password"
-                        // value={this.state.bidValue}
-                        onChange={this.handleSecret}
-                    /><br />
-                    <input style={{ margin: "5px" }} type="submit" value="Place Bid" onClick={this.handlePlaceBid} />
-                    <br /><br />
-
-                    <b>Remaining Time Left for Bidding Stage:</b><br />
-                    {
-                        this.state.remainingTime === ''
-                            ? 'Loading time left...'
-                            : this.state.remainingTime < 0
-                                ? `Bidding Stage has concluded! Please refresh the page.`
-                                : this.state.remainingTime > 60
-                                    ? `${Math.floor(this.state.remainingTime / 60)} min ${this.state.remainingTime - (Math.floor(this.state.remainingTime / 60)) * 60} sec`
-                                    : `${this.state.remainingTime} sec`
-                    }
+            <div>
+                <div style={cardStyle}>
+                    {/* <b>Remaining Time Left:</b><br /> */}
+                    <h2>
+                        {
+                            this.state.remainingTime === ''
+                                ? 'Loading time left...'
+                                : this.state.remainingTime < 0
+                                    ? `Bidding Stage has concluded! Please refresh the page.`
+                                    : this.state.remainingTime > 60
+                                        ? `${Math.floor(this.state.remainingTime / 60)} min ${this.state.remainingTime - (Math.floor(this.state.remainingTime / 60)) * 60} sec`
+                                        : `${this.state.remainingTime} sec`
+                        }
+                    </h2>
 
                 </div>
 
-                <div style={{ ...innerCardStyle, flex: 1 }}>
-                    <img style={{ width: "50px" }} src={require('../../assets/question.png')} />
-                    <h3>How do I participate in the <br />Bidding Phase?</h3>
+                <div style={{
+                    fontFamily: "arial",
+                    width: "82%",
+                    margin: "auto",
+                    display: "flex",
+                    flexDirection: "row",
+                }}>
+                    <div style={{ ...innerCardStyle, flex: 1, marginRight: "16px" }}>
+                        <img style={{ width: "50px" }} src={require('../../assets/question.png')} />
+                        <h3>How do I participate in the <br />Bidding Phase?</h3>
 
-                    <p>
-                        Each bidding stage allows a bidder (you!) to place bids for a particular domain name. To bid, please input in your actual bid (in ether units).
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        <br /><br />Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </p>
-                </div>
+                        <p>
+                            The Bidding Phase allows a bidder (you!) to place bids for a particular domain name. While the Bidding Phase is ongoing, each user can place multiple bids of their choice, as "bid" inputs.
+                            <br /><br />
+                            Each bid takes in 4 values: <br /><br />A <b>deposit (in ether)</b>, a desired <b>bid</b>, a <b>'true/false' real boolean</b>, and finally a <b>secret</b>.
+                            <br /><br />
+                            Here are the steps to start a bid.
+                            <br /><br />
+                            1. Input in a <b>deposit</b> amount of your choice. Note that your desired bid amount does not need to correspond with your deposit amount. However, each individual bid value must be at least equal or greater than the sum of all your deposits.
+                            <br /><br />2. Input your desired <b>bid</b>.
+                            <br /><br />3. Indicate whether this bid is real or not by writing <b>'true'</b> or <b>'false'</b>. This way, you may input fake bids to mask your actual bid.
+                            <br /><br />4. Input a <b>secret password</b> value. The purpose of this secret is to authenticate that you are the one who made the bid. You must remember this secret, as iot will be used in the reveal stage later to prove your identity for your bids.
+                            <br /><br />
+                            And you're done! All the above values will be hashed, and this hash will be sent to the Blind Auction Ethereum Smart Contract as inputs into the auction.
 
-            </div >);
+                            <br /><br />
+                            <b>Important:</b> Please remember all your (bid, real, secret) inputs, as you will need these values in the reveal stage later. Failure to properly safekeep these values will result in you losing your bid.
+
+                            {/* - Tell user that they can place multiple bids
+                            - eth of bid does not need to correpond with bid hash amount
+                            --- as long as total bid is equal or greater than the highest bid put in, its ok
+                            - can put fake bids to mask your real bid, indicate with 'true/false' boolean
+                            - secret is to authenticate that you made the bid
+                            --- must remember this secret, will need to be used in reveal stage later to prove your identity for your bids
+                            - must remember ALL (bid, real, secret) instances, will need to be input into reveal stage later */}
+                        </p>
+                    </div>
+
+                    <div style={{ ...innerCardStyle, flex: 2, paddingTop: "80px" }} >
+                        <p style={{ width: "100%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
+                            This auction is currently in the <b>Bidding Stage</b> and is still accepting bids!<br /><br />
+                            Submit a bid below to participate in this auction.
+                        </p>
+                        <br />
+                        <b>ETH Deposit:</b>
+                        <input
+                            style={{ height: "50px", width: "80px", margin: "5px", fontSize: "30px" }}
+                            type="text"
+                            placeholder=""
+                            // value={this.state.bidValue}
+                            onChange={this.handleBidSend}
+                        /><br /><br />
+                        <b>Hash Values:</b><br />
+                        <input
+                            style={{ width: "40%", margin: "5px" }}
+                            type="text"
+                            placeholder="Enter your desired bid"
+                            // value={this.state.bidValue}
+                            onChange={this.handleBid}
+                        /><br />
+                        <input
+                            style={{ width: "40%", margin: "5px" }}
+                            type="text"
+                            placeholder="Is this bid real? Write 'True' if real, and 'False' if fake. "
+                            // value={this.state.bidValue}
+                            onChange={this.handleReal}
+                        /><br />
+                        <input
+                            style={{ width: "40%", margin: "5px" }}
+                            type="text"
+                            placeholder="Enter a secret password"
+                            // value={this.state.bidValue}
+                            onChange={this.handleSecret}
+                        /><br />
+                        <input style={{ margin: "5px" }} type="submit" value="Place Bid" onClick={this.handlePlaceBid} />
+                        <br /><br />
+
+                    </div>
+
+
+
+                </div >
+            </div >
+        );
     }
 }
 export default BiddingStage;

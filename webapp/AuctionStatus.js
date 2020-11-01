@@ -206,7 +206,7 @@ class AuctionStatus extends React.Component {
                     {/* <input style={{ margin: "5px" }} type="submit" value="Not Expired" onClick={this.setNotExpired} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired No Auction" onClick={this.setExpiredNoAuction} />
                     <input style={{ margin: "5px" }} type="submit" value="Expired Has Auction" onClick={this.setExpiredHasAuction} /> */}
-                    <br />Blind Auction Contract Address: {this.state.contractAddress}
+                    {/* <br />Blind Auction Contract Address: {this.state.contractAddress} */}
 
                 </div>
                 {status}

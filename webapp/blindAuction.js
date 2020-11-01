@@ -74,8 +74,8 @@ export const bid = async (sendValue, value, real, secret, contractAddress) => {
                     from: ethereum.selectedAddress,
                     to: contractAddress,
                     value: parseInt(web3.utils.toWei(sendValue, 'ether')).toString(16),
-                    gas: web3.utils.toHex(46899),
-                    gasPrice: web3.utils.toHex(15000),
+                    gas: web3.utils.toHex(3000000),
+                    gasPrice: web3.utils.toHex(20000000000),
 
                     data: web3.eth.abi.encodeFunctionCall(
                         {
@@ -115,8 +115,8 @@ export const reveal = async (values, reals, secrets, contractAddress) => {
                     from: ethereum.selectedAddress,
                     to: contractAddress,
                     value: parseInt(web3.utils.toWei('0', 'ether')).toString(16),
-                    gas: web3.utils.toHex(46899),
-                    gasPrice: web3.utils.toHex(15000),
+                    gas: web3.utils.toHex(3000000),
+                    gasPrice: web3.utils.toHex(20000000000),
 
                     data: web3.eth.abi.encodeFunctionCall(
                         {
@@ -167,6 +167,8 @@ export const auctionEnd = async (contractAddress) => {
                     from: ethereum.selectedAddress,
                     to: contractAddress,
                     value: parseInt(web3.utils.toWei('0', 'ether')).toString(16),
+                    gas: web3.utils.toHex(3000000),
+                    gasPrice: web3.utils.toHex(20000000000),
                     data: web3.eth.abi.encodeFunctionCall(
                         {
                             name: "auctionEnd",
