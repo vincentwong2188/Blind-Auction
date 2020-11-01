@@ -34,7 +34,7 @@ contract BlindAuction {
         uint256 value
     );
 
-    event ProcessReveal(uint256 deposits, bool isValid);
+    event ProcessReveal(uint256 deposits, uint256 balances, address bidder);
 
     event RevealHashes(bytes32 original, bytes32 test);
 
@@ -105,9 +105,12 @@ contract BlindAuction {
         public
         onlyAfter(biddingEnd)
         onlyBefore(revealEnd)
-        returns (bool isValid)
     {
-        isValid = true;
+        for (uint256 i = 0; i < bidder_list.length; i++) {
+            if (bidder_list[i] == msg.sender) {
+                revert("User have already revealed bids - each user can only reveal once!");
+            }
+        }
         uint256 length = bids[msg.sender].length;
         // require the number of values passed in to be equal to total number of bids for user
         require(_values.length == length);
@@ -134,7 +137,6 @@ contract BlindAuction {
                 // in the event user made a mistake
                 // Although successful reveal will have been made empty,
                 // but unsuccessful bids can always be retried
-                isValid = false;
                 continue;
             }
             if (real && deposits[msg.sender] >= value) {
@@ -150,8 +152,7 @@ contract BlindAuction {
         pendingReturns[msg.sender] += deposits[msg.sender];
         deposits[msg.sender] = 0;
         bidder_list.push(msg.sender);
-        emit ProcessReveal(pendingReturns[msg.sender], isValid);
-        return isValid;
+        emit ProcessReveal(pendingReturns[msg.sender], deposits[msg.sender], bidder_list[bidder_list.length-1]);
     }
 
     // This is an "internal" function which means that it
