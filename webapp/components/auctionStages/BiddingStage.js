@@ -139,7 +139,7 @@ class BiddingStage extends React.Component {
                             <br /><br />
                             1. Input in a <b>deposit</b> amount of your choice. Note that your desired bid amount does not need to correspond with your deposit amount. However, each individual bid value must be at least equal or greater than the sum of all your deposits.
                             <br /><br />2. Input your desired <b>bid</b>.
-                            <br /><br />3. Indicate whether this bid is real or not by writing <b>'true'</b> or <b>'false'</b>. This way, you may input fake bids to mask your actual bid.
+                            <br /><br />3. Indicate whether this bid is real or not by writing <b>'true'</b> or <b>'false'</b>. This way, you may input fake bids to mask your actual bid so that you can top up the ether deposits for your real bids.
                             <br /><br />4. Input a <b>secret password</b> value. The purpose of this secret is to authenticate that you are the one who made the bid. You must remember this secret, as it will be used in the reveal stage later to prove your identity for your bids.
                             <br /><br />
                             And you're done! All the above values will be hashed, and this hash will be sent to the Blind Auction Ethereum Smart Contract as inputs into the auction.
