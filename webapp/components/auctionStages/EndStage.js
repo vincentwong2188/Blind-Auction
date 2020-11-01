@@ -84,7 +84,21 @@ class EndStage extends React.Component {
                 display: "flex",
                 flexDirection: "row"
             }}>
-                <div style={{ ...innerCardStyle, flex: 2 }}>
+                <div style={{ ...innerCardStyle, flex: 1, marginRight: "16px" }}>
+                    <img style={{ width: "50px" }} src={require('../../assets/question.png')} />
+
+                    <h3>How does the End Phase work?</h3>
+                    <p>
+                        The <b>End Phase</b> is where we can officially end an ongoing auction.
+                        <br /><br />Auctions must end before winners can <b>claim ownership</b> to their desired domains, and before <b>refunds will be made</b> to users that did not win the auction.
+                        <br /><br />If an auction has no bidders, the user that started the auction will automatically be the winner the auction.
+                        <br /><br />
+                        <hr />
+                        <br /><br />
+                        <b>Thank you for taking part in the DNS Blind Auction!</b>
+                    </p>
+                </div>
+                <div style={{ ...innerCardStyle, flex: 2, paddingTop: "80px" }}>
                     <p style={{ width: "60%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
                         This auction is currently in the <b>End Stage</b>, as both its Bidding and Reveal Stages have already concluded.
                         <br /><br />
@@ -95,21 +109,6 @@ class EndStage extends React.Component {
                     <br />
                     {button}
                 </div>
-
-                <div style={{ ...innerCardStyle, flex: 1 }}>
-                    <img style={{ width: "50px" }} src={require('../../assets/question.png')} />
-
-                    <h3>How does the End Phase work?</h3>
-                    <p>
-                        - The end phase is where we can officially end an ongoing auction.
-                        - Auctions must end before winners can claim ownership to their desired domains
-                        - Auctions must end before refunds will be made to users that did not win the auction.
-                        - If an auction has no bidders, the user that started the auction will automatically be the winner the auction.
-
-                    </p>
-                </div>
-
-
             </div>);
     }
 }

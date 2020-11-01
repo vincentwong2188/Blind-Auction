@@ -145,7 +145,9 @@ class BiddingStage extends React.Component {
                             And you're done! All the above values will be hashed, and this hash will be sent to the Blind Auction Ethereum Smart Contract as inputs into the auction.
 
                             <br /><br />
-                            <b>Important:</b> Please remember all your (bid, real, secret) inputs in chronological order, as you will need these values in the reveal stage later. Failure to properly safekeep these values will result in you losing your bid.
+                            <hr />
+                            <br /><br />
+                            <b>Important:</b> Please remember all your (bid, real, secret) inputs in chronological order, as you will need these values in the reveal stage later. Failure to properly safe-keep these values will result in you losing your bid.
 
                             {/* - Tell user that they can place multiple bids
                             - eth of bid does not need to correpond with bid hash amount
