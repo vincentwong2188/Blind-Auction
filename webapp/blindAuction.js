@@ -190,14 +190,14 @@ export const highestBidder = async (contractAddress) => {
 
     console.log('enter async highestBidder')
     const contract = new web3.eth.Contract(artifact.abi, contractAddress); // Need to put this into each function
-    let highestBidderAddreses = await contract.methods.getHighestBidder().call({ from: myAddress });
+    let highestBidderAddreses = await contract.methods.highestBidder().call({ from: myAddress });
 
     return highestBidderAddreses;
 }
 
 export const highestBid = async (contractAddress) => {
     const contract = new web3.eth.Contract(artifact.abi, contractAddress); // Need to put this into each function
-    let highestBidValue = await contract.methods.getHighestBid().call({ from: myAddress });
+    let highestBidValue = await contract.methods.highestBid().call({ from: myAddress });
     highestBidValue = fromWei(highestBidValue)
     return highestBidValue;
 }
