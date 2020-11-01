@@ -24,15 +24,22 @@ contract Dns {
     mapping(string => uint256) public expiry_date;
     address public owner;
     mapping(string => AuctionItem) private auctions;
-    uint256 public expiry = 1 minutes; // 15
+    uint256 public expiry; // 15
     uint256 MAX_UINT = 16666666666666666666666666666666666666666666666666666666666666665;
 
-    uint256 public bidding_length = 2 minutes; // 10
-    uint256 public reveal_length = 2 minutes; // 5
+    uint256 public bidding_length; // 10
+    uint256 public reveal_length; // 5
 
-    constructor() public {
+    constructor(
+        uint256 bid_len,
+        uint256 reveal_len,
+        uint256 exp
+    ) public {
         owner = msg.sender;
         // MAX_UINT = 2**256 - 1;
+        bidding_length = bid_len;
+        reveal_length = reveal_len;
+        expiry = exp;
     }
 
     function getAddresses() public view returns (address[] memory) {

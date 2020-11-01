@@ -2,7 +2,11 @@ pragma solidity >0.4.23 <0.7.0;
 import "../Dns.sol";
 
 contract MockDns is Dns {
-    constructor() public Dns() {}
+    constructor(
+        uint256 bidding_len,
+        uint256 reveal_len,
+        uint256 exp
+    ) public Dns(bidding_len, reveal_len, exp) {}
 
     uint256 expiry = 5 seconds;
     uint256 bidding_length = 10 seconds;
