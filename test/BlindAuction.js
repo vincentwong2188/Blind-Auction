@@ -139,7 +139,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       // should not be able call auction end before bidding ended
       await blindAuction.auctionEnd().should.be.rejected
       // should not be able withdraw before bidding ended
-      await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
+      // await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
       await blindAuction.moveAheadBiddingTime(11) // mock moving ahead by 11s (10s is time to bidding end)
@@ -148,7 +148,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       // should not be able call auction end before reveal ended
       await blindAuction.auctionEnd().should.be.rejected
       // should not be able withdraw before reveal ended
-      await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
+      // await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
       revealBidder1 = await blindAuction.reveal([toWei("0.1")], [true], [fromAscii("secret")], { from: bidder1 })
       revealBidder2 = await blindAuction.reveal([toWei("0.2"), toWei("0.05")], [true, false], [fromAscii("secret"), fromAscii("secret")], { from: bidder2 })
       // test if contract will revert in the event getHighestBid / getHighestBidder is called
@@ -166,11 +166,11 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       // reveal should be rejected as pass reveal time
       await blindAuction.reveal([toWei("0.2"), toWei("0.05")], [true, false], [fromAscii("secret"), fromAscii("secret")], { from: bidder2 }).should.be.rejected
       // should not be able withdraw before auction ended
-      await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
+      // await blindAuction.withdraw({ from: bidder1 }).should.be.rejected
       auctionEnd = await blindAuction.auctionEnd()
       // withdraw only can be executed after auction ends
-      bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
-      bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
+      // bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
+      // bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
     })
     it('send bid', async () => {
       const eventBid1 = bid1.logs[0].args
@@ -209,17 +209,15 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.equal(event.highestBid, toWei("0.2"), 'Highest bid of auction should be 0.2')
       assert.equal(highestBid, toWei("0.2"), 'getHighestBid should return 0.2')
       assert.equal(event.currentValue, toWei('0.15'), 'Current value of contract should be 0.15 (0.1 from bidder1 + 0.05 from fake bid bidder 2)')
+      // test withdrawal conducted in auctionEnd
+      const withdrawEventBidder1 = auctionEnd.logs[1].args
+      const withdrawEventBidder2 = auctionEnd.logs[2].args
+      assert.equal(withdrawEventBidder1.amount, toWei("0.1"), 'Withdrawal bidder1 amount should be 0.1')
+      assert.equal(withdrawEventBidder2.amount, toWei("0.05"), 'Withdrawal bidder2 amount should be 0.05')
       // check if URL is registered in dns contract
       const urlAddress = await dns.getRegisteredURL(deployURL)
       assert.equal(event.winner, urlAddress, "Address of winner should be registered as owner in DNS manager")
       
-    })
-
-    it('withdraw', async () => {
-      const eventBidder1 = bidder1Withdraw.logs[0].args
-      const eventBidder2 = bidder2Withdraw.logs[0].args
-      assert.equal(eventBidder1.amount, toWei("0.1"), 'Withdrawal bidder1 amount should be 0.1')
-      assert.equal(eventBidder2.amount, toWei("0.05"), 'Withdrawal bidder2 amount should be 0.05')
     })
 
   })
@@ -268,8 +266,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       revealBidder2 = await blindAuction.reveal([toWei("0.2")], [true], [fromAscii("secret")], { from: bidder2 })
       await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
       auctionEnd = await blindAuction.auctionEnd()
-      bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
-      bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
+      // bidder1Withdraw = await blindAuction.withdraw({ from: bidder1 })
+      // bidder2Withdraw = await blindAuction.withdraw({ from: bidder2 })
     })
     it('send bid', async () => {
       const eventBid1 = bid1.logs[0].args
@@ -301,17 +299,16 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.equal(event.highestBid, toWei("0.1"), 'Highest bid of auction should be 0.1')
       assert.equal(highestBid, toWei("0.1"), 'getHighestBid should return 0.1')
       assert.equal(event.currentValue, toWei('0.01'), 'Current value of contract should be 0.01 (0.01 from rejected bid bidder 2)')
+      // test withdrawal conducted in auctionEnd
+      const withdrawEventBidder1 = auctionEnd.logs[1].args
+      const withdrawEventBidder2 = auctionEnd.logs[2].args
+      assert.equal(withdrawEventBidder1.amount, 0, 'Withdrawal bidder1 amount should be 0')
+      assert.equal(withdrawEventBidder2.amount, toWei("0.01"), 'Withdrawal bidder2 amount should be 0.01')
       // check if URL is registered in dns contract
       const urlAddress = await dns.getRegisteredURL(deployURL)
       assert.equal(event.winner, urlAddress, "Address of winner should be registered as owner in DNS manager")
       
     })
 
-    it('withdraw', async () => {
-      const eventBidder1 = bidder1Withdraw.logs[0].args
-      const eventBidder2 = bidder2Withdraw.logs[0].args
-      assert.equal(eventBidder1.amount, 0, 'Withdrawal bidder1 amount should be 0')
-      assert.equal(eventBidder2.amount, toWei("0.01"), 'Withdrawal bidder2 amount should be 0.01')
-    })
   })
 })
