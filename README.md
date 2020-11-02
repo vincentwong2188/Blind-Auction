@@ -1,0 +1,350 @@
+# CZ4153 Blockchain Technology: DNS Blind Auction House
+
+Welcome to the repository of the DNS Blind Auction House. 
+
+This project is a collaboration between **Shen Chen**, **Sim Zhi Qi**, and **Vincent Wong**, and implements a Decentralized Domain Registrar that allows users on the Ethereum Blockchain Network to bid for unregistered domain names of their choice.
+
+The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows users to bid for domain names using the 'commit-and-reveal' blind auction bidding process to interact with the blockchain, supporting features such as listing of registered domains, query the actual Ethereum public address (owner) behind the domain, bid for an unregistered domain, and many more features.
+
+## Contents
+* [Setting Up Environment](#Environment)
+  * [0. Setting Up Pre-Requisites](#PreReqs)
+  * [1. Setting up Project Directory](#Directory)
+  * [2. Setting Up using the Ganache Environment](#GanacheEnv)
+  * [3. Setting up with Ropsten Test Net](#Ropsten)
+   * [3. Setting up with Goerli Test Net](#Goerli)
+* [Setting Up the React Front End Web Application](#FrontEnd)
+* [Navigating around the DNS Blind Auction House Web Application](#Navigation)
+  * [1. The Auction House](#AuctionHouse)
+  * [2. List of Registered Domains](#ListRegisteredDomains)
+  * [3. Look-Up the Owner of a Domain](#OwnerOfDomain)
+  * [4. Look-Up the Domain(s) of an Owner](#DomainsOfOwner)
+  * [5. Send ETH to a Domain](#SendETH)
+* [Testing of Contracts](#Testing)
+  * [1. DNS Contract](#DNSContract)
+  * [2. Blind Auction Contract](#BlindAuction)
+
+
+<a name="Environment"></a>
+## Setting Up Environment
+
+<a name="PreReqs"></a>
+### 0. Setting up Pre-Requisites
+
+Do ensure that the following are installed first:
+
+* NodeJS - can be installed [from this link](https://nodejs.org/en/).
+* npm - can be installed [from this link](https://www.npmjs.com/get-npm).
+* Metamask Google Chrome Extension - can be installed [from this link](https://metamask.io/download.html).
+* Ganache - can be installed [from this link](https://www.trufflesuite.com/ganache).
+
+Next, we will install Truffle with the following commands:
+
+```bash
+npm install truffle -g 
+truffle version # To check if Truffle has been installed successfully
+```
+<a name="Directory"></a>
+### 1. Setting up Project Directory
+
+To use the DNS Blind Auction House, you will first need to clone the repository to your local computer. You may do so in your own desired local directory with the following command
+
+```bash
+git clone https://github.com/zhiqisim/Blind-Auction.git
+```
+
+We will be utilising the `Migrations.sol`, `Dns.sol` and `BlindAuction.sol` Solidity files for our smart contracts.
+
+We can compile the contracts with the following command:
+
+```bash
+truffle compile
+```
+
+We should now see a new folder named `build/contracts`, which contains the files `BlindAuction.json`, `Dns.json`, and `Migrations.json`.
+
+<a name="GanacheEnv"></a>
+### 2. Setting Up using the Ganache Environment
+
+<a name="GanacheToProject"></a>
+#### 2.1 Linking of Ganache Workplace with Project
+
+Start your Ganache application by double clicking the downloaded app image during installation.
+
+Click on "New Workspace (Ethereum)", which will create a running instance of the Ethereum blockchain locally -- together with 10 accounts created, each with a balance of 100 ETH.
+
+Next, we need to link the **DNS Blind Auction House** project with your local Ganache blockchain, by specifying a customized workspace name and the path to the file `truffle-config.js`.
+
+![Ganache Workspace Settings](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/ganache.jpeg)
+
+Once inputted successfully, click on "Add Project" to link and save the project in Ganache.
+
+Now, we can deploy our contracts. We do so with the following command:
+
+```bash
+truffle migrate --network local --reset
+```
+
+During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
+
+![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
+
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
+
+1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted in the image above.
+2. Change the ENVIRONMENT constant to `'Ganache'`.
+
+<a name="GanacheToMetamask"></a>
+#### 2.2 Linking of Metamask to the Ganache Environment
+
+To properly run the environment with Ganache and make payments to the Auction House smart contracts, we will need to link your Metamask account with the Ganache localhost.
+
+Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
+
+Once done, your Metamask account and the project are both now successfully connected to Ganache. You may now proceed directly to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+<a name="Ropsten"></a>
+### 3. Setting up with Ropsten Test Net
+
+#### 3.1 Linking the Project to the Ropsten Network
+Our group has already successfully deployed our smart contracts onto the Ropsten Test Net. 
+
+To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
+
+1. Change the ENVIRONMENT constant to `'Ropsten'`.
+
+And that's it! The project is now linked to the Ropsten Network.
+
+#### 3.2 Linking of Metamask to the Ropsten Network
+
+Ensure that you have an account in Metamask with ETH in the Ropsten Testnet. You may get ETH for the Ropsten TestNet from [this faucet](https://faucet.metamask.io/).
+
+Once done, your Metamask Account and the project are now both successfully connected to Ropsten. If you do not plan to re-migrate our contracts onto the Ropsten Testnet, you can skip section 4.3, and proceed directly to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+#### 3.3 Re-Migrating our Contracts to the Ropsten Testnet
+
+If you would like to test the deployment of all of our Smart Contracts from scratch, instead of using our pre-deployed contracts, you will need to first connect to Infura. Create an Infura account [here](https://infura.io/register), and create a new project.
+
+Modify the PROJECT ID in the `./truffle-config.js` to reflect your Infura account PROJECT ID for the Ropsten testnet.
+
+Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
+
+Add HDWalletProvider dependency as follows:
+
+```bash
+npm install @truffle/hdwallet-provider
+```
+
+Finally, re-deploy/re-migrate our smart contracts onto the Ropsten Testnet with the following command:
+
+```bash
+truffle migrate --network ropsten --reset
+```
+
+During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
+
+![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
+
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
+
+1. Change the ENVIRONMENT constant to `'Ropsten'`.
+2. Change the address in the constant 'DnsContractAddressRopsten' to the value highlighted in the image above.
+
+Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+<a name="Goerli"></a>
+### 4. Setting up with Goerli Test Net
+
+#### 4.1 Linking the Project to the Goerli Network
+Our group has already successfully deployed our smart contracts onto the Goerli Test Net. 
+
+To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
+
+1. Change the ENVIRONMENT constant to `'Goerli'`.
+
+And that's it! The project is now linked to the Goerli Network.
+
+#### 4.2 Linking of Metamask to the Goerli Network
+
+Ensure that you have an account in Metamask with ETH in the Goerli Testnet. You may get ETH for the Goerli TestNet from [this faucet](https://goerli-faucet.slock.it/).
+
+Once done, your Metamask Account and the project are now both successfully connected to Goerli. If you do not plan to re-migrate our contracts onto the Testnet, you can skip section 4.3, and proceed directly to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+#### 4.3 Re-Migrating our Contracts to the Goerli Testnet
+
+If you would like to test the deployment of all of our Smart Contracts from scratch, instead of using our pre-deployed contracts, you will need to first connect to Infura. Create an Infura account [here](https://infura.io/register), and create a new project.
+
+Modify the PROJECT ID in the `./truffle-config.js` to reflect your Infura account PROJECT ID for the Goerli testnet.
+
+Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
+
+Add HDWalletProvider dependency as follows:
+
+```bash
+npm install @truffle/hdwallet-provider
+```
+
+Finally, re-deploy/re-migrate our smart contracts onto the Goerli Testnet with the following command:
+
+```bash
+truffle migrate --network goerli --reset
+```
+
+During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
+
+![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
+
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
+
+1. Change the ENVIRONMENT constant to `'Goerli'`.
+2. Change the address in the constant 'DnsContractAddressGoerli' to the value highlighted in the image above.
+
+Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+<a name="FrontEnd"></a>
+## Setting Up the React Front End Web Application
+
+Navigate into the `/webapp` folder.
+
+Execute the following commands to initialise the React Web Application.
+
+```bash
+npm install
+```
+
+Once that is done, we can run the web application on `localhost:1234` using the following command:
+
+```bash
+npm start
+```
+
+While at the site, we now need to connect our MetaMask extension to our localhost site. You may do so as follows:
+
+![Metamask Connection 1](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta1.png)
+
+![Metamask Connection 2](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta2.png)
+
+You should be able to see the "Connected" label now, as follows:
+
+![Metamask Connection 3](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta3.png)
+
+Once done, we are finally ready to navigate around the Front End Website!
+
+<a name="Navigation"></a>
+## Navigating around the DNS Blind Auction House Web Application
+
+After entering `localhost:1234`, we will see the web application page.
+
+![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.jpeg)
+
+The web application has **5 different sections**:
+
+<a name="AuctionHouse"></a>
+### 1. The Auction House
+
+The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
+
+* A domain has **already been taken**, and **has not expired yet**. Users will not be able to bid for this domain name, until its current ownership expires.
+* A domain's ownership has **already expired** or is **not currently owned by anyone**, and has **no existing on-going auctions**. Here, the user can choose to start a new auction, which will call the `startAuction()` function in our [DNS Smart Contract](#DNSContract).
+* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction be in one of three different phases:
+  * Bidding Phase: Where users can bid in a Blind Auction
+  * Reveal Phase: Where users reveal and prove that they were the ones who made their bids in the Bidding Phase
+  * End Phase: Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids.
+
+<a name="ListRegisteredDomains"></a>
+### 2. List of Registered Domains
+
+At the bottom of the webpage is where we can see a list of Ethereum Public address, and their owned registered domain name URLs. These domain names were obtained from the [DNS Smart Contract](#DNSContract), through a series of function calls as follows:
+
+* `getAddress()`: To get a complete list of all Ethereum public addresses that currently own domain name URLs.
+* `getURLCount(ethAddress)`: To get the number of URLs owned by a particular Ethereum public address.
+* `getURL(ethAddress, i)`: To get the ith domain name URL owned by a particular Ethereum public address.
+
+All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
+
+
+<a name="OwnerOfDomain"></a>
+### 3. Look-Up the Owner of a Domain
+
+Here, we call the `getRegisteredURL()` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
+
+<a name="DomainsOfOwner"></a>
+### 4. Look-Up the Domain(s) of an Owner
+
+Here, since the `data` state of the web page already holds a mapping of Ethereum Public addresses to domain name URLs as mentioned above, we simply just obtain the appropriate URLs owned by a given Ethereum Public Address, by accessing the `data` state mapping.
+
+<a name="SendETH"></a>
+### 5. Send ETH to a Domain
+
+This section allows us to send ETH to the Ethereum Public Address mapped to the domain name URL given as input. This will open up Metamask, which facilitates the ETH transaction to this public address.
+
+
+<a name="Testing"></a>
+## Testing of Contracts
+To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
+
+```bash
+truffle migrate --reset
+```
+
+After deploying, ensure that we have all the npm packages for the test by running the following command:
+
+```bash
+npm install
+```
+
+We can then run use truffle to run all the test by running the following command:
+
+```bash
+truffle test
+```
+
+We should see 28 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
+
+<a name="DNSContract"></a>
+### 1. DNS Contract
+#### 1.1 State Variables
+- Resolving URL -> Ethereum Address
+- Map of Ethereum Address -> All URLs associated
+- URL Expiry Date
+- Map of URL -> Auction Address
+
+#### 1.2 Functions
+- startAuction : deploys Blind Auction contract to start a blind auction
+- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract
+- getAddress : View function for Frontend to query address list
+- getURLCount : View function for Frontend to query number of domains owned by an address
+- getURL : View function for Frontend to query the domain that a user owns
+- getRegisteredURL : View function for Frontend to query the owner of a particular domain
+- checkExpired : View function for Frontend to query if a domain is expired
+- getExpired : View function for Frontend to query expired domains
+
+#### 1.3 Reasoning
+
+<a name="BlindAuction"></a>
+### 2. Blind Auction Contract
+#### 2.2 State Variables
+- Bidding end time
+- Reveal end time
+- State of Auction
+- Highest Bidder
+- Highest Bid
+- Map of Ethereum Address -> all bids made by user
+- Map of Ethereum Address -> all deposits and pending returns
+
+#### 2.2 Functions
+- bid : Allows user to register a bid and deposit ether for their bids
+- reveal : Allows user to reveal their bids
+- auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
+
+#### 2.3 Reasoning
+The bidding phase allows users to bid multiple bids so that they can hid the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
+keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
+
+The reveal phase allows the user to reveal all the bids they did. Users have to reveal every single bid they did including the fake ones to verify and ensure they cannot selectively reveal certain bids. Users also only got 1 try to reveal before all their other bids are invalidated. This is to ensure that no user can selectively reveal their bids resulting in an unfair auction that isn't truly blind as the user could only reveal their lowest bid and only reveal the higher bids when they realised that they are losing the auction. This is therefore prevented by only allowing the user to reveal once. 
+
+The ending phase is where the user would end the auction and register the domain to their name if they are the winner. All losers will also get refunded the amount the bidded as long as they participated in the reveal phase.
+
+We retrieve our timings to bound our functions based on the now() function in solidity which takes the current block timestamp. This is how we determine when the auction bidding time should end and transition to the reveal phase and when the reveal phase should end as well.
+
+
