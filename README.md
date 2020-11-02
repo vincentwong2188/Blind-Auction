@@ -6,7 +6,7 @@ This project is a collaboration between Shen Chen, Sim Zhi Qi, and Vincent Wong,
 
 The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows users to bid for domain names using the 'commit-and-reveal' blind auction bidding process to interact with the blockchain, supporting features such as listing of registered domains, query the actual Ethereum public address (owner) behind the domain, bid for an unregistered domain, and many more features.
 
-## Set Up
+## Setting Up Environment
 
 ### 0. Setting up Pre-Requisites
 
@@ -73,13 +73,18 @@ Navigate into the `./webapp/configurations.js` file. Make the following 2 change
 
 #### 2.2 Linking of Metamask to the Ganache Environment
 
+To properly run the environment with Ganache and make payments to the Auction House smart contracts, we will need to link your Metamask account with the Ganache localhost.
 
+Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
+
+Once done, your Ganache environment is now properly set up, and you can proceed to [Setting Up the React Front End Web Application](#FrontEnd).
 
 ### 2. Setting up with Ropsten Test Net
 
 Lorem Ipsum
 
-## React Front End Web Application Set Up
+<a name="FrontEnd"></a>
+## Setting Up the React Front End Web Application
 
 Navigate into the `/webapp` folder.
 
