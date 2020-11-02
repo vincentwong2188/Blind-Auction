@@ -6,8 +6,18 @@ This project is a collaboration between Shen Chen, Sim Zhi Qi, and Vincent Wong,
 
 The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows users to bid for domain names using the 'commit-and-reveal' blind auction bidding process to interact with the blockchain, supporting features such as listing of registered domains, query the actual Ethereum public address (owner) behind the domain, bid for an unregistered domain, and many more features.
 
+## Contents
+* [Setting Up Environment](#Environment)
+  * [0. Setting Up Pre-Requisites](#PreReqs)
+  * [1. Setting up Project Directory](#Directory)
+  * [2. Setting Up using the Ganache Environment](#GanacheEnv)
+
+* [Setting Up the React Front End Web Application](#FrontEnd)
+
+<a name="Environment"></a>
 ## Setting Up Environment
 
+<a name="PreReqs"></a>
 ### 0. Setting up Pre-Requisites
 
 Do ensure that the following are installed first:
@@ -23,7 +33,7 @@ Next, we will install Truffle with the following commands:
 npm install truffle -g 
 truffle version # To check if Truffle has been installed successfully
 ```
-
+<a name="Directory"></a>
 ### 1. Setting up Project Directory
 
 To use the DNS Blind Auction House, you will first need to clone the repository to your local computer. You may do so in your own desired local directory with the following command
@@ -42,6 +52,7 @@ truffle compile
 
 We should now see a new folder named `build/contracts`, which contain `BlindAuction.json`, `Dns.json`, and `Migrations.json`.
 
+<a name="GanacheEnv"></a>
 ### 2. Setting Up using the Ganache Environment
 
 #### 2.1 Linking of Ganache Workplace with Project
@@ -77,7 +88,7 @@ To properly run the environment with Ganache and make payments to the Auction Ho
 
 Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
 
-Once done, your Ganache environment is now properly set up, and you can proceed to [Setting Up the React Front End Web Application](#FrontEnd).
+Once done, your Ganache environment is now properly set up, and you can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 ### 2. Setting up with Ropsten Test Net
 
