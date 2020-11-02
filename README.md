@@ -232,9 +232,9 @@ After entering `localhost:1234`, we will see the web application page.
 
 ![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.jpeg)
 
-The web application has 4 different sections:
+The web application has **5 different sections**:
 
-### The Auction House
+### 1. The Auction House
 
 The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
 
@@ -245,7 +245,7 @@ The Auction House is the entry point for users to enter to check if a domain nam
   * Reveal Phase: Where users reveal and prove that they were the ones who made their bids in the Bidding Phase
   * End Phase: Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids.
 
-### List of Registered Domains
+### 2. List of Registered Domains
 
 At the bottom of the webpage is where we can see a list of Ethereum Public address, and their owned registered domain name URLs. These domain names were obtained from the [DNS Smart Contract](#DNSContract), through a series of function calls as follows:
 
@@ -255,15 +255,15 @@ At the bottom of the webpage is where we can see a list of Ethereum Public addre
 
 All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
 
-### Look-Up the Owner of a Domain
+### 3. Look-Up the Owner of a Domain
 
 Here, we call the `getRegisteredURL()` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
 
-### Look-Up the Domain(s) of an Owner
+### 4. Look-Up the Domain(s) of an Owner
 
 Here, since the `data` state of the web page already holds a mapping of Ethereum Public addresses to domain name URLs as mentioned above, we simply just obtain the appropriate URLs owned by a given Ethereum Public Address, by accessing the `data` state mapping.
 
-### Send ETH to a Domain
+### 5. Send ETH to a Domain
 
 This section allows us to send ETH to the Ethereum Public Address mapped to the domain name URL given as input. This will open up Metamask, which facilitates the ETH transaction to this public address.
 
