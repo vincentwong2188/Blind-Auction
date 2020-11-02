@@ -139,6 +139,7 @@ npm start
 While at the site, we now need to connect our MetaMask extension to our localhost site.
 
 ![Metamask Connection 1](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta1.png)
+
 ![Metamask Connection 2](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta2.png)
 
 You should be able to see the "Connected" label now, as follows:
