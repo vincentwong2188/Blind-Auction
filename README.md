@@ -15,6 +15,9 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
    * [3. Setting up with Goerli Test Net](#Goerli)
 * [Setting Up the React Front End Web Application](#FrontEnd)
 * [Navigating around the DNS Blind Auction House Web Application](#Navigation)
+* [Testing](#Testing)
+* [DNS Contract](#DNSContract)
+* [Blind Auction](#BlindAuction)
 
 
 <a name="Environment"></a>
@@ -236,5 +239,73 @@ The web application has 4 different sections:
 * Look-Up the Domain(s) of an Owner
 * Send ETH to a Domain
 * List of Registered Domains
+
+<a name="Testing"></a>
+## Testing of contracts
+To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
+
+```bash
+truffle migrate --reset
+```
+
+After deploying, ensure that we have all the npm packages for the test by running the following command:
+
+```bash
+npm install
+```
+
+We can then run use truffle to run all the test by running the following command:
+
+```bash
+truffle test
+```
+
+We should see 28 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
+
+<a name="DNSContract"></a>
+## DNS Contract
+### State Variables
+- Resolving URL -> Ethereum Address
+- Map of Ethereum Address -> All URLs associated
+- URL Expiry Date
+- Map of URL -> Auction Address
+
+### Functions
+- startAuction : deploys Blind Auction contract to start a blind auction
+- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract
+- getAddress : View function for Frontend to query address list
+- getURLCount : View function for Frontend to query number of domains owned by an address
+- getURL : View function for Frontend to query the domain that a user owns
+- getRegisteredURL : View function for Frontend to query the owner of a particular domain
+- checkExpired : View function for Frontend to query if a domain is expired
+- getExpired : View function for Frontend to query expired domains
+
+### Reasoning
+
+<a name="BlindAuction"></a>
+## Blind Auction
+### State Variables
+- Bidding end time
+- Reveal end time
+- State of Auction
+- Highest Bidder
+- Highest Bid
+- Map of Ethereum Address -> all bids made by user
+- Map of Ethereum Address -> all deposits and pending returns
+
+### Functions
+- bid : Allows user to register a bid and deposit ether for their bids
+- reveal : Allows user to reveal their bids
+- auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
+
+### Reasoning
+The bidding phase allows users to bid multiple bids so that they can hid the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
+keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
+
+The reveal phase allows the user to reveal all the bids they did. Users have to reveal every single bid they did including the fake ones to verify and ensure they cannot selectively reveal certain bids. Users also only got 1 try to reveal before all their other bids are invalidated. This is to ensure that no user can selectively reveal their bids resulting in an unfair auction that isn't truly blind as the user could only reveal their lowest bid and only reveal the higher bids when they realised that they are losing the auction. This is therefore prevented by only allowing the user to reveal once. 
+
+The ending phase is where the user would end the auction and register the domain to their name if they are the winner. All losers will also get refunded the amount the bidded as long as they participated in the reveal phase.
+
+We retrieve our timings to bound our functions based on the now() function in solidity which takes the current block timestamp. This is how we determine when the auction bidding time should end and transition to the reveal phase and when the reveal phase should end as well.
 
 
