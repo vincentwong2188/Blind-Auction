@@ -6,8 +6,9 @@ const { soliditySha3, toWei, fromAscii, fromWei } = require("web3-utils");
 import artifact from "../build/contracts/BlindAuction.json";
 const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // Dummy Address to call neutral contracts
 
-const ENVIRONMENT = "Ganache" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
-
+const ENVIRONMENT = "Ropsten" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
+const infuraWSSRopsten = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
+const infuraWSSGoerli = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
 // run $ truffle migrate --network ropsten --reset
 
 // ROPSTEN
@@ -39,7 +40,6 @@ const web3 = ENVIRONMENT.toUpperCase() === 'GANACHE'
             ? new Web3(
                 Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSSGoerli))
             : ''
-
 
 // Start of Functions
 export const biddingEnd = async (contractAddress) => {

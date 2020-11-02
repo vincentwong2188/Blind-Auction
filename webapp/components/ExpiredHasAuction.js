@@ -19,7 +19,7 @@ class ExpiredHasAuction extends React.Component {
         super(props);
         this.state = {
             // States for handling stage check:
-            stage: "Loading Auction Stage...",
+            stage: 0,
             curTime: '',
         };
     }
@@ -36,7 +36,6 @@ class ExpiredHasAuction extends React.Component {
 
             let timeNow = Math.floor(Date.now() / 1000);
             console.log("timeNow: " + timeNow)
-
 
             if (timeNow <= bidEndTime) {
                 this.setState({
@@ -88,7 +87,7 @@ class ExpiredHasAuction extends React.Component {
                 <div style={cardStyle}>
                     <img style={{ width: "100px" }} src={require('../assets/checked.png')} />
                     <h1 >{this.props.domainName} has an existing ongoing auction!<br /> </h1>
-                    <h1>{this.state.stage === 0 ? "" : this.state.stage === 1 ? "Bidding Phase" : this.state.stage === 2 ? "Reveal Phase" : "End Phase"
+                    <h1>{this.state.stage === 0 ? "Loading Auction Stage..." : this.state.stage === 1 ? "Bidding Phase" : this.state.stage === 2 ? "Reveal Phase" : this.state.stage === 3 ? "End Phase" : ""
                     }</h1>
                 </div>
                 <div>
