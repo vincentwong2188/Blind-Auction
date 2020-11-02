@@ -53,7 +53,11 @@ Navigate into the `./configurations.js` file. Make the following 2 changes:
 1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted above.
 2. Change the ENVIRONMENT constant to `'Ganache'`.
 
-### 2. Setting Up the Front End Web Application
+### 2. Setting up with Ropsten Test Net
+
+Lorem Ipsum
+
+## Front End Web Application Set Up
 
 Navigate into the `/webapp` folder.
 
@@ -69,7 +73,6 @@ Once that is done, we can run the web application on `localhost:1234` using the 
 npm start
 ```
 
-### 3. Setting up with Ropsten Test Net
 
 
 
