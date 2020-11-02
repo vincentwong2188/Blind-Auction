@@ -12,6 +12,8 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
   * [1. Setting up Project Directory](#Directory)
   * [2. Setting Up using the Ganache Environment](#GanacheEnv)
   * [3. Setting up with Ropsten Test Net](#Ropsten)
+* [Navigating around the DNS Blind Auction House Web Application](#Navigation)
+
 
 * [Setting Up the React Front End Web Application](#FrontEnd)
 
@@ -51,7 +53,7 @@ We can compile the contracts with the following command:
 truffle compile
 ```
 
-We should now see a new folder named `build/contracts`, which contain `BlindAuction.json`, `Dns.json`, and `Migrations.json`.
+We should now see a new folder named `build/contracts`, which contains the files `BlindAuction.json`, `Dns.json`, and `Migrations.json`.
 
 <a name="GanacheEnv"></a>
 ### 2. Setting Up using the Ganache Environment
@@ -59,7 +61,7 @@ We should now see a new folder named `build/contracts`, which contain `BlindAuct
 <a name="GanacheToProject"></a>
 #### 2.1 Linking of Ganache Workplace with Project
 
-Next, start your Ganache application by double clicking the downloaded app image during installation.
+Start your Ganache application by double clicking the downloaded app image during installation.
 
 Click on "New Workspace (Ethereum)", which will create a running instance of the Ethereum blockchain locally -- together with 10 accounts created, each with a balance of 100 ETH.
 
@@ -91,12 +93,31 @@ To properly run the environment with Ganache and make payments to the Auction Ho
 
 Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
 
-Once done, your Metamask is now successfully connected to Ganache and you can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+Once done, your Metamask account and the project are both now successfully connected to Ganache. You may proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 <a name="Ropsten"></a>
 ### 3. Setting up with Ropsten Test Net
 
-Lorem Ipsum
+#### 3.1 Linking the Project to the Ropsten Network
+Our group has already successfully deployed our smart contracts onto the Ropsten Test Net. 
+
+To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
+
+1. Change the ENVIRONMENT constant to `'Ganache'`.
+
+And that's it! The project is now linked to the Ropsten Network.
+
+#### 3.2 Linking of Metamask to the Ropsten Network
+
+Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
+
+Add HDWalletProvider dependency as follows:
+
+```bash
+npm install @truffle/hdwallet-provider
+```
+
+Once done, your Metamask Account and the project are now both successfully connected to Ropsten. You can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 <a name="FrontEnd"></a>
 ## Setting Up the React Front End Web Application
@@ -126,6 +147,7 @@ You should be able to see the "Connected" label now, as follows:
 
 Once done, we are finally ready to navigate around the Front End Website!
 
+<a name="Navigation"></a>
 ## Navigating around the DNS Blind Auction House Web Application
 
 After entering `localhost:1234`, we will see the web application page.
