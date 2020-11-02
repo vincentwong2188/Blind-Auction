@@ -7,29 +7,14 @@ import artifact from "../build/contracts/BlindAuction.json";
 const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // Dummy Address to call neutral contracts
 
 const ENVIRONMENT = "Ropsten" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
-const infuraWSSRopsten = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
-const infuraWSSGoerli = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
+
 // run $ truffle migrate --network ropsten --reset
 
-// ROPSTEN
-// const CHAIN_ID = 3;
-// const infuraWSS = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
-// const web3 = new Web3(
-//     Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSS)
-// );
-// export const Testnet = "ropsten"; // PLEASE CHANGE IT TO YOURS (changed)
-
-// GOERLI
-// const infuraWSS = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`; // PLEASE CHANGE IT TO YOURS (changed)
-// const CHAIN_ID = 5;
-// const web3 = new Web3(
-//     Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSS)
-// );
-// export const Testnet = "goerli"; // PLEASE CHANGE IT TO YOURS (changed)
-
-// for GANACHE
-
 // Checking Environment
+
+const infuraWSSRopsten = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
+const infuraWSSGoerli = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
+
 const web3 = ENVIRONMENT.toUpperCase() === 'GANACHE'
     ? new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
     : ENVIRONMENT.toUpperCase() === 'ROPSTEN'
