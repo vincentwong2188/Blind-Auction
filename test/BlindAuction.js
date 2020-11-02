@@ -6,12 +6,33 @@ const BigNumber = require('bignumber.js');
 
 const Dns = artifacts.require("Dns");
 
-const BlindAuction = artifacts.require('./mocks/MockBlindAuction.sol')
+const BlindAuction = artifacts.require('./BlindAuction.sol')
 
 require('chai')
   .use(require('chai-as-promised'))
   .should()
 
+// mock contracts to increase in time to test time bounding functionalities
+function increaseTime(addSeconds) {
+  const id = Date.now();
+
+  return new Promise((resolve, reject) => {
+    web3.currentProvider.send({
+      jsonrpc: '2.0',
+      method: 'evm_increaseTime',
+      params: [addSeconds],
+      id,
+    }, (err1) => {
+      if (err1) return reject(err1);
+
+      web3.currentProvider.send({
+        jsonrpc: '2.0',
+        method: 'evm_mine',
+        id: id + 1,
+      }, (err2, res) => (err2 ? reject(err2) : resolve(res)));
+    });
+  });
+}
 
 
 // accounts are test accounts on local network
@@ -27,7 +48,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const deployEvent = deployBlindAuction.logs[0].args
       auctionAddress = deployEvent._auction_addr
       // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-      blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      blindAuction = await BlindAuction.at(auctionAddress)
     })
     it('deploys successfully', async () => {
       const address = await blindAuction.address
@@ -35,20 +57,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.notEqual(address, '')
       assert.notEqual(address, null)
       assert.notEqual(address, undefined)
-    })
-
-    it('has bidding time', async () => {
-      const biddingEnd = BigNumber(await blindAuction.biddingEnd())
-      const endTime = biddingEnd.c[0]
-      // check that bidding end is below current time + 10s
-      assert.isAtMost(endTime, Math.floor(Date.now() / 1000)+10)
-    })
-
-    it('has reveal time', async () => {
-      const revealEnd = BigNumber(await blindAuction.revealEnd())
-      const endTime = revealEnd.c[0]
-      // check that reveal time is below current time + 20s
-      assert.isAtMost(endTime, Math.floor(Date.now() / 1000)+20)
     })
 
     it('has url', async () => {
@@ -69,6 +77,24 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
     it('has default highest bid', async() => {
       const highestBid = await blindAuction.highestBid()
       assert.equal(0, highestBid, "Default Highest bid should be 0")
+    })
+
+    it('has bidding time', async () => {
+      const biddingEnd = BigNumber(await blindAuction.biddingEnd())
+      const endTime = biddingEnd.c[0]
+      // check that bidding end is above current time
+      assert.isAbove(endTime, Math.floor(Date.now() / 1000))
+    })
+
+    it('has reveal time', async () => {
+      const biddingEnd = BigNumber(await blindAuction.biddingEnd())
+      const biddingTime = biddingEnd.c[0]
+      const revealEnd = BigNumber(await blindAuction.revealEnd())
+      const revealTime = revealEnd.c[0]
+      // check that reveal end above current time
+      assert.isAbove(revealTime, Math.floor(Date.now()/ 1000))
+      // check that reveal end is above bidding end
+      assert.isAbove(revealTime, biddingTime)
     })
 
   })
@@ -107,7 +133,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const deployEvent = deployBlindAuction.logs[0].args
       auctionAddress = deployEvent._auction_addr
       // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-      blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      blindAuction = await BlindAuction.at(auctionAddress)
       // use URL below for keccak256 hash in JS
       // https://blog.8bitzen.com/posts/18-03-2019-keccak-abi-encodepacked-with-javascript/
       // remember change secret to bytes
@@ -139,7 +166,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       await blindAuction.auctionEnd().should.be.rejected
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for reveal bid to ensure it is after bidding time end and before reveal time end
-      await blindAuction.moveAheadBiddingTime(11) // mock moving ahead by 11s (10s is time to bidding end)
+      // await blindAuction.moveAheadBiddingTime(11) // mock moving ahead by 11s (10s is time to bidding end)
+      await increaseTime(181);
       // NOTE: all ether values to be converted to Wei 
       // reveal for both users with their respective correct bids
       // should not be able call auction end before reveal ended
@@ -152,7 +180,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       await blindAuction.bid(hashBid3, { from: bidder3, value: toWei("0.05") }).should.be.rejected
       // move time ahead by 10s so that can test onlyAfter & onlyBefore
       // for end auction to ensure it is after reveal time end
-      await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
+      // await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
+      await increaseTime(181);
       // bidding should be rejected as well as pass bidding time
       await blindAuction.bid(hashBid3, { from: bidder3, value: toWei("0.05") }).should.be.rejected
       // reveal should be rejected as pass reveal time
@@ -246,7 +275,8 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const deployEvent = deployBlindAuction.logs[0].args
       auctionAddress = deployEvent._auction_addr
       // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-      blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
+      blindAuction = await BlindAuction.at(auctionAddress)
       hashBid1 = soliditySha3(
         toWei("0.1"), // hash need to change to wei
         true,
@@ -259,10 +289,12 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       );
       bid1 = await blindAuction.bid(hashBid1, { from: bidder1, value: toWei("0.1") })
       bid2 = await blindAuction.bid(hashBid2, { from: bidder2, value: toWei("0.01") })
-      await blindAuction.moveAheadBiddingTime(11) // mock moving ahead by 11s (10s is time to bidding end)
+      // mock moving ahead by 181s (180s is time to bidding end)
+      await increaseTime(181);
       revealBidder1 = await blindAuction.reveal([toWei("0.1")], [true], [fromAscii("secret")], { from: bidder1 })
       revealBidder2 = await blindAuction.reveal([toWei("0.2")], [true], [fromAscii("secret")], { from: bidder2 })
-      await blindAuction.moveAheadRevealTime(21) // mock moving ahead by 21s (20s is time to reveal end)
+      // mock moving ahead by 181s (180s is time to reveal end)
+      await increaseTime(181);
       bidder1Balance = await web3.eth.getBalance(bidder1)
       bidder2Balance = await web3.eth.getBalance(bidder2)
       auctionEnd = await blindAuction.auctionEnd()
