@@ -283,7 +283,7 @@ We should see 28 test cases passing with test raging from unit testing of the va
 ### Reasoning
 
 <a name="BlindAuction"></a>
-## Blind Auction
+## Blind Auction Contract
 ### State Variables
 - Bidding end time
 - Reveal end time
