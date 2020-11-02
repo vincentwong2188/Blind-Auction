@@ -239,11 +239,11 @@ The web application has 4 different sections:
 The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
 
 * A domain has already been taken, and has not expired yet. Users will not be able to bid for this domain name, until its current ownership expires.
-* A domain's ownership has already expired or is not currently owned by anyone, and has no existing on-going auctions. Here, the user can choose to start a new auction, which will call the startAuction() function in the DNS Smart Contract, elaborated in the contracts section below.
+* A domain's ownership has already expired or is not currently owned by anyone, and has no existing on-going auctions. Here, the user can choose to start a new auction, which will call the `startAuction()` function in the DNS Smart Contract, elaborated in the contracts section below.
 * A domain is not currently owned by anyone, but already has an ongoing auction pegged to it. Here, the ongoing auction will come in the form of 3 stages:
-- Bidding Phase
-- Reveal Phase
-- End Phase
+ * Bidding Phase
+ * Reveal Phase
+ * End Phase
 
 ### Look-Up the Owner of a Domain
 ### Look-Up the Domain(s) of an Owner
@@ -251,10 +251,6 @@ The Auction House is the entry point for users to enter to check if a domain nam
 ### List of Registered Domains
 
 <a name="Testing"></a>
-<<<<<<< HEAD
-## Testing of contracts
-To set up the testing with Ganache, we have to deploy ensure that we have all the npm packages for the test by running the following command:
-=======
 ## Testing of Contracts
 To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
 
@@ -263,7 +259,6 @@ truffle migrate --reset
 ```
 
 After deploying, ensure that we have all the npm packages for the test by running the following command:
->>>>>>> 9abef596211e4de298f3d36ab88dacce5766988d
 
 ```bash
 npm install
@@ -280,34 +275,22 @@ We should see 28 test cases passing with test raging from unit testing of the va
 <a name="DNSContract"></a>
 ### 1. DNS Contract
 #### 1.1 State Variables
-- dns_lookup_table : Resolving URL -> Ethereum Address
-- reverse_lookup_table : Map of Ethereum Address -> All URLs associated
-- expiry_date : URL Expiry Date
-- auctions : Map of URL -> Auction Address
-- expiry : Time for URL to expire
-- bidding_length : Time for bidding in deployed auction
-- reveal_length : Time for reveal in deployed auction
-- grace_period : Time to claim URL by ending auction
+- Resolving URL -> Ethereum Address
+- Map of Ethereum Address -> All URLs associated
+- URL Expiry Date
+- Map of URL -> Auction Address
 
 #### 1.2 Functions
 - startAuction : deploys Blind Auction contract to start a blind auction
-- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract (Only the auction associated with the URL may call this)
+- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract
 - getAddress : View function for Frontend to query address list
 - getURLCount : View function for Frontend to query number of domains owned by an address
 - getURL : View function for Frontend to query the domain that a user owns
 - getRegisteredURL : View function for Frontend to query the owner of a particular domain
 - checkExpired : View function for Frontend to query if a domain is expired
-- getExpired : View function for Frontend to query expiry date
-- checkAuctionEnded : View function for front end to query if auction has been ended
-- checkAuctionPastGrace : View function to check if auction is past the grace period
-- getAuctionURL : View function for Frontend to get auction contract address
+- getExpired : View function for Frontend to query expired domains
 
 #### 1.3 Reasoning
-Storing the forwards and backwards resolution of address -> URLs and URL -> address enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made as lookup queries should outnumber registrations by many orders of magnitude.
-
-Auctions are deployed as required, with the auction calling the relevant callbacks to register the winner as the URL owner once ended. A check is done to ensure accounts/contracts calling the register URL function matches the internal records of the auction address associated with said URL.
-
-Lastly, a grace period is built in to ensure that users are unable to deny a URL by starting an auction but not ending it.
 
 <a name="BlindAuction"></a>
 ### 2. Blind Auction Contract
