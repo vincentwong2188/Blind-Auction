@@ -11,7 +11,6 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
   * [0. Setting Up Pre-Requisites](#PreReqs)
   * [1. Setting up Project Directory](#Directory)
   * [2. Setting Up using the Ganache Environment](#GanacheEnv)
-   * [2.1 Linking of Ganache Workplace with Project](#GanacheToProject)
   * [3. Setting up with Ropsten Test Net](#Ropsten)
 
 * [Setting Up the React Front End Web Application](#FrontEnd)
@@ -118,11 +117,12 @@ npm start
 
 While at the site, we now need to connect our MetaMask extension to our localhost site.
 
-![Ganache Workspace Settings](https://github.com/BlockchainCourseNTU/resource/blob/master/development/hello-dapp/assets/webapp-metamask-connect.png)
+![Metamask Connection 1](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta1.png)
+![Metamask Connection 2](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta2.png)
 
 You should be able to see the "Connected" label now, as follows:
 
-![Ganache Workspace Settings](https://github.com/BlockchainCourseNTU/resource/blob/master/development/hello-dapp/assets/webapp-metamask-connect.png)
+![Metamask Connection 3](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta3.png)
 
 
 
