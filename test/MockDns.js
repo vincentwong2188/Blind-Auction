@@ -1,12 +1,4 @@
-const Dns = artifacts.require("Dns");
-
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
+const Dns = artifacts.require("MockDns");
 
 function increaseTime(addSeconds) {
   const id = Date.now();
@@ -29,7 +21,7 @@ function increaseTime(addSeconds) {
   });
 }
 
-contract("Dns", async (accounts) => {
+contract("MockDns", async (accounts) => {
   // accounts are the list of account created by the Truffle (i.e. 10 key pair)
   // by default, the first account will deploy the contract
   it("should make deployer the owner", async () => {
@@ -115,11 +107,10 @@ contract("Dns", async (accounts) => {
     // console.log(result)
     // assert.equal(address_list, [accounts[2], accounts[3]]);
     let address_list = await dns.getAddresses({ from: accounts[2] })
-    console.log(address_list)
+    // console.log(address_list)
     assert.equal(JSON.stringify(address_list), JSON.stringify([accounts[2], accounts[4]]));
     // const event = result.logs[0].args
     // assert.equal(event._url, "not expired")
   });
-
 
 });

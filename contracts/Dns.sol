@@ -191,14 +191,4 @@ contract Dns {
             }
         }
     }
-
-    function testRegisterFunc(string memory url, address addr) public {
-        require(msg.sender == owner);
-        if (checkExpired(url)) {
-            internalAddressRegister(url, addr);
-            emit Registration(addr, url, expiry_date[url]);
-        } else {
-            emit Registration(address(0), "not expired", 0);
-        }
-    }
 }
