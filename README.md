@@ -77,7 +77,7 @@ Once inputted successfully, click on "Add Project" to link and save the project 
 Now, we can deploy our contracts. We do so with the following command:
 
 ```bash
-truffle migrate --reset
+truffle migrate --network local --reset
 ```
 
 During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
@@ -234,36 +234,15 @@ After entering `localhost:1234`, we will see the web application page.
 
 The web application has 4 different sections:
 
-### The Auction House
-
-The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
-
-* A domain has already been taken, and has not expired yet. Users will not be able to bid for this domain name, until its current ownership expires.
-* A domain's ownership has already expired or is not currently owned by anyone, and has no existing on-going auctions. Here, the user can choose to start a new auction, which will call the startAuction() function in the DNS Smart Contract, elaborated in the contracts section below.
-* A domain is not currently owned by anyone, but already has an ongoing auction pegged to it. Here, the ongoing auction will come in the form of 3 stages:
-- Bidding Phase
-- Reveal Phase
-- End Phase
-
-### Look-Up the Owner of a Domain
-### Look-Up the Domain(s) of an Owner
-### Send ETH to a Domain
-### List of Registered Domains
+* The Auction House
+* Look-Up the Owner of a Domain
+* Look-Up the Domain(s) of an Owner
+* Send ETH to a Domain
+* List of Registered Domains
 
 <a name="Testing"></a>
-<<<<<<< HEAD
 ## Testing of contracts
 To set up the testing with Ganache, we have to deploy ensure that we have all the npm packages for the test by running the following command:
-=======
-## Testing of Contracts
-To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
-
-```bash
-truffle migrate --reset
-```
-
-After deploying, ensure that we have all the npm packages for the test by running the following command:
->>>>>>> 9abef596211e4de298f3d36ab88dacce5766988d
 
 ```bash
 npm install
@@ -279,13 +258,13 @@ We should see 28 test cases passing with test raging from unit testing of the va
 
 <a name="DNSContract"></a>
 ### 1. DNS Contract
-#### 1.1 State Variables
+#### State Variables
 - Resolving URL -> Ethereum Address
 - Map of Ethereum Address -> All URLs associated
 - URL Expiry Date
 - Map of URL -> Auction Address
 
-#### 1.2 Functions
+#### Functions
 - startAuction : deploys Blind Auction contract to start a blind auction
 - registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract
 - getAddress : View function for Frontend to query address list
@@ -295,11 +274,11 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - checkExpired : View function for Frontend to query if a domain is expired
 - getExpired : View function for Frontend to query expired domains
 
-#### 1.3 Reasoning
+#### Reasoning
 
 <a name="BlindAuction"></a>
 ### 2. Blind Auction Contract
-#### 2.2 State Variables
+#### State Variables
 - Bidding end time
 - Reveal end time
 - State of Auction
@@ -308,12 +287,12 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - Map of Ethereum Address -> all bids made by user
 - Map of Ethereum Address -> all deposits and pending returns
 
-#### 2.2 Functions
+#### Functions
 - bid : Allows user to register a bid and deposit ether for their bids
 - reveal : Allows user to reveal their bids
 - auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
 
-#### 2.3 Reasoning
+#### Reasoning
 The bidding phase allows users to bid multiple bids so that they can hid the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
 keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
 
