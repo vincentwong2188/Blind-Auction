@@ -29,17 +29,20 @@ contract Dns {
 
     uint256 public bidding_length; // 10
     uint256 public reveal_length; // 5
+    uint256 public grace_period;
 
     constructor(
         uint256 bid_len,
         uint256 reveal_len,
-        uint256 exp
+        uint256 exp,
+        uint256 grace
     ) public {
         owner = msg.sender;
         // MAX_UINT = 2**256 - 1;
         bidding_length = bid_len;
         reveal_length = reveal_len;
         expiry = exp;
+        grace_period = grace;
     }
 
     function getAddresses() public view returns (address[] memory) {
@@ -76,7 +79,9 @@ contract Dns {
         }
 
         if (!checkAuctionEnded(url)) {
-            revert("Existing auction not yet ended!");
+            if (!checkAuctionPastGrace(url)) {
+                revert("Existing auction not yet ended!");
+            }
         }
 
         AuctionItem memory new_auction;
@@ -104,6 +109,18 @@ contract Dns {
             return true;
         }
         return auctions[url].auction.ended();
+    }
+
+    function checkAuctionPastGrace(string memory url)
+        public
+        view
+        returns (bool)
+    {
+        uint256 revealtimer = auctions[url].auction.revealEnd();
+        if (now > revealtimer + grace_period) {
+            return true;
+        }
+        return false;
     }
 
     function getAuctionURL(string memory url) public view returns (address) {
