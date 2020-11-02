@@ -57,7 +57,7 @@ Navigate into the `./configurations.js` file. Make the following 2 changes:
 
 Lorem Ipsum
 
-## Front End Web Application Set Up
+## React Front End Web Application Set Up
 
 Navigate into the `/webapp` folder.
 
