@@ -238,17 +238,35 @@ The web application has 4 different sections:
 
 The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
 
-* A domain has already been taken, and has not expired yet. Users will not be able to bid for this domain name, until its current ownership expires.
-* A domain's ownership has already expired or is not currently owned by anyone, and has no existing on-going auctions. Here, the user can choose to start a new auction, which will call the `startAuction()` function in the DNS Smart Contract, elaborated in the contracts section below.
-* A domain is not currently owned by anyone, but already has an ongoing auction pegged to it. Here, the ongoing auction will come in the form of 3 stages:
-  * Bidding Phase
-  * Reveal Phase
-  * End Phase
+* A domain has **already been taken**, and **has not expired yet**. Users will not be able to bid for this domain name, until its current ownership expires.
+* A domain's ownership has **already expired** or is **not currently owned by anyone**, and has **no existing on-going auctions**. Here, the user can choose to start a new auction, which will call the `startAuction()` function in our [DNS Smart Contract](#DNSContract).
+* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction be in one of three different phases:
+  * Bidding Phase: Where users can bid in a Blind Auction
+  * Reveal Phase: Where users reveal and prove that they were the ones who made their bids in the Bidding Phase
+  * End Phase: Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids.
+
+### List of Registered Domains
+
+At the bottom of the webpage is where we can see a list of Ethereum Public address, and their owned registered domain name URLs. These domain names were obtained from the [DNS Smart Contract](#DNSContract), through a series of function calls as follows:
+
+* `getAddress()`: To get a complete list of all Ethereum public addresses that currently own domain name URLs.
+* `getURLCount(ethAddress)`: To get the number of URLs owned by a particular Ethereum public address.
+* `getURL(ethAddress, i)`: To get the ith domain name URL owned by a particular Ethereum public address.
+
+All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
 
 ### Look-Up the Owner of a Domain
+
+Here, we call the `getRegisteredURL()` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
+
 ### Look-Up the Domain(s) of an Owner
+
+Here, since the `data` state of the web page already holds a mapping of Ethereum Public addresses to domain name URLs as mentioned above, we simply just obtain the appropriate URLs owned by a given Ethereum Public Address, by accessing the `data` state mapping.
+
 ### Send ETH to a Domain
-### List of Registered Domains
+
+This section allows us to send ETH to the Ethereum Public Address mapped to the domain name URL given as input. This will open up Metamask, which facilitates the ETH transaction to this public address.
+
 
 <a name="Testing"></a>
 ## Testing of Contracts
