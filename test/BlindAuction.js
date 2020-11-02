@@ -37,7 +37,7 @@ function increaseTime(addSeconds) {
 
 // accounts are test accounts on local network
 contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
-  describe('deployment', async () => {
+  describe('Unit test: Deployment', async () => {
     let blindAuction
     let dns
     let deployURL
@@ -47,8 +47,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const deployBlindAuction = await dns.startAuction(deployURL)
       const deployEvent = deployBlindAuction.logs[0].args
       auctionAddress = deployEvent._auction_addr
-      // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-      // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
       blindAuction = await BlindAuction.at(auctionAddress)
     })
     it('deploys successfully', async () => {
@@ -59,34 +57,34 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.notEqual(address, undefined)
     })
 
-    it('has url', async () => {
+    it('should have url', async () => {
       const url = await blindAuction.url()
       assert.equal(url, deployURL)
     })
 
-    it('has beneficiary', async() => {
-      const beneficiary = await blindAuction.dnsManagerAddress()
-      assert.equal(dns.address, beneficiary)
+    it('should have DNS Manager Address', async() => {
+      const dnsManager = await blindAuction.dnsManagerAddress()
+      assert.equal(dns.address, dnsManager)
     })
     
-    it('has default winner', async() => {
+    it('should have default winner', async() => {
       const highestBidder = await blindAuction.highestBidder()
       assert.equal(deployer, highestBidder, "Default Highest bidder should be auction starter")
     })
 
-    it('has default highest bid', async() => {
+    it('should have default highest bid', async() => {
       const highestBid = await blindAuction.highestBid()
       assert.equal(0, highestBid, "Default Highest bid should be 0")
     })
 
-    it('has bidding time', async () => {
+    it('should have bidding time', async () => {
       const biddingEnd = BigNumber(await blindAuction.biddingEnd())
       const endTime = biddingEnd.c[0]
       // check that bidding end is above current time
       assert.isAbove(endTime, Math.floor(Date.now() / 1000))
     })
 
-    it('has reveal time', async () => {
+    it('should have reveal time', async () => {
       const biddingEnd = BigNumber(await blindAuction.biddingEnd())
       const biddingTime = biddingEnd.c[0]
       const revealEnd = BigNumber(await blindAuction.revealEnd())
@@ -99,12 +97,93 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
 
   })
 
+  describe('Unit test: Functions', async () => {
+    let blindAuction
+
+    it('should have default winner', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      const highestBidder = await blindAuction.highestBidder()
+      assert.equal(bidder2, highestBidder, "Default Highest bidder should be auction starter")
+    })
+
+    it('should be able to send bid', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      const hashBid = soliditySha3(
+        toWei("0.1"), // hash need to change to wei
+        true,
+        fromAscii("secret").padEnd(66, 0) 
+      );
+      const bid = await blindAuction.bid(hashBid, { from: bidder1, value: toWei("0.1") })
+      const bidEvent = bid.logs[0].args
+      assert.equal(bidEvent.bidHash, hashBid, 'Bid Hashed bid should be hashbid passed in')
+      assert.equal(bidEvent.deposit, toWei("0.1"), 'Bid Deposit should be 0.1 Ether')
+      assert.equal(bidEvent.bidder, bidder1, 'Bid bidder should be bidder1')
+    })
+
+    it('should not be able to send blank bid', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      // FAILURE: bid must have blinded bid content
+      await blindAuction.bid("", bidder1).should.be.rejected;
+    })
+
+    it('should not be able reveal before bidding phase has ended', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      await blindAuction.reveal([toWei("0.1")], [true], [fromAscii("secret")], { from: bidder1 }).should.be.rejected
+    })
+
+    it('should be able reveal bids', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      const hashBid = soliditySha3(
+        toWei("0.2"), // hash need to change to Wei
+        true,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+      await blindAuction.bid(hashBid, { from: bidder2, value: toWei("0.2") })
+      await increaseTime(11)
+      const revealBidder = await blindAuction.reveal([toWei("0.2")], [true], [fromAscii("secret")], { from: bidder2 })
+      const revealEvent = revealBidder.logs[0].args
+      assert.equal(revealEvent.deposits, 0, 'Bidder2 Deposits should be 0 as deposit taken as highest bid')
+      assert.equal(revealEvent.balances, 0, "bidder2 balance should be 0 as only can reveal once")
+      assert.equal(revealEvent.bidder, bidder2, "bidder2 should be present in bidder list that has revealed already")
+    })
+
+    it('should not be able reveal invalid reveals - wrong number of total bids', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      const hashBid = soliditySha3(
+        toWei("0.2"), // hash need to change to Wei
+        true,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+      const hashBid2 = soliditySha3(
+        toWei("0.05"), // hash need to change to Wei
+        false,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+      await blindAuction.bid(hashBid, { from: bidder2, value: toWei("0.2") })
+      await blindAuction.bid(hashBid2, { from: bidder2, value: toWei("0.05") })
+      await increaseTime(11)
+      const revealBidder = await blindAuction.reveal([toWei("0.2")], [true], [fromAscii("secret")], { from: bidder2 }).should.be.rejected
+    })
+
+    it('should not be able bid in reveal phase', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      const hashBid = soliditySha3(
+        toWei("0.05"), // hash need to change to Wei
+        false,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+      await increaseTime(11)
+      await blindAuction.bid(hashBid, { from: bidder3, value: toWei("0.05") }).should.be.rejected
+    })
+
+  })
+
   // Test when 2 bidders bid their own bids and all have valid bids
   // Bidder2 will emerge as the winner due to the highest bid of 0.2
   // Test rejecting calls to various function due to the time check 
   // function calls that are called before the time bounds will be checked
   // if they are rejected
-  describe('2 Bidders Success Case', async () => {
+  describe('Integration Test: 2 Bidders Success Case', async () => {
     let blindAuction
     let dns
     let deployURL
@@ -206,7 +285,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.equal(eventBid3.bidder, bidder2, 'Bid3 bidder should be bidder2')
       // FAILURE: bid must have blinded bid content
       await blindAuction.bid("", bidder1).should.be.rejected;
-
     })
 
     it('reveal bid', async () => {
@@ -248,7 +326,7 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
 
   })
 
-  describe('Bidder2 bid with not enough value', async () => {
+  describe('Integration Test: Bidder2 bid with not enough value', async () => {
     let blindAuction
     let dns
     let deployURL
