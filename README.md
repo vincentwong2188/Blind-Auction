@@ -93,7 +93,7 @@ To properly run the environment with Ganache and make payments to the Auction Ho
 
 Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
 
-Once done, your Metamask account and the project are both now successfully connected to Ganache. You may proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+Once done, your Metamask account and the project are both now successfully connected to Ganache. You may now proceed directly to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 <a name="Ropsten"></a>
 ### 3. Setting up with Ropsten Test Net
@@ -111,6 +111,14 @@ And that's it! The project is now linked to the Ropsten Network.
 
 Ensure that you have an account in Metamask with ETH in the Ropsten Testnet. You may get ETH for the Ropsten TestNet from [this faucet](https://faucet.metamask.io/).
 
+Once done, your Metamask Account and the project are now both successfully connected to Ropsten. If you do not plan to re-migrate our contracts onto the Ropsten Testnet, you can skip section 4.3, and proceed directly to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+#### 3.3 Re-Migrating our Contracts to the Ropsten Testnet
+
+If you would like to test the deployment of all of our Smart Contracts from scratch, instead of using our pre-deployed contracts, you will need to first connect to Infura. Create an Infura account [here](https://infura.io/register), and create a new project.
+
+Modify the PROJECT ID in the `./truffle-config.js` to reflect your Infura account PROJECT ID for the Ropsten testnet.
+
 Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
 
 Add HDWalletProvider dependency as follows:
@@ -119,7 +127,22 @@ Add HDWalletProvider dependency as follows:
 npm install @truffle/hdwallet-provider
 ```
 
-Once done, your Metamask Account and the project are now both successfully connected to Ropsten. You can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+Finally, re-deploy/re-migrate our smart contracts onto the Ropsten Testnet with the following command:
+
+```bash
+truffle migrate --network goerli --reset
+```
+
+During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
+
+![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
+
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
+
+1. Change the ENVIRONMENT constant to `'Ropsten'`.
+2. Change the address in the constant 'DnsContractAddressRopsten' to the value highlighted in the image above.
+
+Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 <a name="Goerli"></a>
 ### 4. Setting up with Goerli Test Net
@@ -137,6 +160,14 @@ And that's it! The project is now linked to the Goerli Network.
 
 Ensure that you have an account in Metamask with ETH in the Goerli Testnet. You may get ETH for the Goerli TestNet from [this faucet](https://goerli-faucet.slock.it/).
 
+Once done, your Metamask Account and the project are now both successfully connected to Goerli. If you do not plan to re-migrate our contracts onto the Testnet, you can skip section 4.3, and proceed directly to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+#### 4.3 Re-Migrating our Contracts to the Goerli Testnet
+
+If you would like to test the deployment of all of our Smart Contracts from scratch, instead of using our pre-deployed contracts, you will need to first connect to Infura. Create an Infura account [here](https://infura.io/register), and create a new project.
+
+Modify the PROJECT ID in the `./truffle-config.js` to reflect your Infura account PROJECT ID for the Goerli testnet.
+
 Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
 
 Add HDWalletProvider dependency as follows:
@@ -145,7 +176,22 @@ Add HDWalletProvider dependency as follows:
 npm install @truffle/hdwallet-provider
 ```
 
-Once done, your Metamask Account and the project are now both successfully connected to Goerli. You can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+Finally, re-deploy/re-migrate our smart contracts onto the Goerli Testnet with the following command:
+
+```bash
+truffle migrate --network goerli --reset
+```
+
+During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
+
+![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
+
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
+
+1. Change the ENVIRONMENT constant to `'Goerli'`.
+2. Change the address in the constant 'DnsContractAddressGoerli' to the value highlighted in the image above.
+
+Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 <a name="FrontEnd"></a>
 ## Setting Up the React Front End Web Application
