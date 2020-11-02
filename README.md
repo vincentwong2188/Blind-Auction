@@ -130,6 +130,6 @@ Once done, we are finally ready to navigate around the Front End Website!
 
 After entering `localhost:1234`, we will see the web application page.
 
-![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.png)
+![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.jpeg)
 
 
