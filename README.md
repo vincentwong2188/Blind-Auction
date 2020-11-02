@@ -15,6 +15,11 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
    * [3. Setting up with Goerli Test Net](#Goerli)
 * [Setting Up the React Front End Web Application](#FrontEnd)
 * [Navigating around the DNS Blind Auction House Web Application](#Navigation)
+  * [1. The Auction House](#AuctionHouse)
+  * [2. List of Registered Domains](#ListRegisteredDomains)
+  * [3. Look-Up the Owner of a Domain](#OwnerOfDomain)
+  * [4. Look-Up the Domain(s) of an Owner](#DomainsOfOwner)
+  * [5. Send ETH to a Domain](#SendETH)
 * [Testing of Contracts](#Testing)
   * [1. DNS Contract](#DNSContract)
   * [2. Blind Auction Contract](#BlindAuction)
@@ -234,6 +239,7 @@ After entering `localhost:1234`, we will see the web application page.
 
 The web application has **5 different sections**:
 
+<a name="AuctionHouse"></a>
 ### 1. The Auction House
 
 The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
@@ -245,6 +251,7 @@ The Auction House is the entry point for users to enter to check if a domain nam
   * Reveal Phase: Where users reveal and prove that they were the ones who made their bids in the Bidding Phase
   * End Phase: Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids.
 
+<a name="ListRegisteredDomains"></a>
 ### 2. List of Registered Domains
 
 At the bottom of the webpage is where we can see a list of Ethereum Public address, and their owned registered domain name URLs. These domain names were obtained from the [DNS Smart Contract](#DNSContract), through a series of function calls as follows:
@@ -255,14 +262,18 @@ At the bottom of the webpage is where we can see a list of Ethereum Public addre
 
 All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
 
+
+<a name="OwnerOfDomain"></a>
 ### 3. Look-Up the Owner of a Domain
 
 Here, we call the `getRegisteredURL()` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
 
+<a name="DomainsOfOwner"></a>
 ### 4. Look-Up the Domain(s) of an Owner
 
 Here, since the `data` state of the web page already holds a mapping of Ethereum Public addresses to domain name URLs as mentioned above, we simply just obtain the appropriate URLs owned by a given Ethereum Public Address, by accessing the `data` state mapping.
 
+<a name="SendETH"></a>
 ### 5. Send ETH to a Domain
 
 This section allows us to send ETH to the Ethereum Public Address mapped to the domain name URL given as input. This will open up Metamask, which facilitates the ETH transaction to this public address.
