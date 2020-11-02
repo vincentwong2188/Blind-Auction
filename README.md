@@ -186,8 +186,13 @@ After entering `localhost:1234`, we will see the web application page.
 The web application has 4 different sections:
 
 **1. The Auction House**
+
 **2. Look-Up the Owner of a Domain**
+
 **3. Look-Up the Domain(s) of an Owner**
+
 **4. Send ETH to a Domain**
+
 **5. List of Registered Domains**
+
 
