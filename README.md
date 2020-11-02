@@ -251,6 +251,10 @@ The Auction House is the entry point for users to enter to check if a domain nam
 ### List of Registered Domains
 
 <a name="Testing"></a>
+<<<<<<< HEAD
+## Testing of contracts
+To set up the testing with Ganache, we have to deploy ensure that we have all the npm packages for the test by running the following command:
+=======
 ## Testing of Contracts
 To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
 
@@ -259,6 +263,7 @@ truffle migrate --reset
 ```
 
 After deploying, ensure that we have all the npm packages for the test by running the following command:
+>>>>>>> 9abef596211e4de298f3d36ab88dacce5766988d
 
 ```bash
 npm install
