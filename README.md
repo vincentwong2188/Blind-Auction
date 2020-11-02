@@ -77,7 +77,7 @@ Once inputted successfully, click on "Add Project" to link and save the project 
 Now, we can deploy our contracts. We do so with the following command:
 
 ```bash
-truffle migrate --reset
+truffle migrate --network local --reset
 ```
 
 During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
@@ -133,7 +133,7 @@ npm install @truffle/hdwallet-provider
 Finally, re-deploy/re-migrate our smart contracts onto the Ropsten Testnet with the following command:
 
 ```bash
-truffle migrate --network goerli --reset
+truffle migrate --network ropsten --reset
 ```
 
 During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
