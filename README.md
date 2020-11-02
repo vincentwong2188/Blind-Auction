@@ -2,7 +2,7 @@
 
 Welcome to the repository of the DNS Blind Auction House. 
 
-This project is a collaboration between Shen Chen, Sim Zhi Qi, and Vincent Wong, and implements a Decentralized Domain Registrar that allows users on the Ethereum Blockchain Network to bid for unregistered domain names of their choice.
+This project is a collaboration between **Shen Chen**, **Sim Zhi Qi**, and **Vincent Wong**, and implements a Decentralized Domain Registrar that allows users on the Ethereum Blockchain Network to bid for unregistered domain names of their choice.
 
 The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows users to bid for domain names using the 'commit-and-reveal' blind auction bidding process to interact with the blockchain, supporting features such as listing of registered domains, query the actual Ethereum public address (owner) behind the domain, bid for an unregistered domain, and many more features.
 
@@ -124,5 +124,12 @@ You should be able to see the "Connected" label now, as follows:
 
 ![Metamask Connection 3](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta3.png)
 
+Once done, we are finally ready to navigate around the Front End Website!
+
+## Navigating around the DNS Blind Auction House Web Application
+
+After entering `localhost:1234`, we will see the web application page.
+
+![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.png)
 
 
