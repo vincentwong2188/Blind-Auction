@@ -241,9 +241,9 @@ The Auction House is the entry point for users to enter to check if a domain nam
 * A domain has already been taken, and has not expired yet. Users will not be able to bid for this domain name, until its current ownership expires.
 * A domain's ownership has already expired or is not currently owned by anyone, and has no existing on-going auctions. Here, the user can choose to start a new auction, which will call the `startAuction()` function in the DNS Smart Contract, elaborated in the contracts section below.
 * A domain is not currently owned by anyone, but already has an ongoing auction pegged to it. Here, the ongoing auction will come in the form of 3 stages:
- * Bidding Phase
- * Reveal Phase
- * End Phase
+  * Bidding Phase
+  * Reveal Phase
+  * End Phase
 
 ### Look-Up the Owner of a Domain
 ### Look-Up the Domain(s) of an Owner
