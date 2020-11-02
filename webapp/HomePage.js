@@ -293,7 +293,7 @@ class HomePage extends React.Component {
 
                     <h1 >DNS Auction House</h1>
                     <p style={{ width: "45%", margin: "auto", fontSize: "18px", marginBottom: "20px" }} >
-                        Your one-stop registrar service to bid for domain names, <br />using the <b>Ethereum</b> blockchain on the <b>{ENVIRONMENT.toUpperCase() === 'GANACHE' ? 'Ganache' : ENVIRONMENT.toUpperCase() === 'ROPSTEN' ? ' Ropsten' : ENVIRONMENT.toUpperCase() === 'GOERLI' ? ' Goerli' : 'undefined'}</b> network!</p>
+                        Your one-stop registrar service to bid for domain names, <br />using the <b>Ethereum</b> blockchain on the <b>{ENVIRONMENT.toUpperCase() === 'GANACHE' ? 'Local Ganache' : ENVIRONMENT.toUpperCase() === 'ROPSTEN' ? ' Ropsten' : ENVIRONMENT.toUpperCase() === 'GOERLI' ? ' Goerli' : 'undefined'}</b> network!</p>
 
                 </div>
                 {/* Routing for Entering the Auction House */}
