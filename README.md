@@ -15,9 +15,9 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
    * [3. Setting up with Goerli Test Net](#Goerli)
 * [Setting Up the React Front End Web Application](#FrontEnd)
 * [Navigating around the DNS Blind Auction House Web Application](#Navigation)
-* [Testing](#Testing)
-* [DNS Contract](#DNSContract)
-* [Blind Auction](#BlindAuction)
+* [Testing of Contracts](#Testing)
+  * [1. DNS Contract](#DNSContract)
+  * [2. Blind Auction Contract](#BlindAuction)
 
 
 <a name="Environment"></a>
@@ -241,7 +241,7 @@ The web application has 4 different sections:
 * List of Registered Domains
 
 <a name="Testing"></a>
-## Testing of contracts
+## Testing of Contracts
 To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
 
 ```bash
@@ -263,14 +263,14 @@ truffle test
 We should see 28 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
 
 <a name="DNSContract"></a>
-## DNS Contract
-### State Variables
+### 1. DNS Contract
+#### State Variables
 - Resolving URL -> Ethereum Address
 - Map of Ethereum Address -> All URLs associated
 - URL Expiry Date
 - Map of URL -> Auction Address
 
-### Functions
+#### Functions
 - startAuction : deploys Blind Auction contract to start a blind auction
 - registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract
 - getAddress : View function for Frontend to query address list
@@ -280,11 +280,11 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - checkExpired : View function for Frontend to query if a domain is expired
 - getExpired : View function for Frontend to query expired domains
 
-### Reasoning
+#### Reasoning
 
 <a name="BlindAuction"></a>
-## Blind Auction Contract
-### State Variables
+### 2. Blind Auction Contract
+#### State Variables
 - Bidding end time
 - Reveal end time
 - State of Auction
@@ -293,12 +293,12 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - Map of Ethereum Address -> all bids made by user
 - Map of Ethereum Address -> all deposits and pending returns
 
-### Functions
+#### Functions
 - bid : Allows user to register a bid and deposit ether for their bids
 - reveal : Allows user to reveal their bids
 - auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
 
-### Reasoning
+#### Reasoning
 The bidding phase allows users to bid multiple bids so that they can hid the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
 keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
 
