@@ -6,7 +6,35 @@ This project is a collaboration between Shen Chen, Sim Zhi Qi, and Vincent Wong,
 
 The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows users to bid for domain names using the 'commit-and-reveal' blind auction bidding process to interact with the blockchain, supporting features such as listing of registered domains, query the actual Ethereum public address (owner) behind the domain, bid for an unregistered domain, and many more features.
 
-## Set Up
+## Contents
+* [Setting Up Environment](#Environment)
+  * [0. Setting Up Pre-Requisites](#PreReqs)
+  * [1. Setting up Project Directory](#Directory)
+  * [2. Setting Up using the Ganache Environment](#GanacheEnv)
+
+* [Setting Up the React Front End Web Application](#FrontEnd)
+
+<a name="Environment"></a>
+## Setting Up Environment
+
+<a name="PreReqs"></a>
+### 0. Setting up Pre-Requisites
+
+Do ensure that the following are installed first:
+
+* NodeJS - can be installed [from this link](https://nodejs.org/en/).
+* npm - can be installed [from this link](https://www.npmjs.com/get-npm).
+* Metamask Google Chrome Extension - can be installed [from this link](https://metamask.io/download.html).
+* Ganache - can be installed [from this link](https://www.trufflesuite.com/ganache).
+
+Next, we will install Truffle with the following commands:
+
+```bash
+npm install truffle -g 
+truffle version # To check if Truffle has been installed successfully
+```
+<a name="Directory"></a>
+### 1. Setting up Project Directory
 
 To use the DNS Blind Auction House, you will first need to clone the repository to your local computer. You may do so in your own desired local directory with the following command
 
@@ -24,9 +52,10 @@ truffle compile
 
 We should now see a new folder named `build/contracts`, which contain `BlindAuction.json`, `Dns.json`, and `Migrations.json`.
 
-### 1. Setting Up using the Ganache Environment
+<a name="GanacheEnv"></a>
+### 2. Setting Up using the Ganache Environment
 
-To set up with Ganache, first download Ganache [at this link](https://www.trufflesuite.com/ganache).
+#### 2.1 Linking of Ganache Workplace with Project
 
 Next, start your Ganache application by double clicking the downloaded app image during installation.
 
@@ -44,20 +73,29 @@ Now, we can deploy our contracts. We do so with the following command:
 truffle migrate --reset
 ```
 
-During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted below.
+During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
 
 ![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
 
-Navigate into the `./configurations.js` file. Make the following 2 changes:
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted above.
+1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted in the image above.
 2. Change the ENVIRONMENT constant to `'Ganache'`.
+
+#### 2.2 Linking of Metamask to the Ganache Environment
+
+To properly run the environment with Ganache and make payments to the Auction House smart contracts, we will need to link your Metamask account with the Ganache localhost.
+
+Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
+
+Once done, your Ganache environment is now properly set up, and you can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 ### 2. Setting up with Ropsten Test Net
 
 Lorem Ipsum
 
-## React Front End Web Application Set Up
+<a name="FrontEnd"></a>
+## Setting Up the React Front End Web Application
 
 Navigate into the `/webapp` folder.
 

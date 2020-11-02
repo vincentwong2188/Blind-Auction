@@ -5,8 +5,9 @@ contract MockDns is Dns {
     constructor(
         uint256 bidding_len,
         uint256 reveal_len,
-        uint256 exp
-    ) public Dns(bidding_len, reveal_len, exp) {}
+        uint256 exp,
+        uint256 grace
+    ) public Dns(bidding_len, reveal_len, exp, grace) {}
 
     function testFuncParam(int256 input_int) public pure returns (int256) {
         return input_int;
