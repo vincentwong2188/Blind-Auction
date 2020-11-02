@@ -242,13 +242,7 @@ The web application has 4 different sections:
 
 <a name="Testing"></a>
 ## Testing of contracts
-To set up the testing with Ganache, we have to deploy our contracts first. Deploy them with the following command:
-
-```bash
-truffle migrate --reset
-```
-
-After deploying, ensure that we have all the npm packages for the test by running the following command:
+To set up the testing with Ganache, we have to deploy ensure that we have all the npm packages for the test by running the following command:
 
 ```bash
 npm install
