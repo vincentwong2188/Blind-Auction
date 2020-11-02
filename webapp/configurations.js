@@ -1,5 +1,5 @@
 // Only Change the following constants:
-export const ENVIRONMENT = 'GANACHE'; // GANACHE, ROPSTEN, or GOERLI
+export const ENVIRONMENT = 'goerli'; // GANACHE, ROPSTEN, or GOERLI
 export const DnsContractAddressGanache = '0xA59960d719799a9D45566f5b068EfB2a75F06611';
 
 // Do not change the following Contract Addresses 
