@@ -8,6 +8,24 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
 
 ## Set Up
 
+### 0. Setting up Pre-Requisites
+
+Do ensure that the following are installed first:
+
+* NodeJS - can be installed [from this link](https://nodejs.org/en/).
+* npm - can be installed [from this link](https://www.npmjs.com/get-npm).
+* Metamask Google Chrome Extension - can be installed [from this link](https://metamask.io/download.html).
+* Ganache - can be installed [from this link](https://www.trufflesuite.com/ganache).
+
+Next, we will install Truffle with the following commands:
+
+```bash
+npm install truffle -g 
+truffle version # To check if Truffle has been installed successfully
+```
+
+### 1. Setting up Project Directory
+
 To use the DNS Blind Auction House, you will first need to clone the repository to your local computer. You may do so in your own desired local directory with the following command
 
 ```bash
@@ -24,9 +42,9 @@ truffle compile
 
 We should now see a new folder named `build/contracts`, which contain `BlindAuction.json`, `Dns.json`, and `Migrations.json`.
 
-### 1. Setting Up using the Ganache Environment
+### 2. Setting Up using the Ganache Environment
 
-To set up with Ganache, first download Ganache [at this link](https://www.trufflesuite.com/ganache).
+#### 2.1 Linking of Ganache Workplace with Project
 
 Next, start your Ganache application by double clicking the downloaded app image during installation.
 
@@ -52,6 +70,10 @@ Navigate into the `./webapp/configurations.js` file. Make the following 2 change
 
 1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted in the image above.
 2. Change the ENVIRONMENT constant to `'Ganache'`.
+
+#### 2.2 Linking of Metamask to the Ganache Environment
+
+
 
 ### 2. Setting up with Ropsten Test Net
 
