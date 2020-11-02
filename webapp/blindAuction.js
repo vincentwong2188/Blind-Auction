@@ -6,7 +6,7 @@ const { soliditySha3, toWei, fromAscii, fromWei } = require("web3-utils");
 import artifact from "../build/contracts/BlindAuction.json";
 const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // Dummy Address to call neutral contracts
 
-const ENVIRONMENT = "Ropsten" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
+import { ENVIRONMENT } from './configurations';
 
 // run $ truffle migrate --network ropsten --reset
 

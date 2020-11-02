@@ -2,12 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 import artifact from "../build/contracts/Dns.json";
-
-import { ENVIRONMENT, DnsContractAddressGanache } from './configurations';
-
+import { ENVIRONMENT, DnsContractAddressGanache } from './configurations'
 const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054";
 
-// const ENVIRONMENT = "Ropsten" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
+// const ENVIRONMENT = "ROPSTEN" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
 
 // export const DnsContractAddress = "0xA59960d719799a9D45566f5b068EfB2a75F06611"; // GANACHE
 export const DnsContractAddress = ENVIRONMENT.toUpperCase() === 'ROPSTEN'
@@ -16,7 +14,7 @@ export const DnsContractAddress = ENVIRONMENT.toUpperCase() === 'ROPSTEN'
         ? DnsContractAddressGanache
         : ENVIRONMENT.toUpperCase() === 'GOERLI'
             ? "0x1674e1cC98D8E9d8e31f411f3A81400880dCaDfB"
-            : ''
+            : '0x7825c086c793BA87D7C12F3FA843FB8F93A2b755'
 
 const infuraWSSRopsten = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
 const infuraWSSGoerli = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
