@@ -1,18 +1,8 @@
 import React from "react";
-import {
-  updateDeposit,
-  newDeposit,
-  BankContractAddress,
-  Testnet,
-} from "./bank.js";
+
 import { Route, Switch } from 'react-router-dom';
 
-import {
-  registerDomain,
-  lookupAddress,
-  bid,
-  DnsContractAddress
-} from "./dns.js"
+
 import HomePage from "./HomePage.js";
 import AuctionPage from "./AuctionPage.js";
 import AuctionStatus from "./AuctionStatus.js";

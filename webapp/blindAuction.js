@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
-// NOTE: be aware of this: https://flaviocopes.com/parcel-regeneratorruntime-not-defined/
 import Web3 from "web3";
 const BigNumber = require('bignumber.js');
 const { soliditySha3, toWei, fromAscii, fromWei } = require("web3-utils");
+import artifact from "../build/contracts/BlindAuction.json";
+const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // Dummy Address to call neutral contracts
 
-// importing a compiled contract artifact which contains function signature etc. to interact
-import artifact from "../build/contracts/BlindAuction.json"; // REMEMBER TO CHANGE THIS!!!
-const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // MAY NEED TO FILL UP
+const ENVIRONMENT = "Ganache" // Switch between 'Ganache' Local Env, 'Ropsten' Testnet, or 'Goerli' Testnet
 
 // run $ truffle migrate --network ropsten --reset
 
@@ -28,10 +27,21 @@ const myAddress = "0x132982D9c32E206a8A814cCdbEe09bf0Baa01A71"; // MAY NEED TO F
 // export const Testnet = "goerli"; // PLEASE CHANGE IT TO YOURS (changed)
 
 // for GANACHE
-const web3 = new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
+
+// Checking Environment
+const web3 = ENVIRONMENT.toUpperCase() === 'GANACHE'
+    ? new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
+    : ENVIRONMENT.toUpperCase() === 'ROPSTEN'
+        ? new Web3(
+            Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSSRopsten))
+        :
+        ENVIRONMENT.toUpperCase() === 'GOERLI'
+            ? new Web3(
+                Web3.currentProvider || new Web3.providers.WebsocketProvider(infuraWSSGoerli))
+            : ''
+
 
 // Start of Functions
-
 export const biddingEnd = async (contractAddress) => {
 
     const contract = new web3.eth.Contract(artifact.abi, contractAddress); // Need to put this into each function
@@ -50,9 +60,12 @@ export const revealEnd = async (contractAddress) => {
 }
 
 export const bid = async (sendValue, value, real, secret, contractAddress) => {
-    console.log('enters bid function')
-    // For ganache:
-    const CHAIN_ID = await web3.eth.getChainId();
+    const CHAIN_ID = ENVIRONMENT.toUpperCase() === 'GANACHE'
+        ? await web3.eth.getChainId()
+        : ENVIRONMENT.toUpperCase() === 'ROPSTEN'
+            ? 3
+            : ENVIRONMENT.toUpperCase() === 'GOERLI' ? 5
+                : ''
 
     let hashBid1 = soliditySha3(
         toWei(value), // hash need to change to wei
@@ -65,8 +78,7 @@ export const bid = async (sendValue, value, real, secret, contractAddress) => {
     const provider = await detectEthereumProvider();
 
     if (provider) {
-        // From now on, this should always be true:
-        // provider === window.ethereum
+
         ethereum.request({
             method: "eth_sendTransaction",
             params: [
@@ -100,8 +112,12 @@ export const bid = async (sendValue, value, real, secret, contractAddress) => {
 }
 
 export const reveal = async (values, reals, secrets, contractAddress) => {
-    // For ganache:
-    const CHAIN_ID = await web3.eth.getChainId();
+    const CHAIN_ID = ENVIRONMENT.toUpperCase() === 'GANACHE'
+        ? await web3.eth.getChainId()
+        : ENVIRONMENT.toUpperCase() === 'ROPSTEN'
+            ? 3
+            : ENVIRONMENT.toUpperCase() === 'GOERLI' ? 5
+                : ''
 
     const provider = await detectEthereumProvider();
 
@@ -149,17 +165,16 @@ export const reveal = async (values, reals, secrets, contractAddress) => {
 }
 
 export const auctionEnd = async (contractAddress) => {
-    // Using MetaMask API to send transaction
-    //
-    // please read: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-provider-api
-
-    // For ganache:
-    const CHAIN_ID = await web3.eth.getChainId();
+    const CHAIN_ID = ENVIRONMENT.toUpperCase() === 'GANACHE'
+        ? await web3.eth.getChainId()
+        : ENVIRONMENT.toUpperCase() === 'ROPSTEN'
+            ? 3
+            : ENVIRONMENT.toUpperCase() === 'GOERLI' ? 5
+                : ''
 
     const provider = await detectEthereumProvider();
     if (provider) {
-        // From now on, this should always be true:
-        // provider === window.ethereum
+
         ethereum.request({
             method: "eth_sendTransaction",
             params: [

@@ -323,14 +323,14 @@ class HomePage extends React.Component {
 
                 <div style={{
                     fontFamily: "arial",
-                    width: "81%",
+                    width: "82%",
                     margin: "auto",
                     display: "flex",
                     flexDirection: "row"
                 }}>
                     {/* DNS Look up from URL String -> ETH Address of Owner */}
 
-                    <div style={innerCardStyle}>
+                    <div style={{ ...innerCardStyle, marginRight: "15px" }}>
                         <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/teamwork.png')} />
                         <h3>Look-up the Owner of a Domain</h3>
 
@@ -362,7 +362,7 @@ class HomePage extends React.Component {
 
                     {/* DNS Look up from URL String -> ETH Address of Owner */}
 
-                    <div style={innerCardStyle}>
+                    <div style={{ ...innerCardStyle, marginRight: "15px" }}>
                         <img style={{ height: "50px", width: "50px", marginTop: "15px" }} src={require('./assets/www.png')} />
                         <h3> Look-up the Domain(s) of an Owner</h3>
                         <input
