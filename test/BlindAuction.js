@@ -147,6 +147,24 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       assert.equal(revealEvent.bidder, bidder2, "bidder2 should be present in bidder list that has revealed already")
     })
 
+    it('should not be able reveal invalid reveals - wrong number of total bids', async () => {
+      blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
+      const hashBid = soliditySha3(
+        toWei("0.2"), // hash need to change to Wei
+        true,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+      const hashBid2 = soliditySha3(
+        toWei("0.05"), // hash need to change to Wei
+        false,
+        fromAscii("secret").padEnd(66, 0) // pad with 66 '0s' so that fit byte32 to match sol func
+      );
+      await blindAuction.bid(hashBid, { from: bidder2, value: toWei("0.2") })
+      await blindAuction.bid(hashBid2, { from: bidder2, value: toWei("0.05") })
+      await increaseTime(11)
+      const revealBidder = await blindAuction.reveal([toWei("0.2")], [true], [fromAscii("secret")], { from: bidder2 }).should.be.rejected
+    })
+
     it('should not be able bid in reveal phase', async () => {
       blindAuction = await BlindAuction.new(10, 10, "dns.ntu", deployer, bidder2)
       const hashBid = soliditySha3(
