@@ -103,7 +103,7 @@ Our group has already successfully deployed our smart contracts onto the Ropsten
 
 To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
 
-1. Change the ENVIRONMENT constant to `'Ganache'`.
+1. Change the ENVIRONMENT constant to `'Ropsten'`.
 
 And that's it! The project is now linked to the Ropsten Network.
 
