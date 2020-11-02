@@ -12,10 +12,10 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
   * [1. Setting up Project Directory](#Directory)
   * [2. Setting Up using the Ganache Environment](#GanacheEnv)
   * [3. Setting up with Ropsten Test Net](#Ropsten)
+   * [3. Setting up with Goerli Test Net](#Goerli)
+* [Setting Up the React Front End Web Application](#FrontEnd)
 * [Navigating around the DNS Blind Auction House Web Application](#Navigation)
 
-
-* [Setting Up the React Front End Web Application](#FrontEnd)
 
 <a name="Environment"></a>
 ## Setting Up Environment
@@ -109,6 +109,8 @@ And that's it! The project is now linked to the Ropsten Network.
 
 #### 3.2 Linking of Metamask to the Ropsten Network
 
+Ensure that you have an account in Metamask with ETH in the Ropsten Testnet. You may get ETH for the Ropsten TestNet from [this faucet](https://faucet.metamask.io/).
+
 Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
 
 Add HDWalletProvider dependency as follows:
@@ -118,6 +120,32 @@ npm install @truffle/hdwallet-provider
 ```
 
 Once done, your Metamask Account and the project are now both successfully connected to Ropsten. You can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+
+<a name="Goerli"></a>
+### 4. Setting up with Goerli Test Net
+
+#### 4.1 Linking the Project to the Goerli Network
+Our group has already successfully deployed our smart contracts onto the Goerli Test Net. 
+
+To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
+
+1. Change the ENVIRONMENT constant to `'Goerli'`.
+
+And that's it! The project is now linked to the Goerli Network.
+
+#### 4.2 Linking of Metamask to the Goerli Network
+
+Ensure that you have an account in Metamask with ETH in the Goerli Testnet. You may get ETH for the Goerli TestNet from [this faucet](https://goerli-faucet.slock.it/).
+
+Create a file named .secret, and copy & paste your Metamask mnemonic seed into this file. To find out about your seed, go to MetaMask top right "Settings > Security & Privacy > Reveal Seed Phrase".
+
+Add HDWalletProvider dependency as follows:
+
+```bash
+npm install @truffle/hdwallet-provider
+```
+
+Once done, your Metamask Account and the project are now both successfully connected to Goerli. You can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
 <a name="FrontEnd"></a>
 ## Setting Up the React Front End Web Application
@@ -136,7 +164,7 @@ Once that is done, we can run the web application on `localhost:1234` using the 
 npm start
 ```
 
-While at the site, we now need to connect our MetaMask extension to our localhost site.
+While at the site, we now need to connect our MetaMask extension to our localhost site. You may do so as follows:
 
 ![Metamask Connection 1](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/meta1.png)
 
@@ -155,4 +183,11 @@ After entering `localhost:1234`, we will see the web application page.
 
 ![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.jpeg)
 
+The web application has 4 different sections:
+
+**1. The Auction House**
+**2. Look-Up the Owner of a Domain**
+**3. Look-Up the Domain(s) of an Owner**
+**4. Send ETH to a Domain**
+**5. List of Registered Domains**
 
