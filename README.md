@@ -48,7 +48,7 @@ During the migration, take note of the contract address obtained after deploying
 
 ![DNS Migration Contract Address](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/dns%20migrations.jpeg)
 
-Navigate into the `./configurations.js` file. Make the following 2 changes:
+Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
 1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted above.
 2. Change the ENVIRONMENT constant to `'Ganache'`.
