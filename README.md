@@ -11,6 +11,8 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
   * [0. Setting Up Pre-Requisites](#PreReqs)
   * [1. Setting up Project Directory](#Directory)
   * [2. Setting Up using the Ganache Environment](#GanacheEnv)
+   * [2.1 Linking of Ganache Workplace with Project](#GanacheToProject)
+  * [3. Setting up with Ropsten Test Net](#Ropsten)
 
 * [Setting Up the React Front End Web Application](#FrontEnd)
 
@@ -55,6 +57,7 @@ We should now see a new folder named `build/contracts`, which contain `BlindAuct
 <a name="GanacheEnv"></a>
 ### 2. Setting Up using the Ganache Environment
 
+<a name="GanacheToProject"></a>
 #### 2.1 Linking of Ganache Workplace with Project
 
 Next, start your Ganache application by double clicking the downloaded app image during installation.
@@ -82,15 +85,17 @@ Navigate into the `./webapp/configurations.js` file. Make the following 2 change
 1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted in the image above.
 2. Change the ENVIRONMENT constant to `'Ganache'`.
 
+<a name="GanacheToMetamask"></a>
 #### 2.2 Linking of Metamask to the Ganache Environment
 
 To properly run the environment with Ganache and make payments to the Auction House smart contracts, we will need to link your Metamask account with the Ganache localhost.
 
 Head to [this link](https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf) to properly link your Metamask to Ganache.
 
-Once done, your Ganache environment is now properly set up, and you can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
+Once done, your Metamask is now successfully connected to Ganache and you can proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
-### 2. Setting up with Ropsten Test Net
+<a name="Ropsten"></a>
+### 3. Setting up with Ropsten Test Net
 
 Lorem Ipsum
 
@@ -111,6 +116,13 @@ Once that is done, we can run the web application on `localhost:1234` using the 
 npm start
 ```
 
+While at the site, we now need to connect our MetaMask extension to our localhost site.
+
+![Ganache Workspace Settings](https://github.com/BlockchainCourseNTU/resource/blob/master/development/hello-dapp/assets/webapp-metamask-connect.png)
+
+You should be able to see the "Connected" label now, as follows:
+
+![Ganache Workspace Settings](https://github.com/BlockchainCourseNTU/resource/blob/master/development/hello-dapp/assets/webapp-metamask-connect.png)
 
 
 
