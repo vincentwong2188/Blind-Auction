@@ -349,16 +349,16 @@ Lastly, a grace period is built in to ensure that users are unable to deny a URL
 
 <a name="BiddingPhase"></a>
 ##### 2.3.1 Bidding Phase
-The Bidding Phase allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract, as this value is publicly available to everyone due to the properties of a decentralised blockchain network. Thus, instead of taking the publicly available value as the bid value of the bidder, we convert the publicly available ETH value to be the bidder's input deposit instead, and collect his actual intended bid value separately. As the bid values (not to be confused with the deposit values) are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the keccak256 hash. 
+The **Bidding Phase** allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract, as this value is publicly available to everyone due to the properties of a decentralised blockchain network. Thus, instead of taking the publicly available value as the bid value of the bidder, we convert the publicly available ETH value to be the bidder's input deposit instead, and collect his actual intended bid value separately. As the bid values (not to be confused with the deposit values) are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the keccak256 hash. 
 
-Hence, during the bidding phase, all bids are hidden and the only information that is available to the public is the ether deposit amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids, and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. Here, users just have to make sure that the total sum of all deposit inputs has to be greater than or equal to the individual bid values of each bid. 
+Hence, during the bidding phase, all bids are hidden and the only information that is available to the public is the ether deposit amount sent by the user. Users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids, and to top up the total deposits in their account. To indicate and send fake bids, users will input a "false" value as their Real Boolean, and this value will also be hashed. Here, users just have to make sure that the total sum of all deposit inputs has to be greater than or equal to the individual (true) bid values of each bid. 
 
 For example, a user might want to bid a bid value of 1 ETH for their domain name in the Auction House.
 
 The user can choose to make 2 separate bids to mask their bid.
 
-* First Bid: Deposit = 0.1 ETH, Bid Value = 1 ETH, Real Boolean = True (indicating that this bid is real), Secret = secretvalue
-* Second Bid: Deposit = 10 ETH, Bid Value = 20 ETH, Real Boolean = False (indicating that this bid is false, and is only used to mislead other auction viewers, and also used to deposit more eth into their bidding account), Secret = secretvalue2
+* **First Bid**: Deposit = 0.1 ETH, Bid Value = 1 ETH, Real Boolean = True (indicating that this bid is real), Secret = secretvalue
+* **Second Bid**: Deposit = 10 ETH, Bid Value = 20 ETH, Real Boolean = False (indicating that this bid is false, and is only used to mislead other auction viewers, and also used to deposit more eth into their bidding account), Secret = secretvalue2
 
 Here, the bidder's bid will successfully go through, as their total deposit of 0.1 + 10 = 10.1 ETH is larger than their actual (true) bid of 1 ETH. This means that the bidder would have bidded 1 ETH. Note that the Bid Value, Real Boolean, and Secret Values will all be hashed and sent as data to the Blind Auction Smart Contract.
 
