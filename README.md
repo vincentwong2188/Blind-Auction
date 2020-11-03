@@ -246,7 +246,7 @@ The Auction House is the entry point for users to enter to check if a domain nam
 
 * A domain has **already been taken**, and **has not expired yet**. Users will not be able to bid for this domain name, until its current ownership expires.
 * A domain's ownership has **already expired** or is **not currently owned by anyone**, and has **no existing on-going auctions**. Here, the user can choose to start a new auction, which will call the `startAuction()` function in our [DNS Smart Contract](#DNSContract).
-* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction be in one of three different phases:
+* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction will be in one of three different phases:
   * **Bidding Phase:** Where users can bid in a Blind Auction. More information can be found in the [Bidding Phase](#BiddingPhase) section.
   * **Reveal Phase:** Where users reveal and prove that they were the ones who made their bids in the Bidding Phase. More information can be found in the [Reveal Phase](#RevealPhase) section.
   * **End Phase:** Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids. More information can be found in the [End Phase](#EndPhase) section.
