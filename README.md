@@ -368,7 +368,14 @@ Here, the bidder's bid will successfully go through, as their total deposit of *
 
 <a name="RevealPhase"></a>
 ##### 2.3.2 Reveal Phase
-The Reveal Phase allows the user to reveal all the bids they did. Users have to reveal every single bid they did including the fake ones to verify and ensure they cannot selectively reveal certain bids. Users also only got 1 try to reveal before all their other bids are invalidated. This is to ensure that no user can selectively reveal their bids resulting in an unfair auction that isn't truly blind as the user could only reveal their lowest bid and only reveal the higher bids when they realised that they are losing the auction. This is therefore prevented by only allowing the user to reveal once. 
+The **Reveal Phase** allows the user to reveal all the bids they made during the Bidding Phase. Users have to reveal every single bid they made, **including** the fake ones, to verify and ensure they cannot selectively reveal certain bids. Users also only have 1 try to reveal their bids. Any subsequently reveals or wrong reveals will invalidate their bids. This is to ensure that no user can selectively reveal their bids, which would have resulted in an unfair auction that isn't truly blind, since the user would only reveal their lowest bid, selectively revealling the higher bids when they realised that they are losing the auction. This security flaw is thus prevented by only allowing the user to reveal **once**. 
+
+Using the aforementioned user in the Bidding Phase above as an example of what to input during the reveal phase:
+* **Bid Values**: 1, 20
+* **Real Booleans**: True, False
+* **Secret Values**: secretvalue, secretvalue2
+
+*Note that values MUST be inputted in the order that they were bidded in (ie. the bid value order should be 1, 20 instead of 20, 1*
 
 <a name="EndPhase"></a>
 ##### 2.3.3 End Phase
