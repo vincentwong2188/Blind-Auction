@@ -211,8 +211,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const deployBlindAuction = await dns.startAuction(deployURL)
       const deployEvent = deployBlindAuction.logs[0].args
       auctionAddress = deployEvent._auction_addr
-      // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-      // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
       blindAuction = await BlindAuction.at(auctionAddress)
       // use URL below for keccak256 hash in JS
       // https://blog.8bitzen.com/posts/18-03-2019-keccak-abi-encodepacked-with-javascript/
@@ -352,8 +350,6 @@ contract('BlindAuction', ([deployer, bidder1, bidder2, bidder3]) => {
       const deployBlindAuction = await dns.startAuction(deployURL)
       const deployEvent = deployBlindAuction.logs[0].args
       auctionAddress = deployEvent._auction_addr
-      // TODO: START TEST WITH ADDRESSS FROM CREATED IN DNS CONTRACT
-      // blindAuction = await BlindAuction.new(10, 10, deployURL, dns.address, deployer)
       blindAuction = await BlindAuction.at(auctionAddress)
       hashBid1 = soliditySha3(
         toWei("0.1"), // hash need to change to wei
