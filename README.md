@@ -370,7 +370,7 @@ Here, the bidder's bid will successfully go through, as their total deposit of *
 ##### 2.3.2 Reveal Phase
 The **Reveal Phase** allows the user to reveal all the bids they made during the Bidding Phase. Users have to reveal every single bid they made, **including** the fake ones, to verify and ensure they cannot selectively reveal certain bids. Users also only have 1 try to reveal their bids. Any subsequently reveals or wrong reveals will invalidate their bids. This is to ensure that no user can selectively reveal their bids, which would have resulted in an unfair auction that isn't truly blind, since the user would only reveal their lowest bid, selectively revealling the higher bids when they realised that they are losing the auction. This security flaw is thus prevented by only allowing the user to reveal **once**. 
 
-Using the aforementioned user in the Bidding Phase above as an example of what to input during the reveal phase:
+Using the aforementioned user in the Bidding Phase above as an example of what to input during the Reveal Phase:
 * **Bid Values**: 1, 20
 * **Real Booleans**: True, False
 * **Secret Values**: secretvalue, secretvalue2
@@ -379,8 +379,8 @@ Using the aforementioned user in the Bidding Phase above as an example of what t
 
 <a name="EndPhase"></a>
 ##### 2.3.3 End Phase
-The End Phase is where the user would end the auction and register the domain to their name if they are the winner. All losers will also get refunded the amount the bidded as long as they participated in the reveal phase.
+The **End Phase** is where the user would end the auction. Once the auction has ended, the winner of the bid will have the domain name registered to their Ethereum public address and ownership transfered to them, while users that did not win the auction will be refunded the amount they bidded, as long as they successfully participated in the Reveal Phase.
 
-We retrieve our timings to bound our functions based on the now() function in solidity which takes the current block timestamp. This is how we determine when the auction bidding time should end and transition to the reveal phase and when the reveal phase should end as well.
+*Note that we retrieve our timings to bound our functions based on the now() function in solidity, which takes the current block timestamp as our "now" time. This is how we determine when the auction Bidding Phase should end and transition to the Reveal Phase, and likewise for the Reveal Phase to transition to the End Phase.*
 
 
