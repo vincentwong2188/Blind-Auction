@@ -297,27 +297,39 @@ We should see 28 test cases passing with test raging from unit testing of the va
 
 <a name="DNSContract"></a>
 ### 1. DNS Contract
-#### State Variables
-- Resolving URL -> Ethereum Address
-- Map of Ethereum Address -> All URLs associated
-- URL Expiry Date
-- Map of URL -> Auction Address
+#### 1.1 State Variables
+- dns_lookup_table : Resolving URL -> Ethereum Address
+- reverse_lookup_table : Map of Ethereum Address -> All URLs associated
+- expiry_date : URL Expiry Date
+- auctions : Map of URL -> Auction Address
+- expiry : Time for URL to expire
+- bidding_length : Time for bidding in deployed auction
+- reveal_length : Time for reveal in deployed auction
+- grace_period : Time to claim URL by ending auction
 
-#### Functions
+#### 1.2 Functions
 - startAuction : deploys Blind Auction contract to start a blind auction
-- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract
+- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract (Only the auction associated with the URL may call this)
 - getAddress : View function for Frontend to query address list
 - getURLCount : View function for Frontend to query number of domains owned by an address
 - getURL : View function for Frontend to query the domain that a user owns
 - getRegisteredURL : View function for Frontend to query the owner of a particular domain
 - checkExpired : View function for Frontend to query if a domain is expired
-- getExpired : View function for Frontend to query expired domains
+- getExpired : View function for Frontend to query expiry date
+- checkAuctionEnded : View function for front end to query if auction has been ended
+- checkAuctionPastGrace : View function to check if auction is past the grace period
+- getAuctionURL : View function for Frontend to get auction contract address
 
-#### Reasoning
+#### 1.3 Reasoning
+Storing the forwards and backwards resolution of address -> URLs and URL -> address enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made as lookup queries should outnumber registrations by many orders of magnitude.
+
+Auctions are deployed as required, with the auction calling the relevant callbacks to register the winner as the URL owner once ended. A check is done to ensure accounts/contracts calling the register URL function matches the internal records of the auction address associated with said URL.
+
+Lastly, a grace period is built in to ensure that users are unable to deny a URL by starting an auction but not ending it.
 
 <a name="BlindAuction"></a>
 ### 2. Blind Auction Contract
-#### State Variables
+#### 2.1 State Variables
 - Bidding end time
 - Reveal end time
 - State of Auction
@@ -326,7 +338,7 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - Map of Ethereum Address -> all bids made by user
 - Map of Ethereum Address -> all deposits and pending returns
 
-#### Functions
+#### 2.2 Functions
 - bid : Allows user to register a bid and deposit ether for their bids
 - reveal : Allows user to reveal their bids
 - auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
