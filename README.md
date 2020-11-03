@@ -91,8 +91,8 @@ During the migration, take note of the contract address obtained after deploying
 
 Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted in the image above.
-2. Change the ENVIRONMENT constant to `'Ganache'`.
+1. Change the address in the constant `DnsContractAddressGanache` to the value highlighted in the image above.
+2. Change the `ENVIRONMENT` constant to `'Ganache'`.
 
 <a name="GanacheToMetamask"></a>
 #### 2.2 Linking of Metamask to the Ganache Environment
