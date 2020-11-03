@@ -357,10 +357,14 @@ For example, a user might want to bid a bid value of 1 ETH for their domain name
 
 The user can choose to make 2 separate bids to mask their bid.
 
-* **First Bid**: Deposit = 0.1 ETH, Bid Value = 1 ETH, Real Boolean = True (indicating that this bid is real), Secret = secretvalue
-* **Second Bid**: Deposit = 10 ETH, Bid Value = 20 ETH, Real Boolean = False (indicating that this bid is false, and is only used to mislead other auction viewers, and also used to deposit more eth into their bidding account), Secret = secretvalue2
+* **First Bid**: 
+  * **Deposit** = 0.1 ETH, **Bid Value** = 1 ETH, **Real Boolean** = True (indicating that this bid is real), **Secret** = secretvalue
+* **Second Bid**: 
+  * **Deposit** = 10 ETH, **Bid Value** = 20 ETH, **Real Boolean** = False (indicating that this bid is false, and is only used to mislead other auction viewers, and also used to deposit more eth into their bidding account), **Secret** = secretvalue2
 
-Here, the bidder's bid will successfully go through, as their total deposit of 0.1 + 10 = 10.1 ETH is larger than their actual (true) bid of 1 ETH. This means that the bidder would have bidded 1 ETH. Note that the Bid Value, Real Boolean, and Secret Values will all be hashed and sent as data to the Blind Auction Smart Contract.
+Here, the bidder's bid will successfully go through, as their total deposit of **0.1 + 10 = 10.1 ETH** is larger than their actual (true) bid of **1 ETH**. This means that the bidder would have bidded **1 ETH**, though the publicly available ETH values are **0.1 ETH** and **10 ETH** respectively in each bid transaction. 
+
+*Note that the Bid Value, Real Boolean, and Secret Values will all be hashed and sent as data to the Blind Auction Smart Contract.*
 
 <a name="RevealPhase"></a>
 ##### 2.3.2 Reveal Phase
