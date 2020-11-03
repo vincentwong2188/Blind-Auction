@@ -266,7 +266,7 @@ All these function calls generate a mapping of Ethereum Public addresses to doma
 <a name="OwnerOfDomain"></a>
 ### 3. Look-Up the Owner of a Domain
 
-Here, we call the `getRegisteredURL()` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
+Here, we call the `getRegisteredURL(domainURL)` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
 
 <a name="DomainsOfOwner"></a>
 ### 4. Look-Up the Domain(s) of an Owner
