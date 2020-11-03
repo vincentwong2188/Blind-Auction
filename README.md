@@ -111,7 +111,7 @@ Our group has already successfully deployed our smart contracts onto the Ropsten
 
 To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
 
-1. Change the ENVIRONMENT constant to `'Ropsten'`.
+1. Change the `ENVIRONMENT` constant to `'Ropsten'`.
 
 And that's it! The project is now linked to the Ropsten Network.
 
@@ -147,8 +147,8 @@ During the migration, take note of the contract address obtained after deploying
 
 Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the ENVIRONMENT constant to `'Ropsten'`.
-2. Change the address in the constant 'DnsContractAddressRopsten' to the value highlighted in the image above.
+1. Change the `ENVIRONMENT` constant to `'Ropsten'`.
+2. Change the address in the constant `DnsContractAddressRopsten` to the value highlighted in the image above.
 
 Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
@@ -160,7 +160,7 @@ Our group has already successfully deployed our smart contracts onto the Goerli 
 
 To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
 
-1. Change the ENVIRONMENT constant to `'Goerli'`.
+1. Change the `ENVIRONMENT` constant to `'Goerli'`.
 
 And that's it! The project is now linked to the Goerli Network.
 
@@ -196,8 +196,8 @@ During the migration, take note of the contract address obtained after deploying
 
 Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the ENVIRONMENT constant to `'Goerli'`.
-2. Change the address in the constant 'DnsContractAddressGoerli' to the value highlighted in the image above.
+1. Change the `ENVIRONMENT` constant to `'Goerli'`.
+2. Change the address in the constant `DnsContractAddressGoerli` to the value highlighted in the image above.
 
 Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
