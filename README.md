@@ -293,35 +293,35 @@ We can then run use truffle to run all the test by running the following command
 truffle test
 ```
 
-We should see 31 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
+We should see **31 test cases successfully passing**, with tests raging from unit testing of the various functionality of each contract, to integration testing of various scenarios ran on both contracts integrated together. All these tests mock a sample real case usage of the 2 contracts participating in an auction and registering a domain. 
 
 <a name="DNSContract"></a>
 ### 1. DNS Contract
 #### 1.1 State Variables
-- dns_lookup_table : Resolving URL -> Ethereum Address
-- reverse_lookup_table : Map of Ethereum Address -> All URLs associated
-- expiry_date : URL Expiry Date
-- auctions : Map of URL -> Auction Address
-- expiry : Time for URL to expire
-- bidding_length : Time for bidding in deployed auction
-- reveal_length : Time for reveal in deployed auction
-- grace_period : Time to claim URL by ending auction
+- **dns_lookup_table** : Resolving URL -> Ethereum Address
+- **reverse_lookup_table** : Map of Ethereum Address -> All URLs associated
+- **expiry_date** : URL Expiry Date
+- **auctions** : Map of URL -> Auction Address
+- **expiry** : Time for URL to expire
+- **bidding_length** : Time for bidding in deployed auction
+- **reveal_length** : Time for reveal in deployed auction
+- **grace_period** : Time to claim URL by ending auction
 
 #### 1.2 Functions
-- startAuction : deploys Blind Auction contract to start a blind auction
-- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract (Only the auction associated with the URL may call this)
-- getAddress : View function for Frontend to query address list
-- getURLCount : View function for Frontend to query number of domains owned by an address
-- getURL : View function for Frontend to query the domain that a user owns
-- getRegisteredURL : View function for Frontend to query the owner of a particular domain
-- checkExpired : View function for Frontend to query if a domain is expired
-- getExpired : View function for Frontend to query expiry date
-- checkAuctionEnded : View function for front end to query if auction has been ended
-- checkAuctionPastGrace : View function to check if auction is past the grace period
-- getAuctionURL : View function for Frontend to get auction contract address
+- **startAuction** : deploys Blind Auction contract to start a blind auction
+- **registerAddress** : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract (Only the auction associated with the URL may call this)
+- **getAddress** : View function for Frontend to query address list
+- **getURLCount** : View function for Frontend to query number of domains owned by an address
+- **getURL** : View function for Frontend to query the domain that a user owns
+- **getRegisteredURL** : View function for Frontend to query the owner of a particular domain
+- **checkExpired** : View function for Frontend to query if a domain is expired
+- **getExpired** : View function for Frontend to query expiry date
+- **checkAuctionEnded** : View function for front end to query if auction has been ended
+- **checkAuctionPastGrace** : View function to check if auction is past the grace period
+- **getAuctionURL** : View function for Frontend to get auction contract address
 
 #### 1.3 Reasoning
-Storing the forwards and backwards resolution of (address -> URLs) and (URL -> address) enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made as lookup queries should outnumber registrations by many orders of magnitude.
+Storing the forwards and backwards resolution of (address -> URLs) and (URL -> address) enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made, as lookup queries should outnumber registrations by many orders of magnitude.
 
 Auctions are deployed as required, with the auction calling the relevant callbacks to register the winner as the URL owner once ended. A check is done to ensure accounts/contracts calling the register URL function matches the internal records of the auction address associated with said URL.
 
@@ -332,25 +332,35 @@ Lastly, a grace period is built in to ensure that users are unable to deny a URL
 <a name="BlindAuction"></a>
 ### 2. Blind Auction Contract
 #### 2.1 State Variables
-- Bidding end time
-- Reveal end time
-- State of Auction
-- Highest Bidder
-- Highest Bid
-- Map of Ethereum Address -> all bids made by user
-- Map of Ethereum Address -> all deposits and pending returns
+- **Bidding end time**
+- **Reveal end time**
+- **State of Auction**
+- **Highest Bidder**
+- **Highest Bid**
+- **Map of Ethereum Address -> all bids made by user**
+- **Map of Ethereum Address -> all deposits and pending returns**
 
 #### 2.2 Functions
-- bid : Allows user to register a bid and deposit ether for their bids
-- reveal : Allows user to reveal their bids
-- auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
+- **bid** : Allows user to register a bid and deposit ether for their bids
+- **reveal** : Allows user to reveal their bids
+- **auctionEnd** : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
 
 #### 2.3 Reasoning
 
 <a name="BiddingPhase"></a>
 ##### 2.3.1 Bidding Phase
-The Bidding Phase allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
-keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
+The Bidding Phase allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract, as this value is publicly available to everyone due to the properties of a decentralised blockchain network. Thus, instead of taking the publicly available value as the bid value of the bidder, we convert the publicly available ETH value to be the bidder's input deposit instead, and collect his actual intended bid value separately. As the bid values (not to be confused with the deposit values) are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the keccak256 hash. 
+
+Hence, during the bidding phase, all bids are hidden and the only information that is available to the public is the ether deposit amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids, and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. Here, users just have to make sure that the total sum of all deposit inputs has to be greater than or equal to the individual bid values of each bid. 
+
+For example, a user might want to bid a bid value of 1 ETH for their domain name in the Auction House.
+
+The user can choose to make 2 separate bids to mask their bid.
+
+* First Bid: Deposit = 0.1 ETH, Bid Value = 1 ETH, Real Boolean = True (indicating that this bid is real), Secret = secretvalue
+* Second Bid: Deposit = 10 ETH, Bid Value = 20 ETH, Real Boolean = False (indicating that this bid is false, and is only used to mislead other auction viewers, and also used to deposit more eth into their bidding account), Secret = secretvalue2
+
+Here, the bidder's bid will successfully go through, as their total deposit of 0.1 + 10 = 10.1 ETH is larger than their actual (true) bid of 1 ETH. This means that the bidder would have bidded 1 ETH. Note that the Bid Value, Real Boolean, and Secret Values will all be hashed and sent as data to the Blind Auction Smart Contract.
 
 <a name="RevealPhase"></a>
 ##### 2.3.2 Reveal Phase
