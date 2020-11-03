@@ -15,6 +15,11 @@ The Decentralized Domain Registrar, titled **'DNS Blind Auction House'**, allows
    * [3. Setting up with Goerli Test Net](#Goerli)
 * [Setting Up the React Front End Web Application](#FrontEnd)
 * [Navigating around the DNS Blind Auction House Web Application](#Navigation)
+  * [1. The Auction House](#AuctionHouse)
+  * [2. List of Registered Domains](#ListRegisteredDomains)
+  * [3. Look-Up the Owner of a Domain](#OwnerOfDomain)
+  * [4. Look-Up the Domain(s) of an Owner](#DomainsOfOwner)
+  * [5. Send ETH to a Domain](#SendETH)
 * [Testing of Contracts](#Testing)
   * [1. DNS Contract](#DNSContract)
   * [2. Blind Auction Contract](#BlindAuction)
@@ -133,7 +138,7 @@ npm install @truffle/hdwallet-provider
 Finally, re-deploy/re-migrate our smart contracts onto the Ropsten Testnet with the following command:
 
 ```bash
-truffle migrate --network goerli --reset
+truffle migrate --network ropsten --reset
 ```
 
 During the migration, take note of the contract address obtained after deploying the Dns Solidity contract, as highlighted in the image below.
@@ -232,17 +237,51 @@ After entering `localhost:1234`, we will see the web application page.
 
 ![Web Application](https://github.com/zhiqisim/Blind-Auction/blob/master/assets/website.jpeg)
 
-The web application has 4 different sections:
+The web application has **5 different sections**:
 
-* The Auction House
-* Look-Up the Owner of a Domain
-* Look-Up the Domain(s) of an Owner
-* Send ETH to a Domain
-* List of Registered Domains
+<a name="AuctionHouse"></a>
+### 1. The Auction House
+
+The Auction House is the entry point for users to enter to check if a domain name has already been taken up. There are three cases:
+
+* A domain has **already been taken**, and **has not expired yet**. Users will not be able to bid for this domain name, until its current ownership expires.
+* A domain's ownership has **already expired** or is **not currently owned by anyone**, and has **no existing on-going auctions**. Here, the user can choose to start a new auction, which will call the `startAuction()` function in our [DNS Smart Contract](#DNSContract).
+* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction be in one of three different phases:
+  * **Bidding Phase:** Where users can bid in a Blind Auction
+  * **Reveal Phase:** Where users reveal and prove that they were the ones who made their bids in the Bidding Phase
+  * **End Phase:** Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids.
+
+<a name="ListRegisteredDomains"></a>
+### 2. List of Registered Domains
+
+At the bottom of the webpage is where we can see a list of Ethereum Public address, and their owned registered domain name URLs. These domain names were obtained from the [DNS Smart Contract](#DNSContract), through a series of function calls as follows:
+
+* `getAddress()`: To get a complete list of all Ethereum public addresses that currently own domain name URLs.
+* `getURLCount(ethAddress)`: To get the number of URLs owned by a particular Ethereum public address.
+* `getURL(ethAddress, i)`: To get the ith domain name URL owned by a particular Ethereum public address.
+
+All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
+
+
+<a name="OwnerOfDomain"></a>
+### 3. Look-Up the Owner of a Domain
+
+Here, we call the `getRegisteredURL()` function from our [DNS Smart Contract](#DNSContract), which returns the Ethereum public address of the owner of a given domain name URL.
+
+<a name="DomainsOfOwner"></a>
+### 4. Look-Up the Domain(s) of an Owner
+
+Here, since the `data` state of the web page already holds a mapping of Ethereum Public addresses to domain name URLs as mentioned above, we simply just obtain the appropriate URLs owned by a given Ethereum Public Address, by accessing the `data` state mapping.
+
+<a name="SendETH"></a>
+### 5. Send ETH to a Domain
+
+This section allows us to send ETH to the Ethereum Public Address mapped to the domain name URL given as input. This will open up Metamask, which facilitates the ETH transaction to this public address.
+
 
 <a name="Testing"></a>
-## Testing of contracts
-To set up the testing with Ganache, we have to deploy ensure that we have all the npm packages for the test by running the following command:
+## Testing of Contracts
+To set up the testing with Ganache, we have to ensure that we have all the npm packages for the test by running the following command:
 
 ```bash
 npm install
@@ -292,8 +331,8 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - reveal : Allows user to reveal their bids
 - auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
 
-#### Reasoning
-The bidding phase allows users to bid multiple bids so that they can hid the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
+#### 2.3 Reasoning
+The bidding phase allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
 keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
 
 The reveal phase allows the user to reveal all the bids they did. Users have to reveal every single bid they did including the fake ones to verify and ensure they cannot selectively reveal certain bids. Users also only got 1 try to reveal before all their other bids are invalidated. This is to ensure that no user can selectively reveal their bids resulting in an unfair auction that isn't truly blind as the user could only reveal their lowest bid and only reveal the higher bids when they realised that they are losing the auction. This is therefore prevented by only allowing the user to reveal once. 
