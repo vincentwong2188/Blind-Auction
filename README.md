@@ -293,7 +293,7 @@ We can then run use truffle to run all the test by running the following command
 truffle test
 ```
 
-We should see 28 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
+We should see 31 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
 
 <a name="DNSContract"></a>
 ### 1. DNS Contract
@@ -321,11 +321,13 @@ We should see 28 test cases passing with test raging from unit testing of the va
 - getAuctionURL : View function for Frontend to get auction contract address
 
 #### 1.3 Reasoning
-Storing the forwards and backwards resolution of address -> URLs and URL -> address enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made as lookup queries should outnumber registrations by many orders of magnitude.
+Storing the forwards and backwards resolution of (address -> URLs) and (URL -> address) enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made as lookup queries should outnumber registrations by many orders of magnitude.
 
 Auctions are deployed as required, with the auction calling the relevant callbacks to register the winner as the URL owner once ended. A check is done to ensure accounts/contracts calling the register URL function matches the internal records of the auction address associated with said URL.
 
-Lastly, a grace period is built in to ensure that users are unable to deny a URL by starting an auction but not ending it.
+Many of the auction-related state variables like the bidding and reveal time are public to enforce transparency in the bidding process. In addition, there are a few helper state variables (e.g. address_not_unique mapping) to reduce the need for computation (looping through an array to check if it already exists), reducing run time in exchange for slightly increased storage space.
+
+Lastly, a grace period is built in to ensure that users are unable to deny a URL registration by starting an auction but not ending it.
 
 <a name="BlindAuction"></a>
 ### 2. Blind Auction Contract
