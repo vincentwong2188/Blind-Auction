@@ -260,7 +260,7 @@ At the bottom of the webpage is where we can see a list of Ethereum Public addre
 * `getURLCount(ethAddress)`: To get the number of URLs owned by a particular Ethereum public address.
 * `getURL(ethAddress, i)`: To get the ith domain name URL owned by a particular Ethereum public address.
 
-All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
+All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then both stored and rendered from the `data` state of the web page.
 
 
 <a name="OwnerOfDomain"></a>
