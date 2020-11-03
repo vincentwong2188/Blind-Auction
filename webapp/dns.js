@@ -11,9 +11,11 @@ import {
     infuraWSSGoerli
 
 } from './configurations'
+
 const myAddress = "0x612f3f3bc105eb95b14Af4A93D9788cC888E6054"; // Used only for neutral contract calls
 
-// export const DnsContractAddress = "0xA59960d719799a9D45566f5b068EfB2a75F06611"; // GANACHE
+// Checking Environment
+
 export const DnsContractAddress = ENVIRONMENT.toUpperCase() === 'ROPSTEN'
     ? DnsContractAddressRopsten :
     ENVIRONMENT.toUpperCase() === 'GANACHE'
@@ -22,10 +24,6 @@ export const DnsContractAddress = ENVIRONMENT.toUpperCase() === 'ROPSTEN'
             ? DnsContractAddressGoerli
             : ''
 
-// const infuraWSSRopsten = `wss://ropsten.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
-// const infuraWSSGoerli = `wss://goerli.infura.io/ws/v3/58dd641dd5c54a49b9418a8e2e4e17c5`;
-
-// Checking Environment
 const web3 = ENVIRONMENT.toUpperCase() === 'GANACHE'
     ? new Web3(Web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:7545"))
     : ENVIRONMENT.toUpperCase() === 'ROPSTEN'
@@ -39,8 +37,9 @@ const web3 = ENVIRONMENT.toUpperCase() === 'GANACHE'
 
 const contract = new web3.eth.Contract(artifact.abi, DnsContractAddress);
 
+// Start of Functions
+
 export const lookupAddress = async (addr) => {
-    // doc here: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-call
     const result = await contract.methods.getRegisteredURL(addr).call({ from: myAddress });
     return { ownerAddress: result };
 };
