@@ -53,8 +53,6 @@ To use the DNS Blind Auction House, you will first need to clone the repository 
 git clone https://github.com/zhiqisim/Blind-Auction.git
 ```
 
-or you may use the submission zip file that we submitted.
-
 We will be utilising the `Migrations.sol`, `Dns.sol` and `BlindAuction.sol` Solidity files for our smart contracts.
 
 We can compile the contracts with the following command:
@@ -93,8 +91,8 @@ During the migration, take note of the contract address obtained after deploying
 
 Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the address in the constant 'DnsContractAddressGanache' to the value highlighted in the image above.
-2. Change the ENVIRONMENT constant to `'Ganache'`.
+1. Change the address in the constant `DnsContractAddressGanache` to the value highlighted in the image above.
+2. Change the `ENVIRONMENT` constant to `'Ganache'`.
 
 <a name="GanacheToMetamask"></a>
 #### 2.2 Linking of Metamask to the Ganache Environment
@@ -113,7 +111,7 @@ Our group has already successfully deployed our smart contracts onto the Ropsten
 
 To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
 
-1. Change the ENVIRONMENT constant to `'Ropsten'`.
+1. Change the `ENVIRONMENT` constant to `'Ropsten'`.
 
 And that's it! The project is now linked to the Ropsten Network.
 
@@ -149,8 +147,8 @@ During the migration, take note of the contract address obtained after deploying
 
 Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the ENVIRONMENT constant to `'Ropsten'`.
-2. Change the address in the constant 'DnsContractAddressRopsten' to the value highlighted in the image above.
+1. Change the `ENVIRONMENT` constant to `'Ropsten'`.
+2. Change the address in the constant `DnsContractAddressRopsten` to the value highlighted in the image above.
 
 Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
@@ -162,7 +160,7 @@ Our group has already successfully deployed our smart contracts onto the Goerli 
 
 To connect to the Testnet, simply navigate into the `./webapp/configurations.js` file. Make the following change:
 
-1. Change the ENVIRONMENT constant to `'Goerli'`.
+1. Change the `ENVIRONMENT` constant to `'Goerli'`.
 
 And that's it! The project is now linked to the Goerli Network.
 
@@ -198,8 +196,8 @@ During the migration, take note of the contract address obtained after deploying
 
 Navigate into the `./webapp/configurations.js` file. Make the following 2 changes:
 
-1. Change the ENVIRONMENT constant to `'Goerli'`.
-2. Change the address in the constant 'DnsContractAddressGoerli' to the value highlighted in the image above.
+1. Change the `ENVIRONMENT` constant to `'Goerli'`.
+2. Change the address in the constant `DnsContractAddressGoerli` to the value highlighted in the image above.
 
 Once done, the smart contracts should be successfully re-deployed, and you can now proceed to the section [Setting Up the React Front End Web Application](#FrontEnd).
 
@@ -248,7 +246,7 @@ The Auction House is the entry point for users to enter to check if a domain nam
 
 * A domain has **already been taken**, and **has not expired yet**. Users will not be able to bid for this domain name, until its current ownership expires.
 * A domain's ownership has **already expired** or is **not currently owned by anyone**, and has **no existing on-going auctions**. Here, the user can choose to start a new auction, which will call the `startAuction()` function in our [DNS Smart Contract](#DNSContract).
-* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction be in one of three different phases:
+* A domain is **not currently owned by anyone**, but already **has an ongoing auction** pegged to it. Here, the ongoing auction will be in one of three different phases:
   * **Bidding Phase:** Where users can bid in a Blind Auction. More information can be found in the [Bidding Phase](#BiddingPhase) section.
   * **Reveal Phase:** Where users reveal and prove that they were the ones who made their bids in the Bidding Phase. More information can be found in the [Reveal Phase](#RevealPhase) section.
   * **End Phase:** Where users choose to end an ongoing auction, giving the winner of the auction ownership to the domain, and refunding the losers with their bids. More information can be found in the [End Phase](#EndPhase) section.
@@ -262,7 +260,7 @@ At the bottom of the webpage is where we can see a list of Ethereum Public addre
 * `getURLCount(ethAddress)`: To get the number of URLs owned by a particular Ethereum public address.
 * `getURL(ethAddress, i)`: To get the ith domain name URL owned by a particular Ethereum public address.
 
-All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then rendered in the `data` state of the web page.
+All these function calls generate a mapping of Ethereum Public addresses to domain name URLs, which are then both stored and rendered from the `data` state of the web page.
 
 
 <a name="OwnerOfDomain"></a>
@@ -295,35 +293,35 @@ We can then run use truffle to run all the test by running the following command
 truffle test
 ```
 
-We should see 31 test cases passing with test raging from unit testing of the various functionality of each contract to integration testing of various scenarios ran on both contract integrated together, to mock a sample real case usage of the 2 contracts to partipate in an auction and register a domain. 
+We should see **31 test cases successfully passing**, with tests raging from unit testing of the various functionality of each contract, to integration testing of various scenarios ran on both contracts integrated together. All these tests mock a sample real case usage of the 2 contracts participating in an auction and registering a domain. 
 
 <a name="DNSContract"></a>
 ### 1. DNS Contract
 #### 1.1 State Variables
-- dns_lookup_table : Resolving URL -> Ethereum Address
-- reverse_lookup_table : Map of Ethereum Address -> All URLs associated
-- expiry_date : URL Expiry Date
-- auctions : Map of URL -> Auction Address
-- expiry : Time for URL to expire
-- bidding_length : Time for bidding in deployed auction
-- reveal_length : Time for reveal in deployed auction
-- grace_period : Time to claim URL by ending auction
+- **dns_lookup_table** : Resolving URL -> Ethereum Address
+- **reverse_lookup_table** : Map of Ethereum Address -> All URLs associated
+- **expiry_date** : URL Expiry Date
+- **auctions** : Map of URL -> Auction Address
+- **expiry** : Time for URL to expire
+- **bidding_length** : Time for bidding in deployed auction
+- **reveal_length** : Time for reveal in deployed auction
+- **grace_period** : Time to claim URL by ending auction
 
 #### 1.2 Functions
-- startAuction : deploys Blind Auction contract to start a blind auction
-- registerAddress : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract (Only the auction associated with the URL may call this)
-- getAddress : View function for Frontend to query address list
-- getURLCount : View function for Frontend to query number of domains owned by an address
-- getURL : View function for Frontend to query the domain that a user owns
-- getRegisteredURL : View function for Frontend to query the owner of a particular domain
-- checkExpired : View function for Frontend to query if a domain is expired
-- getExpired : View function for Frontend to query expiry date
-- checkAuctionEnded : View function for front end to query if auction has been ended
-- checkAuctionPastGrace : View function to check if auction is past the grace period
-- getAuctionURL : View function for Frontend to get auction contract address
+- **startAuction** : deploys Blind Auction contract to start a blind auction
+- **registerAddress** : Handles URL registration after an auction is ended and the auction contract calls this function to update the state of this contract (Only the auction associated with the URL may call this)
+- **getAddress** : View function for Frontend to query address list
+- **getURLCount** : View function for Frontend to query number of domains owned by an address
+- **getURL** : View function for Frontend to query the domain that a user owns
+- **getRegisteredURL** : View function for Frontend to query the owner of a particular domain
+- **checkExpired** : View function for Frontend to query if a domain is expired
+- **getExpired** : View function for Frontend to query expiry date
+- **checkAuctionEnded** : View function for front end to query if auction has been ended
+- **checkAuctionPastGrace** : View function to check if auction is past the grace period
+- **getAuctionURL** : View function for Frontend to get auction contract address
 
 #### 1.3 Reasoning
-Storing the forwards and backwards resolution of (address -> URLs) and (URL -> address) enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made as lookup queries should outnumber registrations by many orders of magnitude.
+Storing the forwards and backwards resolution of (address -> URLs) and (URL -> address) enables quick and simple lookup at expense of state variable updates when new URLs are added. This is an intentional trade-off made, as lookup queries should outnumber registrations by many orders of magnitude.
 
 Auctions are deployed as required, with the auction calling the relevant callbacks to register the winner as the URL owner once ended. A check is done to ensure accounts/contracts calling the register URL function matches the internal records of the auction address associated with said URL.
 
@@ -334,34 +332,53 @@ Lastly, a grace period is built in to ensure that users are unable to deny a URL
 <a name="BlindAuction"></a>
 ### 2. Blind Auction Contract
 #### 2.1 State Variables
-- Bidding end time
-- Reveal end time
-- State of Auction
-- Highest Bidder
-- Highest Bid
-- Map of Ethereum Address -> all bids made by user
-- Map of Ethereum Address -> all deposits and pending returns
+- **Bidding end time**
+- **Reveal end time**
+- **State of Auction**
+- **Highest Bidder**
+- **Highest Bid**
+- **Map of Ethereum Address -> all bids made by user**
+- **Map of Ethereum Address -> all deposits and pending returns**
 
 #### 2.2 Functions
-- bid : Allows user to register a bid and deposit ether for their bids
-- reveal : Allows user to reveal their bids
-- auctionEnd : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
+- **bid** : Allows user to register a bid and deposit ether for their bids
+- **reveal** : Allows user to reveal their bids
+- **auctionEnd** : Register user as owner of domain after end of auction and winner determined and also refund all loser's ether
 
 #### 2.3 Reasoning
 
 <a name="BiddingPhase"></a>
 ##### 2.3.1 Bidding Phase
-The Bidding Phase allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract which is publicly available to everyone due to the properties of a blockchain network. However as the bids are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the 
-keccak256 hash. Hence during the bidding phase, all bids are hidden and the only information that is available to the public is the ether amount sent by the user. Hence, users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids and to top up the total deposits in their account. Users can send fake bids by hashing "false" in the "real" segment of the hash. 
+The **Bidding Phase** allows users to bid multiple bids so that they can hide the amount of Ether being sent to the contract, as this value is publicly available to everyone due to the properties of a decentralised blockchain network. Thus, instead of taking the publicly available value as the bid value of the bidder, we convert the publicly available ETH value to be the bidder's input deposit instead, and collect his actual intended bid value separately. As the bid values (not to be confused with the deposit values) are hashed before sending, the bids are hidden from everyone else and can only be verified in the reveal phase when the user sends the same input to generate the hash from the keccak256 hash. 
+
+Hence, during the bidding phase, all bids are hidden and the only information that is available to the public is the ether deposit amount sent by the user. Users can send multiple fake bids to deposit extra ether into their account to fake the true value of their bids, and to top up the total deposits in their account. To indicate and send fake bids, users will input a "false" value as their Real Boolean, and this value will also be hashed. Here, users just have to make sure that the total sum of all deposit inputs has to be greater than or equal to the individual (true) bid values of each bid. 
+
+For example, a user might want to bid a bid value of 1 ETH for their domain name in the Auction House.
+
+The user can choose to make 2 separate bids to mask their bid.
+
+* **First Bid**: 
+  * **Deposit** = 0.1 ETH, **Bid Value** = 1 ETH, **Real Boolean** = True (indicating that this bid is real), **Secret** = secretvalue
+* **Second Bid**: 
+  * **Deposit** = 10 ETH, **Bid Value** = 20 ETH, **Real Boolean** = False (indicating that this bid is false, and is only used to mislead other auction viewers, and also used to deposit more eth into their bidding account), **Secret** = secretvalue2
+
+Here, the bidder's bid will successfully go through, as their total deposit of **0.1 + 10 = 10.1 ETH** is larger than their actual (true) bid of **1 ETH**. This means that the bidder would have bidded **1 ETH**, though the publicly available ETH values are **0.1 ETH** and **10 ETH** respectively in each bid transaction. 
+
+*Note that the Bid Value, Real Boolean, and Secret Values will all be hashed and sent as data to the Blind Auction Smart Contract.*
 
 <a name="RevealPhase"></a>
 ##### 2.3.2 Reveal Phase
-The Reveal Phase allows the user to reveal all the bids they did. Users have to reveal every single bid they did including the fake ones to verify and ensure they cannot selectively reveal certain bids. Users also only got 1 try to reveal before all their other bids are invalidated. This is to ensure that no user can selectively reveal their bids resulting in an unfair auction that isn't truly blind as the user could only reveal their lowest bid and only reveal the higher bids when they realised that they are losing the auction. This is therefore prevented by only allowing the user to reveal once. 
+The **Reveal Phase** allows the user to reveal all the bids they made during the Bidding Phase. Users have to reveal every single bid they made, **including** the fake ones, to verify and ensure they cannot selectively reveal certain bids. Users also only have 1 try to reveal their bids. Any subsequently reveals or wrong reveals will invalidate their bids. This is to ensure that no user can selectively reveal their bids, which would have resulted in an unfair auction that isn't truly blind, since the user would only reveal their lowest bid, selectively revealling the higher bids when they realised that they are losing the auction. This security flaw is thus prevented by only allowing the user to reveal **once**. 
+
+Using the aforementioned user in the Bidding Phase above as an example of what to input during the Reveal Phase:
+* **Bid Values**: 1, 20
+* **Real Booleans**: True, False
+* **Secret Values**: secretvalue, secretvalue2
+
+*Note that values MUST be inputted in the order that they were bidded in (ie. the bid value order should be 1, 20 instead of 20, 1)*
 
 <a name="EndPhase"></a>
 ##### 2.3.3 End Phase
-The End Phase is where the user would end the auction and register the domain to their name if they are the winner. All losers will also get refunded the amount the bidded as long as they participated in the reveal phase.
+The **End Phase** is where the user would end the auction. Once the auction has ended, the winner of the bid will have the domain name registered to their Ethereum public address and ownership transfered to them, while users that did not win the auction will be refunded the amount they bidded, as long as they successfully participated in the Reveal Phase.
 
-We retrieve our timings to bound our functions based on the now() function in solidity which takes the current block timestamp. This is how we determine when the auction bidding time should end and transition to the reveal phase and when the reveal phase should end as well.
-
-
+*Note that we retrieve our timings to bound our functions based on the now() function in solidity, which takes the current block timestamp as our "now" time. This is how we determine when the auction Bidding Phase should end and transition to the Reveal Phase, and likewise for the Reveal Phase to transition to the End Phase.*
